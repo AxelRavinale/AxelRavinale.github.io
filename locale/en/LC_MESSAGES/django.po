@@ -1,0 +1,63 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-04 20:36-0300\n"
+"PO-Revision-Date: 2025-07-04 21:00-0300\n"
+"Last-Translator: Danilo Gavari <danilo@example.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: autentificacion/templates/login.html:6
+#: autentificacion/templates/login.html:24
+
+msgid "Iniciar sesión"
+msgstr "Log in"
+
+msgid "Nombre de usuario"
+msgstr "Username"
+
+msgid "Contraseña"
+msgstr "Password"
+
+msgid "¿No tienes cuenta? Regístrate"
+msgstr "Don't have an account? Sign up"
+
+msgid "Correo Electrónico"
+msgstr "Email"
+
+msgid "Repetir contraseña"
+msgstr "Repeat password"
+
+msgid "¿Ya tienes una cuenta? Inicia sesión"
+msgstr "Already have an account? Log in"
+
+msgid "Registro exitoso. ¡Bienvenido/a!"
+msgstr "Registration successful. Welcome!"
+
+msgid "Inicio de sesión exitoso."
+msgstr "Successfully logged in."
+
+msgid "Usuario o contraseña incorrectos."
+msgstr "Invalid username or password."
+
+msgid "Sesión cerrada correctamente."
+msgstr "Successfully logged out."
+
+msgid "Bienvenido"
+msgstr "Welcome"
+
+msgid "Esta es la página de inicio."
+msgstr "This is the home page."
+
+msgid "Idioma actual"
+msgstr "Current language"
+
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Registrarse"
+msgstr "Register"

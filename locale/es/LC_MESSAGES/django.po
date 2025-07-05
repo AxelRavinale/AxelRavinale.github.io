@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-04 20:36-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+#: autentificacion/templates/login.html:6
+#: autentificacion/templates/login.html:24
+msgid "Iniciar sesión"
+msgstr ""
+
+#: autentificacion/templates/login.html:13
+#: autentificacion/templates/register.html:13
+
+msgid "Nombre de usuario"
+msgstr ""
+
+#: autentificacion/templates/login.html:19
+#: autentificacion/templates/register.html:25
+msgid "Contraseña"
+msgstr ""
+
+#: autentificacion/templates/login.html:25
+msgid "¿No tienes cuenta? Regístrate"
+msgstr ""
+
+#: autentificacion/templates/register.html:6
+#: autentificacion/templates/register.html:36
+msgid "Registrarse"
+msgstr ""
+
+#: autentificacion/templates/register.html:19
+msgid "Correo Electrónico"
+msgstr ""
+
+#: autentificacion/templates/register.html:31
+msgid "Repetir contraseña"
+msgstr ""
+
+#: autentificacion/templates/register.html:37
+msgid "¿Ya tienes una cuenta? Inicia sesión"
+msgstr ""
+
+#: autentificacion/views.py:24
+msgid "Registro exitoso. ¡Bienvenido/a!"
+msgstr ""
+
+#: autentificacion/views.py:43
+msgid "Inicio de sesión exitoso."
+msgstr ""
+
+#: autentificacion/views.py:46
+msgid "Usuario o contraseña incorrectos."
+msgstr ""
+
+#: autentificacion/views.py:53
+msgid "Sesión cerrada correctamente."
+msgstr ""
+
+#: home/templates/home.html:7
+msgid "Bienvenido"
+msgstr ""
+
+#: home/templates/home.html:8
+msgid "Esta es la página de inicio."
+msgstr ""
