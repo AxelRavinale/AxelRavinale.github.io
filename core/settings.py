@@ -27,9 +27,11 @@ SECRET_KEY = 'django-insecure-^3vrc^tp0l&92m*o47fujz*%%!ji6m+lj5*-p)4+#kugkspx14
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-]
+ALLOWED_HOSTS = ['*']
+
+# Para que Render sirva archivos estáticos
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 # Application definition
