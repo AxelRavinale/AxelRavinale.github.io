@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 
 # Para que Render sirva archivos estáticos
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATIC_URL = '/static/'
 
 
 # Application definition
