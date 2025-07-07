@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'pasajeros',
     'home',
     'autentificacion',
+    'rest_framework',
 
 ]
 
