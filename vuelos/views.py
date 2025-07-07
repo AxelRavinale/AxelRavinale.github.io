@@ -6,7 +6,7 @@ from aviones.models import Avion
 from vuelos.models import Vuelo, Escala, TripulacionVuelo
 from core.models import Localidad
 
-from .serializers import (
+from vuelos.serializers import (
     LocalidadSerializer, AvionSerializer, EscalaSerializer,
     VueloSerializer, TripulacionVueloSerializer
 )
