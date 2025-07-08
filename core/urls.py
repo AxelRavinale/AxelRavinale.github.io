@@ -29,6 +29,7 @@ urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('auth/', include('autentificacion.urls')),
+    path('', include('vuelos.urls')),
 )
 
 if settings.DEBUG:

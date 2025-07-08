@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Detalle del vuelo {{ vuelo.codigo_vuelo }}</h1>
+
+<h2>Datos del vuelo</h2>
+<ul>
+    <li><strong>Código:</strong> {{ vuelo.codigo_vuelo }}</li>
+    <li><strong>Avión:</strong> {{ vuelo.avion.modelo }} ({{ vuelo.avion.num_avion }})</li>
+    <li><strong>Estado del avión:</strong> {{ vuelo.avion.estado }}</li>
+    <li><strong>Activo:</strong> {{ vuelo.activo }}</li>
+</ul>
+
+<h2>Escala asignada</h2>
+<ul>
+    <li><strong>Origen:</strong> {{ vuelo.escala.origen.nombre }}</li>
+    <li><strong>Destino:</strong> {{ vuelo.escala.destino.nombre }}</li>
+    <li><strong>Salida:</strong> {{ vuelo.escala.fecha_salida }}</li>
+    <li><strong>Llegada:</strong> {{ vuelo.escala.fecha_llegada }}</li>
+    <li><strong>Distancia estimada:</strong> {{ vuelo.escala.km_estimados }} km</li>
+</ul>
+
+<h2>Tripulación asignada</h2>
+<ul>
+    {% for miembro in vuelo.tripulacion.all %}
+        <li>{{ miembro.get_rol_display }} - Persona #{{ miembro.persona_id }}</li>
+    {% empty %}
+        <li>No hay tripulación asignada.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'vuelo_template' %}">← Volver a la lista de vuelos</a> 
+{% endblock %}
