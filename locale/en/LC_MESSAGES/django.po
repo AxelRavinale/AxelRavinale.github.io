@@ -61,3 +61,12 @@ msgstr "Home"
 
 msgid "Registrarse"
 msgstr "Register"
+
+msgid "Inicia sesión para poder acceder a todas las funcionalidades."
+msgstr "Please log in to access all features."
+
+msgid "¡Bienvenido!"
+msgstr "¡Welcome!"
+
+msgid "INICIO"
+msgstr "HOME"

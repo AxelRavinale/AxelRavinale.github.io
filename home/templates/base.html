@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
@@ -7,7 +8,8 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
-        <a class="navbar-brand" href="{% url 'home' %}">INICIO</a>
+        <a class="navbar-brand" href="{% url 'home' %}">{% trans "INICIO" %}</a>
+        
         <div class="ms-auto">
             <form action="{% url 'set_language' %}" method="post" class="d-inline">
                 {% csrf_token %}

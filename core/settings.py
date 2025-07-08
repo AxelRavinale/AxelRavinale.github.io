@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'home',
     'autentificacion',
     'rest_framework',
+    'core',
 
 ]
 
