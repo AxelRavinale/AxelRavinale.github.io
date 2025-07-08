@@ -1,7 +1,7 @@
 from django.db import models
 from aviones.models import Avion
 from core.models import Localidad
-
+from core.models import Persona
 
 class Escala(models.Model):
     origen = models.ForeignKey(Localidad, related_name='escalas_origen', on_delete=models.CASCADE)
@@ -13,7 +13,6 @@ class Escala(models.Model):
 
     def __str__(self):
         return f"{self.origen} → {self.destino}"
-
 
 
 class Vuelo(models.Model):
@@ -34,7 +33,7 @@ class TripulacionVuelo(models.Model):
     ]
 
     vuelo = models.ForeignKey(Vuelo, related_name='tripulacion', on_delete=models.CASCADE)
-    persona = models.ForeignKey('personas.Persona', on_delete=models.CASCADE)
+    persona = models.ForeignKey('core.Persona', on_delete=models.CASCADE)
     rol = models.CharField(max_length=20, choices=ROLES)
 
     def __str__(self):

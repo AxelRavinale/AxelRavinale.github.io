@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-
 {% block content %}
 <div class="container mt-5">
-    <h1>{% trans "Bienvenido" %}</h1>
-    <p>{% trans "Esta es la página de inicio." %}</p>
-    <p class="text-end mt-2"><small>{% trans "Idioma actual" %}: {{ LANGUAGE_CODE }}</small></p>
+    <div class="jumbotron py-5 px-4 bg-light rounded shadow">
+        <h1 class="display-4 mb-3">{% trans "¡Bienvenido!" %}</h1>
+        <hr class="my-4">
+        
+        {% if not user.is_authenticated %}
+            <p class="lead">{% trans "Inicia sesión para poder acceder a todas las funcionalidades." %}</p>
+            <div class="d-flex gap-3 mt-4">
+                <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">{% trans "Iniciar sesión" %}</a>
+                <a class="btn btn-outline-primary btn-lg" href="{% url 'register' %}" role="button">{% trans "Registrarse" %}</a>
+            </div>
+        {% else %}
+            <p class="lead">{% trans "Accede a los productos disponibles desde aquí:" %}</p>
+            <a class="btn btn-success btn-lg mt-3" href="{% url 'product_list' %}" role="button">{% trans "Ver productos" %}</a>
+        {% endif %}
+    </div>
 
+    <div class="text-center mt-5">
+        <h2>{% trans "Bienvenido" %}</h2>
+        <p>{% trans "Esta es la página de inicio." %}</p>
+        <p class="text-muted mt-2"><small>{% trans "Idioma actual" %}: {{ LANGUAGE_CODE }}</small></p>
+    </div>
 </div>
 {% endblock %}
