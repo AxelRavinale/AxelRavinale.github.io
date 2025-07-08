@@ -1,0 +1,34 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
+from .models import Trabajador
+from .forms import UsuarioForm, TrabajadorForm
+
+def lista_trabajadores(request):
+    trabajadores = Trabajador.objects.filter(activo=True)
+    return render(request, 'empleados/lista_trabajadores.html', {'trabajadores': trabajadores})
+
+def registrar_trabajador(request):
+    if request.method == 'POST':
+        usuario_form = UsuarioForm(request.POST)
+        trabajador_form = TrabajadorForm(request.POST)
+        if usuario_form.is_valid() and trabajador_form.is_valid():
+            usuario = usuario_form.save(commit=False)
+            usuario.set_password(usuario.password)
+            usuario.save()
+            trabajador = trabajador_form.save(commit=False)
+            trabajador.usuario = usuario
+            trabajador.save()
+            return redirect('lista_trabajadores')
+    else:
+        usuario_form = UsuarioForm()
+        trabajador_form = TrabajadorForm()
+    return render(request, 'empleados/registrar_trabajador.html', {
+        'usuario_form': usuario_form,
+        'trabajador_form': trabajador_form
+    })
+
+def eliminar_trabajador(request, trabajador_id):
+    trabajador = get_object_or_404(Trabajador, id=trabajador_id)
+    trabajador.activo = False
+    trabajador.save()
+    return redirect('lista_trabajadores')

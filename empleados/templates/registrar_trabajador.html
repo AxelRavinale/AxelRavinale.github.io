@@ -1,0 +1,9 @@
+<h1>Registrar Trabajador</h1>
+<form method="post">
+    {% csrf_token %}
+    <h2>Datos del Usuario</h2>
+    {{ usuario_form.as_p }}
+    <h2>Datos del Trabajador</h2>
+    {{ trabajador_form.as_p }}
+    <button type="submit">Registrar</button>
+</form>

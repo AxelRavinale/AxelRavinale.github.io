@@ -29,6 +29,7 @@ urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('auth/', include('autentificacion.urls')),
+    path('trabajadores/', include('empleados.urls')),
 )
 
 if settings.DEBUG:

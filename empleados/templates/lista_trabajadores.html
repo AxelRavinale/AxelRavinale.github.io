@@ -1,0 +1,20 @@
+<h1>Lista de Trabajadores</h1>
+<a href="{% url 'registrar_trabajador' %}">Registrar nuevo trabajador</a>
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Cargo</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+    </tr>
+    {% for t in trabajadores %}
+    <tr>
+        <td>{{ t.usuario.first_name }} {{ t.usuario.last_name }}</td>
+        <td>{{ t.cargo }}</td>
+        <td>{{ t.telefono }}</td>
+        <td>
+        <a href="{% url 'eliminar_trabajador' t.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
