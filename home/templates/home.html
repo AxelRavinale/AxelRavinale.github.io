@@ -13,9 +13,6 @@
                 <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">{% trans "Iniciar sesión" %}</a>
                 <a class="btn btn-outline-primary btn-lg" href="{% url 'register' %}" role="button">{% trans "Registrarse" %}</a>
             </div>
-        {% else %}
-            <p class="lead">{% trans "Accede a los productos disponibles desde aquí:" %}</p>
-            <a class="btn btn-success btn-lg mt-3" href="{% url 'product_list' %}" role="button">{% trans "Ver productos" %}</a>
         {% endif %}
     </div>
 
