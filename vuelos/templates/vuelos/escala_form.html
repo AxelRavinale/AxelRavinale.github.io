@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>{% trans "Crear nueva escala" %}</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Campo Origen con botón para nueva localidad -->
+      <div class="mb-3">
+        <label for="{{ form.origen.id_for_label }}">{{ form.origen.label }}</label>
+        <div class="d-flex gap-2 align-items-center">
+          {{ form.origen }}
+          <a href="{% url 'localidad_create' %}" target="_blank" class="btn btn-outline-secondary btn-sm">
+            ➕ {% trans "Nueva localidad" %}
+          </a>
+        </div>
+        {% if form.origen.errors %}
+          <div class="text-danger">{{ form.origen.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Campo Destino con botón para nueva localidad -->
+      <div class="mb-3">
+        <label for="{{ form.destino.id_for_label }}">{{ form.destino.label }}</label>
+        <div class="d-flex gap-2 align-items-center">
+          {{ form.destino }}
+          <a href="{% url 'localidad_create' %}" target="_blank" class="btn btn-outline-secondary btn-sm">
+            ➕ {% trans "Nueva localidad" %}
+          </a>
+        </div>
+        {% if form.destino.errors %}
+          <div class="text-danger">{{ form.destino.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Otros campos normales -->
+      <div class="mb-3">
+        <label for="{{ form.fecha_salida.id_for_label }}">{{ form.fecha_salida.label }}</label>
+        {{ form.fecha_salida }}
+        {% if form.fecha_salida.errors %}
+          <div class="text-danger">{{ form.fecha_salida.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.fecha_llegada.id_for_label }}">{{ form.fecha_llegada.label }}</label>
+        {{ form.fecha_llegada }}
+        {% if form.fecha_llegada.errors %}
+          <div class="text-danger">{{ form.fecha_llegada.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.km_estimados.id_for_label }}">{{ form.km_estimados.label }}</label>
+        {{ form.km_estimados }}
+        {% if form.km_estimados.errors %}
+          <div class="text-danger">{{ form.km_estimados.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-check mb-3">
+        {{ form.activo }}
+        <label class="form-check-label" for="{{ form.activo.id_for_label }}">{{ form.activo.label }}</label>
+        {% if form.activo.errors %}
+          <div class="text-danger">{{ form.activo.errors }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">{% trans "Guardar" %}</button>
+    </form>
+  </div>
+{% endblock %}

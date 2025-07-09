@@ -12,6 +12,7 @@
             <div class="d-flex gap-3 mt-4">
                 <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">{% trans "Iniciar sesión" %}</a>
                 <a class="btn btn-outline-primary btn-lg" href="{% url 'register' %}" role="button">{% trans "Registrarse" %}</a>
+                
             </div>
         {% else %}
             <p class="lead">{% trans "¡Ya has iniciado sesión!" %}</p>
