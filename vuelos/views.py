@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView 
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
@@ -39,3 +40,12 @@ class TripulacionVueloViewSet(viewsets.ModelViewSet):
     queryset = TripulacionVuelo.objects.all()
     serializer_class = TripulacionVueloSerializer
     permission_classes = [AllowAny]
+
+
+class VueloTemplateView(TemplateView):
+    template_name = 'vuelos/vuelo_list.html'  
+
+class DetailVueloTemplateView(TemplateView):
+    model = Vuelo
+    template_name = 'vuelos/vuelo_detail.html'
+    context_object_name = 'vuelo'  
