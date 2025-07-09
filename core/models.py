@@ -4,15 +4,23 @@ from django.db import models
 class Localidad(models.Model):
     nombre = models.CharField(max_length=100)
     activo = models.BooleanField(default=True)
+    def __str__(self):
+        return self.nombre
 
 
 class Genero(models.Model):
     nombre = models.CharField(max_length=100)
     activo = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.nombre
+
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=100)
     activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nombre
 
 class Persona(models.Model):
     nombre = models.CharField(max_length=100)
@@ -24,3 +32,6 @@ class Persona(models.Model):
     localidad = models.ForeignKey(Localidad, on_delete=models.PROTECT)
     genero = models.ForeignKey(Genero, on_delete=models.PROTECT)
     activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.tipo_documento.nombre} {self.numero_documento})"

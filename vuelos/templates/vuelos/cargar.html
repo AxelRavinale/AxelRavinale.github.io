@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{% trans "Cargar nuevo vuelo" %}</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Campo escala con botón para crear nueva escala -->
+        <div class="mb-3">
+            <label for="{{ form.escala.id_for_label }}">{{ form.escala.label }}</label>
+            <div class="d-flex gap-2 align-items-center">
+                {{ form.escala }}
+                <a href="{% url 'escala_create' %}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                    ➕ {% trans "Nueva escala" %}
+                </a>
+            </div>
+            {% if form.escala.errors %}
+                <div class="text-danger">{{ form.escala.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.codigo_vuelo.id_for_label }}">{{ form.codigo_vuelo.label }}</label>
+            {{ form.codigo_vuelo }}
+            {% if form.codigo_vuelo.errors %}
+                <div class="text-danger">{{ form.codigo_vuelo.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.avion.id_for_label }}">{{ form.avion.label }}</label>
+            {{ form.avion }}
+            {% if form.avion.errors %}
+                <div class="text-danger">{{ form.avion.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-check mb-3">
+            {{ form.activo }}
+            <label class="form-check-label" for="{{ form.activo.id_for_label }}">{{ form.activo.label }}</label>
+            {% if form.activo.errors %}
+                <div class="text-danger">{{ form.activo.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-success">{% trans "Guardar vuelo" %}</button>
+    </form>
+</div>
+{% endblock %}
