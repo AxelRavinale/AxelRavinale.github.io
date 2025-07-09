@@ -13,7 +13,12 @@
                 <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">{% trans "Iniciar sesión" %}</a>
                 <a class="btn btn-outline-primary btn-lg" href="{% url 'register' %}" role="button">{% trans "Registrarse" %}</a>
             </div>
-
+        {% else %}
+            <p class="lead">{% trans "¡Ya has iniciado sesión!" %}</p>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg mt-3">{% trans "Cerrar sesión" %}</button>
+            </form>
         {% endif %}
     </div>
 
