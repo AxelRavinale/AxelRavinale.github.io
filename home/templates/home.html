@@ -6,13 +6,14 @@
     <div class="jumbotron py-5 px-4 bg-light rounded shadow">
         <h1 class="display-4 mb-3">{% trans "¡Bienvenido!" %}</h1>
         <hr class="my-4">
-        
+
         {% if not user.is_authenticated %}
             <p class="lead">{% trans "Inicia sesión para poder acceder a todas las funcionalidades." %}</p>
             <div class="d-flex gap-3 mt-4">
                 <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">{% trans "Iniciar sesión" %}</a>
                 <a class="btn btn-outline-primary btn-lg" href="{% url 'register' %}" role="button">{% trans "Registrarse" %}</a>
             </div>
+
         {% endif %}
     </div>
 

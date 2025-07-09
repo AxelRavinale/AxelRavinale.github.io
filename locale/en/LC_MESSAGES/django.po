@@ -70,3 +70,9 @@ msgstr "¡Welcome!"
 
 msgid "INICIO"
 msgstr "HOME"
+
+msgid "¡Ya has iniciado sesión!"
+msgstr "¡You are already logged in!"
+
+msgid "Cerrar sesión"
+msgstr "Log out"
