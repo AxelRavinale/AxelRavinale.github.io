@@ -5,7 +5,8 @@ from .views import (
     VueloViewSet, TripulacionVueloViewSet,
     VueloTemplateView, DetailVueloTemplateView,
     VueloCreateView, EscalaCreateView,
-    LocalidadCreateView,
+    LocalidadCreateView, PaisCreateView,
+    ProvinciaCreateView
 )
 
 router = DefaultRouter()
@@ -22,5 +23,7 @@ urlpatterns = [
     path('detalle-vuelo/<int:pk>/', DetailVueloTemplateView.as_view(), name='detail_vuelo_template'),
     path('cargar-vuelo/', VueloCreateView.as_view(), name='cargar_vuelo'),
     path('cargar-escala/', EscalaCreateView.as_view(), name='escala_create'),
-     path('cargar-localidad/', LocalidadCreateView.as_view(), name='localidad_create'),
+    path('crear-pais/', PaisCreateView.as_view(), name='pais_form'),
+    path('crear-provincia/', ProvinciaCreateView.as_view(), name='provincia_form'),
+    path('cargar-localidad/', LocalidadCreateView.as_view(), name='localidad_create'),
 ]

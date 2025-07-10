@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView
 
 from aviones.models import Avion
 from vuelos.models import Vuelo, Escala, TripulacionVuelo
-from core.models import Localidad
+from core.models import Localidad, Provincia, Pais, TipoDocumento, Genero, Persona
 from vuelos.forms import VueloForm
 
 from vuelos.serializers import (
@@ -83,11 +83,50 @@ class EscalaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         from django.http import HttpResponseForbidden
         return HttpResponseForbidden("No tienes permiso para crear escalas.")
     
+class PaisCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Pais
+    fields = ['nombre', 'activo']
+    template_name = 'vuelos/pais_form.html'
+    success_url = reverse_lazy('pais_form')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("No tienes permiso para crear países.")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['paises'] = Pais.objects.order_by('nombre')
+        return context
+
+
+    
+class ProvinciaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Provincia
+    fields = ['pais', 'nombre', 'activo']
+    template_name = 'vuelos/provincia_form.html'
+    success_url = reverse_lazy('provincia_form')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("No tienes permiso para crear provincias.")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['provincias'] = Provincia.objects.select_related('pais').order_by('pais__nombre', 'nombre')
+        return context
+
+    
 class LocalidadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Localidad
-    fields = ['nombre', 'activo']
-    template_name = 'vuelos/localidad_form.html'  
-    success_url = reverse_lazy('cargar_vuelo') 
+    fields = ['nombre', 'provincia', 'activo']
+    template_name = 'vuelos/localidad_form.html'
+    success_url = reverse_lazy('cargar_vuelo')
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -95,3 +134,8 @@ class LocalidadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def handle_no_permission(self):
         from django.http import HttpResponseForbidden
         return HttpResponseForbidden("No tienes permiso para crear localidades.")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['localidades'] = Localidad.objects.select_related('provincia__pais').order_by('provincia__pais__nombre', 'provincia__nombre', 'nombre')
+        return context

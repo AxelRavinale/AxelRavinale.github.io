@@ -23,8 +23,7 @@ class Provincia(models.Model):
         ]
 
     def __str__(self):
-        return self.nombre
-
+        return f"{self.nombre} ({self.pais.nombre})"
 
 class Localidad(models.Model):
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE, related_name='localidades', null=True)
