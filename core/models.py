@@ -1,9 +1,42 @@
 from django.db import models
 
-# Localidad
-class Localidad(models.Model):
+class Pais(models.Model):
     nombre = models.CharField(max_length=100)
     activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['nombre']
+
+    def __str__(self):
+        return self.nombre
+
+
+class Provincia(models.Model):
+    pais = models.ForeignKey(Pais, on_delete=models.CASCADE, related_name='provincias')
+    nombre = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['nombre']
+        constraints = [
+            models.UniqueConstraint(fields=['pais', 'nombre'], name='unique_provincia_por_pais')
+        ]
+
+    def __str__(self):
+        return self.nombre
+
+
+class Localidad(models.Model):
+    provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE, related_name='localidades', null=True)
+    nombre = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['nombre']
+        constraints = [
+            models.UniqueConstraint(fields=['provincia', 'nombre'], name='unique_localidad_por_provincia')
+        ]
+
     def __str__(self):
         return self.nombre
 
