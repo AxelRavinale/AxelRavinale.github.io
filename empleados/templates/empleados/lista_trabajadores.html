@@ -14,6 +14,7 @@
         <td>{{ t.telefono }}</td>
         <td>
         <a href="{% url 'eliminar_trabajador' t.id %}">Eliminar</a>
+        <a href="{% url 'editar_trabajador' t.id %}">Editar</a>
         </td>
     </tr>
     {% endfor %}

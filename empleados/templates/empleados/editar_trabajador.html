@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar trabajador</title>
+</head>
+<body>
+    <h1>Editar trabajador</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ usuario_form.as_p }}
+        {{ trabajador_form.as_p }}
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+    <a href="{% url 'lista_trabajadores' %}">Volver a la lista</a>
+</body>
+</html>

@@ -32,3 +32,24 @@ def eliminar_trabajador(request, trabajador_id):
     trabajador.activo = False
     trabajador.save()
     return redirect('lista_trabajadores')
+
+def editar_trabajador(request, trabajador_id):
+    trabajador = get_object_or_404(Trabajador, id=trabajador_id)
+    usuario = trabajador.usuario
+
+    if request.method == 'POST':
+        usuario_form = UsuarioForm(request.POST, instance=usuario)
+        trabajador_form = TrabajadorForm(request.POST, instance=trabajador)
+        if usuario_form.is_valid() and trabajador_form.is_valid():
+            usuario_form.save()
+            trabajador_form.save()
+            return redirect('lista_trabajadores')
+    else:
+        usuario_form = UsuarioForm(instance=usuario)
+        trabajador_form = TrabajadorForm(instance=trabajador)
+
+    return render(request, 'empleados/editar_trabajador.html', {
+        'usuario_form': usuario_form,
+        'trabajador_form': trabajador_form,
+        'editar': True
+    })
