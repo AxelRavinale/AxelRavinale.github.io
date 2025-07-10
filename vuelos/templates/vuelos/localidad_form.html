@@ -6,8 +6,36 @@
     <h2>{% trans "Crear nueva localidad" %}</h2>
     <form method="post">
       {% csrf_token %}
-      {{ form.as_p }}
+
+      <div class="mb-3">
+        <label for="id_nombre" class="form-label">{% trans "Nombre de la localidad" %}</label>
+        {{ form.nombre }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_provincia" class="form-label">{% trans "Provincia (País)" %}</label>
+        {{ form.provincia }}
+        <a href="{% url 'provincia_form' %}" class="btn btn-link btn-sm ms-2">
+          {% trans "Agregar nueva provincia" %}
+        </a>
+      </div>
+
+      <div class="form-check mb-3">
+        {{ form.activo }}
+        <label class="form-check-label" for="id_activo">{% trans "¿Está activa?" %}</label>
+      </div>
+
       <button type="submit" class="btn btn-primary">{% trans "Guardar" %}</button>
     </form>
+
+    <hr>
+    <h3 class="mt-4">{% trans "Localidades existentes" %}</h3>
+    <ul>
+      {% for localidad in localidades %}
+        <li>{{ localidad.nombre }} — {{ localidad.provincia.nombre }} ({{ localidad.provincia.pais.nombre }})</li>
+      {% empty %}
+        <li>{% trans "No hay localidades registradas aún." %}</li>
+      {% endfor %}
+    </ul>
   </div>
 {% endblock %}
