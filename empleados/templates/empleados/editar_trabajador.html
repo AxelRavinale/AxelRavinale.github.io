@@ -1,19 +1,99 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar trabajador</title>
-</head>
-<body>
-    <h1>Editar trabajador</h1>
+{% extends 'empleados/base.html' %}
+{% load form_filters %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ usuario_form.as_p }}
-        {{ trabajador_form.as_p }}
-        <button type="submit">Guardar cambios</button>
-    </form>
+{% block title %}Editar Trabajador{% endblock %}
+{% block header %}Editar Datos del Trabajador{% endblock %}
 
-    <a href="{% url 'lista_trabajadores' %}">Volver a la lista</a>
-</body>
-</html>
+{% block content %}
+<form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+
+    <!-- Errores generales -->
+    {% if usuario_form.non_field_errors %}
+        <div class="alert alert-danger">{{ usuario_form.non_field_errors }}</div>
+    {% endif %}
+    {% if trabajador_form.non_field_errors %}
+        <div class="alert alert-danger">{{ trabajador_form.non_field_errors }}</div>
+    {% endif %}
+
+    <!-- Campos del Usuario -->
+    <div class="mb-3">
+        {{ usuario_form.first_name.label_tag }}
+        {{ usuario_form.first_name|add_class:"form-control" }}
+        {% if usuario_form.first_name.errors %}
+        <div class="invalid-feedback d-block">{{ usuario_form.first_name.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ usuario_form.last_name.label_tag }}
+        {{ usuario_form.last_name|add_class:"form-control" }}
+        {% if usuario_form.last_name.errors %}
+        <div class="invalid-feedback d-block">{{ usuario_form.last_name.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    
+    <div class="mb-3">
+        {{ trabajador_form.dni.label_tag }}
+        {{ trabajador_form.dni|add_class:"form-control" }}
+        {% if trabajador_form.dni.errors %}
+        <div class="invalid-feedback d-block">{{ trabajador_form.dni.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ usuario_form.email.label_tag }}
+        {{ usuario_form.email|add_class:"form-control" }}
+        {% if usuario_form.email.errors %}
+        <div class="invalid-feedback d-block">{{ usuario_form.email.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ usuario_form.username.label_tag }}
+        {{ usuario_form.username|add_class:"form-control" }}
+        {% if usuario_form.username.errors %}
+        <div class="invalid-feedback d-block">{{ usuario_form.username.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ usuario_form.password.label_tag }}
+        {{ usuario_form.password|add_class:"form-control" }}
+        {% if usuario_form.password.errors %}
+        <div class="invalid-feedback d-block">{{ usuario_form.password.errors.0 }}</div>
+        {% endif %}
+        <div class="form-text">Dejar vacío si no querés cambiar la contraseña.</div>
+    </div>
+
+    <!-- Campos del Trabajador -->
+    <div class="mb-3">
+        {{ trabajador_form.cargo.label_tag }}
+        {{ trabajador_form.cargo|add_class:"form-control" }}
+        {% if trabajador_form.cargo.errors %}
+        <div class="invalid-feedback d-block">{{ trabajador_form.cargo.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ trabajador_form.telefono.label_tag }}
+        {{ trabajador_form.telefono|add_class:"form-control" }}
+        {% if trabajador_form.telefono.errors %}
+        <div class="invalid-feedback d-block">{{ trabajador_form.telefono.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ trabajador_form.fecha_ingreso.label_tag }}
+        {{ trabajador_form.fecha_ingreso|add_class:"form-control" }}
+        {% if trabajador_form.fecha_ingreso.errors %}
+        <div class="invalid-feedback d-block">{{ trabajador_form.fecha_ingreso.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Botones -->
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a href="{% url 'lista_trabajadores' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
