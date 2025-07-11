@@ -48,6 +48,10 @@ class TripulacionVueloViewSet(viewsets.ModelViewSet):
 
 class VueloTemplateView(TemplateView):
     template_name = 'vuelos/vuelo_list.html'  
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vuelos'] = Vuelo.objects.all()
+        return context
 
 class DetailVueloTemplateView(TemplateView):
     model = Vuelo
@@ -58,7 +62,7 @@ class VueloCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Vuelo
     form_class = VueloForm
     template_name = 'vuelos/cargar.html'
-    success_url = reverse_lazy('vista_vuelos')  # Cambiá si tenés otro nombre
+    success_url = reverse_lazy('vuelo_template')  # Cambiá si tenés otro nombre
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -74,7 +78,7 @@ class EscalaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Escala
     fields = ['origen', 'destino', 'fecha_salida', 'fecha_llegada', 'km_estimados', 'activo']
     template_name = 'vuelos/escala_form.html'
-    success_url = reverse_lazy('vuelo_create')
+    success_url = reverse_lazy('cargar_vuelo')
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -139,3 +143,7 @@ class LocalidadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['localidades'] = Localidad.objects.select_related('provincia__pais').order_by('provincia__pais__nombre', 'provincia__nombre', 'nombre')
         return context
+
+def listar_vuelos(request):
+    vuelos = Vuelo.objects.all()
+    return render(request, 'tu_template.html', {'vuelos': vuelos})
