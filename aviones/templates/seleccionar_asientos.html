@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seleccionar Asientos</title>
+    <style>
+        .asiento {
+            width: 30px;
+            height: 30px;
+            margin: 4px;
+            background-color: #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .asiento.libre { background-color: #ccc; }
+        .asiento.ocupado { background-color: red; pointer-events: none; }
+        .asiento.reservado { background-color: orange; pointer-events: none; }
+        .asiento.seleccionado { background-color: blue; color: white; }
+        .fila {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Seleccionar asientos para el avión {{ avion.num_avion }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for fila, asientos in mapa.items %}
+            <div class="fila">
+                {% for asiento in asientos %}
+                    <div class="asiento {{ asiento.estado }}"
+                         data-id="{{ asiento.id }}"
+                         data-fila="{{ asiento.fila }}"
+                         data-columna="{{ asiento.columna }}">
+                        {{ asiento.columna }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <input type="hidden" name="asientos_seleccionados" id="asientosSeleccionados">
+        <br>
+        <button type="submit">Reservar</button>
+    </form>
+
+    <script>
+        const seleccionados = new Set();
+        document.querySelectorAll('.asiento.libre').forEach(seat => {
+            seat.addEventListener('click', () => {
+                seat.classList.toggle('seleccionado');
+                const id = seat.getAttribute('data-id');
+                if (seleccionados.has(id)) {
+                    seleccionados.delete(id);
+                } else {
+                    seleccionados.add(id);
+                }
+                document.getElementById('asientosSeleccionados').value = Array.from(seleccionados).join(',');
+            });
+        });
+    </script>
+</body>
+</html>
