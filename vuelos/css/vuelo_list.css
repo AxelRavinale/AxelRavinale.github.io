@@ -1,0 +1,65 @@
+.flight-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.flight-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.flight-route {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+.flight-location {
+    text-align: center;
+    flex: 1;
+}
+.flight-arrow {
+    flex: 0 0 auto;
+    margin: 0 1rem;
+    color: #007bff;
+}
+.flight-code {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
+}
+.flight-time {
+    font-size: 0.9rem;
+    color: #666;
+}
+.flight-date {
+    font-size: 1rem;
+    font-weight: 500;
+}
+.badge-escalas {
+    background-color: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+.search-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+.filter-section {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+.no-flights {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+.section-title {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}

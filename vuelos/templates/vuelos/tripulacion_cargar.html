@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>{% trans "Crear nuevo país" %}</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_nombre" class="form-label">{% trans "Nombre del país" %}</label>
+        {{ form.nombre }}
+      </div>
+
+      <div class="form-check mb-3">
+        {{ form.activo }}
+        <label class="form-check-label" for="id_activo">{% trans "¿Está activo?" %}</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">{% trans "Guardar" %}</button>
+    </form>
+
+    <hr>
+    <h3 class="mt-4">{% trans "Países existentes" %}</h3>
+    <ul>
+      {% for pais in paises %}
+        <li>{{ pais.nombre }}</li>
+      {% empty %}
+        <li>{% trans "No hay países registrados aún." %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
