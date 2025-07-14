@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'autentificacion',
     'rest_framework',
     'core',
+    'empleados',
 
 ]
 
