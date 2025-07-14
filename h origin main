@@ -1,0 +1,70 @@
+*   [33m3f5d99f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Resolví conflictos entre main y empleados
+[31m|[m[32m\[m  
+[31m|[m * [33m0380a1e[m[33m ([m[1;31morigin/empleados[m[33m, [m[1;32mempleados[m[33m)[m estilos
+[31m|[m * [33mbd39b3c[m editar empleado
+[31m|[m * [33m83e4a47[m Primera versión de la app empleados con alta, listado y borrado lógico
+* [32m|[m [33me1178b8[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Lista de vuelos
+* [32m|[m   [33m4cf6d3f[m Merge pull request #9 from AxelRavinale/asientos
+[33m|[m[34m\[m [32m\[m  
+[33m|[m * [32m|[m [33m10510a8[m asientos
+* [34m|[m [32m|[m   [33m13a9cf8[m Merge pull request #8 from AxelRavinale/vuelos
+[35m|[m[36m\[m [34m\[m [32m\[m  
+[35m|[m * [34m|[m [32m|[m [33md9974a0[m[33m ([m[1;31morigin/vuelos[m[33m)[m Template de localidad, provincia y pais
+* [36m|[m [34m|[m [32m|[m [33m724eb17[m Merge pull request #7 from AxelRavinale/vuelos
+[1;31m|[m[36m\[m[36m|[m [34m|[m [32m|[m 
+[1;31m|[m * [34m|[m [32m|[m [33mcbb10e7[m Provincias y Pais
+[1;31m|[m[1;31m/[m [34m/[m [32m/[m  
+* [34m|[m [32m|[m [33m0254e38[m Merge pull request #6 from AxelRavinale/navbar
+[1;33m|[m[34m\[m[34m|[m [32m|[m 
+[1;33m|[m * [32m|[m [33mde73afb[m template vuelos y creacion de los mismos
+[1;33m|[m[1;33m/[m [32m/[m  
+* [32m|[m [33m1c1171e[m logout
+* [32m|[m   [33me1ac128[m Merge pull request #5 from AxelRavinale/vuelos
+[1;35m|[m[1;36m\[m [32m\[m  
+[1;35m|[m * [32m\[m   [33m00cc694[m Merge branch 'main' into vuelos
+[1;35m|[m [31m|[m[1;35m\[m [32m\[m  
+[1;35m|[m [31m|[m[1;35m/[m [32m/[m  
+[1;35m|[m[1;35m/[m[31m|[m [32m|[m   
+* [31m|[m [32m|[m [33mfe93268[m logout
+[32m|[m [31m|[m[32m/[m  
+[32m|[m[32m/[m[31m|[m   
+* [31m|[m   [33m5261fd1[m Merge pull request #4 from AxelRavinale/auth
+[33m|[m[34m\[m [31m\[m  
+[33m|[m * [31m\[m   [33mbaa7439[m Merge branch 'main' of github.com:AxelRavinale/gestion_de_aerolinea into auth
+[33m|[m [35m|[m[33m\[m [31m\[m  
+[33m|[m [35m|[m[33m/[m [31m/[m  
+[33m|[m[33m/[m[35m|[m [31m|[m   
+[33m|[m * [31m|[m [33maf9db9a[m Login mejorado
+[33m|[m [36m|[m * [33m519cd4d[m Template de vuelos
+[33m|[m [36m|[m * [33m5bb5738[m template vuelo
+[33m|[m [36m|[m *   [33m4d74069[m Merge branch 'main' into vuelos
+[33m|[m [36m|[m [1;31m|[m[33m\[m  
+[33m|[m [36m|[m[33m_[m[1;31m|[m[33m/[m  
+[33m|[m[33m/[m[36m|[m [1;31m|[m   
+* [36m|[m [1;31m|[m [33me4da545[m Merge pull request #3 from AxelRavinale/auth
+[1;33m|[m[36m\[m[36m|[m [1;31m|[m 
+[1;33m|[m * [1;31m|[m [33me906a1b[m Index mejorado
+[1;33m|[m[1;33m/[m [1;31m/[m  
+* [1;31m|[m [33ma9fec0d[m Update requirements.txt
+* [1;31m|[m   [33m4f3ea05[m Merge pull request #2 from AxelRavinale/vuelos
+[1;35m|[m[1;36m\[m [1;31m\[m  
+[1;35m|[m [1;36m|[m * [33m1889ac5[m Update dependencies
+[1;35m|[m [1;36m|[m * [33m8bcd822[m Update dependencies
+[1;35m|[m [1;36m|[m[1;36m/[m  
+[1;35m|[m * [33m486b77e[m Ignorar cache .gitignore
+[1;35m|[m * [33mc3655d5[m Vuelos
+[1;35m|[m[1;35m/[m  
+* [33m4202515[m render 2
+* [33m132a319[m render en index
+* [33m1c32867[m render en index
+* [33m252602a[m RENDER
+* [33m13d7951[m prueba de index
+*   [33md219ef6[m Merge pull request #1 from AxelRavinale/auth
+[31m|[m[32m\[m  
+[31m|[m * [33m6be332e[m auth completo
+* [32m|[m [33m914081c[m Confirmación inicial
+[32m|[m[32m/[m  
+* [33m8b6f932[m auth
+* [33mf32a901[m .gitignore
+* [33m0275b78[m .env borrado
+* [33m6e1edbc[m Initial commit
