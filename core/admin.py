@@ -1,13 +1,26 @@
 # core/admin.py
 from django.contrib import admin
-from core.models import Localidad, Genero, TipoDocumento, Persona
+from core.models import Localidad, Genero, TipoDocumento, Persona, Provincia, Pais
 
-@admin.register(Localidad)
-class LocalidadAdmin(admin.ModelAdmin):
+
+@admin.register(Pais)
+class PaisAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'activo')
     list_filter = ('activo',)
     search_fields = ('nombre',)
 
+@admin.register(Provincia)
+class ProvinciaAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'pais', 'activo')
+    list_filter = ('activo', 'pais')
+    search_fields = ('nombre',)
+
+@admin.register(Localidad)
+class LocalidadAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'provincia', 'activo')
+    list_filter = ('activo', 'provincia')
+    search_fields = ('nombre',)
+    
 @admin.register(Genero)
 class GeneroAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'activo')

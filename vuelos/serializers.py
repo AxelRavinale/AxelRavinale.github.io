@@ -2,6 +2,7 @@ from rest_framework import serializers
 from aviones.models import Avion
 from vuelos.models import Vuelo, Escala, TripulacionVuelo
 from core.models import Localidad
+from .constant import ROLES_TRIPULACION
 
 class LocalidadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,7 +44,7 @@ class VueloSerializer(serializers.ModelSerializer):
 class TripulacionVueloSerializer(serializers.ModelSerializer):
     persona_id = serializers.IntegerField()
     vuelo_id = serializers.PrimaryKeyRelatedField(queryset=Vuelo.objects.all(), source='vuelo')
-    rol = serializers.ChoiceField(choices=TripulacionVuelo.ROLES)
+    rol = serializers.ChoiceField(choices=ROLES_TRIPULACION)
 
     class Meta:
         model = TripulacionVuelo
