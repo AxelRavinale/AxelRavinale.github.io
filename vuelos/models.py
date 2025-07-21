@@ -21,7 +21,7 @@ class Escala(models.Model):
 
 
 class Vuelo(models.Model):
-    """Modelo principal para vuelos"""
+    
     codigo_vuelo = models.CharField(max_length=20, unique=True)
     origen_principal = models.ForeignKey(Localidad, related_name='vuelos_origen', on_delete=models.CASCADE, null=True, blank=True)
     destino_principal = models.ForeignKey(Localidad, related_name='vuelos_destino', on_delete=models.CASCADE, null=True, blank=True)
