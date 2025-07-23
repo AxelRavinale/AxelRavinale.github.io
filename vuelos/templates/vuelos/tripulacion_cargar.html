@@ -3,13 +3,28 @@
 
 {% block content %}
   <div class="container mt-4">
-    <h2>{% trans "Crear nuevo país" %}</h2>
+    <h2>{% trans "Cargar nueva tripulación" %}</h2>
     <form method="post">
       {% csrf_token %}
 
       <div class="mb-3">
-        <label for="id_nombre" class="form-label">{% trans "Nombre del país" %}</label>
+        <label for="id_nombre" class="form-label">{% trans "Nombre del tripulante" %}</label>
         {{ form.nombre }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_apellido" class="form-label">{% trans "Apellido del tripulante" %}</label>
+        {{ form.apellido }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_cargo" class="form-label">{% trans "Cargo" %}</label>
+        {{ form.cargo }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_documento" class="form-label">{% trans "Número de documento" %}</label>
+        {{ form.documento }}
       </div>
 
       <div class="form-check mb-3">
@@ -21,12 +36,12 @@
     </form>
 
     <hr>
-    <h3 class="mt-4">{% trans "Países existentes" %}</h3>
+    <h3 class="mt-4">{% trans "Tripulación existente" %}</h3>
     <ul>
-      {% for pais in paises %}
-        <li>{{ pais.nombre }}</li>
+      {% for tripulante in tripulacion %}
+        <li>{{ tripulante.nombre }} {{ tripulante.apellido }} {% trans "—" %} {{ tripulante.cargo }}</li>
       {% empty %}
-        <li>{% trans "No hay países registrados aún." %}</li>
+        <li>{% trans "No hay tripulantes registrados aún." %}</li>
       {% endfor %}
     </ul>
   </div>

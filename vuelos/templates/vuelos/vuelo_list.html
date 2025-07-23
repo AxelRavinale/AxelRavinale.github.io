@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Lista de Vuelos{% endblock %}
+{% block title %}{% trans "Lista de Vuelos" %}{% endblock %}
 
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,9 +18,9 @@
             <div class="row">
                 <div class="col-12">
                     <h1 class="text-center mb-4">
-                        <i class="fas fa-plane"></i> Sistema de Vuelos
+                        <i class="fas fa-plane"></i> {% trans "Sistema de Vuelos" %}
                     </h1>
-                    <p class="text-center lead">Gestiona y consulta todos los vuelos disponibles</p>
+                    <p class="text-center lead">{% trans "Gestiona y consulta todos los vuelos disponibles" %}</p>
                 </div>
             </div>
         </div>
@@ -31,50 +32,50 @@
             <form method="get" class="row g-3">
                 <div class="col-md-3">
                     <label for="fecha_inicio" class="form-label">
-                        <i class="fas fa-calendar-alt"></i> Fecha Desde
+                        <i class="fas fa-calendar-alt"></i> {% trans "Fecha Desde" %}
                     </label>
                     {{ form_filtro.fecha_inicio }}
                 </div>
                 <div class="col-md-3">
                     <label for="fecha_fin" class="form-label">
-                        <i class="fas fa-calendar-alt"></i> Fecha Hasta
+                        <i class="fas fa-calendar-alt"></i> {% trans "Fecha Hasta" %}
                     </label>
                     {{ form_filtro.fecha_fin }}
                 </div>
                 <div class="col-md-2">
                     <label for="activo" class="form-label">
-                        <i class="fas fa-toggle-on"></i> Estado
+                        <i class="fas fa-toggle-on"></i> {% trans "Estado" %}
                     </label>
                     <select name="activo" class="form-select" id="activo">
-                        <option value="">Todos</option>
-                        <option value="1" {% if request.GET.activo == '1' %}selected{% endif %}>Activos</option>
-                        <option value="0" {% if request.GET.activo == '0' %}selected{% endif %}>Inactivos</option>
+                        <option value="">{% trans "Todos" %}</option>
+                        <option value="1" {% if request.GET.activo == '1' %}selected{% endif %}>{% trans "Activos" %}</option>
+                        <option value="0" {% if request.GET.activo == '0' %}selected{% endif %}>{% trans "Inactivos" %}</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <label for="codigo_vuelo" class="form-label">
-                        <i class="fas fa-search"></i> Código Vuelo
+                        <i class="fas fa-search"></i> {% trans "Código Vuelo" %}
                     </label>
                     <input type="text" name="codigo_vuelo" class="form-control" id="codigo_vuelo" 
-                           placeholder="Ej: AA123" value="{{ request.GET.codigo_vuelo }}">
+                           placeholder="{% trans 'Ej: AA123' %}" value="{{ request.GET.codigo_vuelo }}">
                 </div>
                 <div class="col-md-2">
                     <label for="avion" class="form-label">
-                        <i class="fas fa-plane"></i> Avión
+                        <i class="fas fa-plane"></i> {% trans "Avión" %}
                     </label>
                     <input type="text" name="avion" class="form-control" id="avion" 
-                           placeholder="Modelo/Matrícula" value="{{ request.GET.avion }}">
+                           placeholder="{% trans 'Modelo/Matrícula' %}" value="{{ request.GET.avion }}">
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary me-2">
-                        <i class="fas fa-search"></i> Filtrar
+                        <i class="fas fa-search"></i> {% trans "Filtrar" %}
                     </button>
                     <a href="{% url 'vuelo_list' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-times"></i> Limpiar
+                        <i class="fas fa-times"></i> {% trans "Limpiar" %}
                     </a>
                     {% if user.is_superuser %}
                         <a href="{% url 'cargar_vuelo' %}" class="btn btn-success ms-3">
-                            <i class="fas fa-plus"></i> Nuevo Vuelo
+                            <i class="fas fa-plus"></i> {% trans "Nuevo Vuelo" %}
                         </a>
                     {% endif %}
                 </div>
@@ -89,7 +90,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title text-primary">
-                            <i class="fas fa-plane"></i> Total de Vuelos
+                            <i class="fas fa-plane"></i> {% trans "Total de Vuelos" %}
                         </h5>
                         <h2 class="text-primary">{{ total_vuelos }}</h2>
                     </div>
@@ -99,7 +100,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title text-success">
-                            <i class="fas fa-arrow-right"></i> Vuelos Directos
+                            <i class="fas fa-arrow-right"></i> {% trans "Vuelos Directos" %}
                         </h5>
                         <h2 class="text-success">{{ vuelos_sin_escalas|length }}</h2>
                     </div>
@@ -109,7 +110,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title text-warning">
-                            <i class="fas fa-route"></i> Vuelos con Escalas
+                            <i class="fas fa-route"></i> {% trans "Vuelos con Escalas" %}
                         </h5>
                         <h2 class="text-warning">{{ vuelos_con_escalas|length }}</h2>
                     </div>
@@ -123,7 +124,7 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="section-title">
-                    <i class="fas fa-arrow-right text-success"></i> Vuelos Directos
+                    <i class="fas fa-arrow-right text-success"></i> {% trans "Vuelos Directos" %}
                 </h2>
                 {% if vuelos_sin_escalas %}
                     <div class="row">
@@ -140,13 +141,13 @@
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a class="dropdown-item" href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}">
-                                                        <i class="fas fa-eye"></i> Ver Detalle
+                                                        <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
                                                     </a>
                                                 </li>
                                                 {% if user.is_superuser %}
                                                     <li>
                                                         <a class="dropdown-item" href="{% url 'update_vuelo' vuelo.codigo_vuelo %}">
-                                                            <i class="fas fa-edit"></i> Editar
+                                                            <i class="fas fa-edit"></i> {% trans "Editar" %}
                                                         </a>
                                                     </li>
                                                 {% endif %}
@@ -171,17 +172,17 @@
                                         <div class="mt-3">
                                             <div class="row text-center">
                                                 <div class="col-6">
-                                                    <small class="text-muted">Avión</small>
+                                                    <small class="text-muted">{% trans "Avión" %}</small>
                                                     <div class="fw-bold">
                                                         {% if vuelo.avion_asignado %}
                                                             {{ vuelo.avion_asignado.modelo }} - {{ vuelo.avion_asignado.matricula }}
                                                         {% else %}
-                                                            <span class="text-muted">Sin asignar</span>
+                                                            <span class="text-muted">{% trans "Sin asignar" %}</span>
                                                         {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <small class="text-muted">Distancia</small>
+                                                    <small class="text-muted">{% trans "Distancia" %}</small>
                                                     <div class="fw-bold">{{ vuelo.km_totales }} km</div>
                                                 </div>
                                             </div>
@@ -190,18 +191,18 @@
                                     <div class="card-footer d-flex justify-content-between align-items-center">
                                         <div>
                                             {% if vuelo.activo %}
-                                                <span class="badge bg-success">Activo</span>
+                                                <span class="badge bg-success">{% trans "Activo" %}</span>
                                             {% else %}
-                                                <span class="badge bg-secondary">Inactivo</span>
+                                                <span class="badge bg-secondary">{% trans "Inactivo" %}</span>
                                             {% endif %}
                                         </div>
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye"></i> Detalle
+                                                <i class="fas fa-eye"></i> {% trans "Detalle" %}
                                             </a>
                                             {% if user.is_superuser %}
                                                 <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
-                                                    <i class="fas fa-edit"></i> Editar
+                                                    <i class="fas fa-edit"></i> {% trans "Editar" %}
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -213,8 +214,8 @@
                 {% else %}
                     <div class="no-flights">
                         <i class="fas fa-plane fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">No hay vuelos directos disponibles</h4>
-                        <p class="text-muted">Prueba ajustando los filtros o crea un nuevo vuelo</p>
+                        <h4 class="text-muted">{% trans "No hay vuelos directos disponibles" %}</h4>
+                        <p class="text-muted">{% trans "Prueba ajustando los filtros o crea un nuevo vuelo" %}</p>
                     </div>
                 {% endif %}
             </div>
@@ -226,7 +227,7 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="section-title">
-                    <i class="fas fa-route text-warning"></i> Vuelos con Escalas
+                    <i class="fas fa-route text-warning"></i> {% trans "Vuelos con Escalas" %}
                 </h2>
                 {% if vuelos_con_escalas %}
                     <div class="row">
@@ -243,13 +244,13 @@
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a class="dropdown-item" href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}">
-                                                        <i class="fas fa-eye"></i> Ver Detalle
+                                                        <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
                                                     </a>
                                                 </li>
                                                 {% if user.is_superuser %}
                                                     <li>
                                                         <a class="dropdown-item" href="{% url 'update_vuelo' vuelo.codigo_vuelo %}">
-                                                            <i class="fas fa-edit"></i> Editar
+                                                            <i class="fas fa-edit"></i> {% trans "Editar" %}
                                                         </a>
                                                     </li>
                                                 {% endif %}
@@ -274,21 +275,21 @@
                                         <div class="mt-3">
                                             <div class="row text-center">
                                                 <div class="col-4">
-                                                    <small class="text-muted">Avión</small>
+                                                    <small class="text-muted">{% trans "Avión" %}</small>
                                                     <div class="fw-bold">
                                                         {% if vuelo.avion_asignado %}
                                                             {{ vuelo.avion_asignado.modelo }}
                                                         {% else %}
-                                                            <span class="text-muted">Sin asignar</span>
+                                                            <span class="text-muted">{% trans "Sin asignar" %}</span>
                                                         {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="col-4">
-                                                    <small class="text-muted">Escalas</small>
+                                                    <small class="text-muted">{% trans "Escalas" %}</small>
                                                     <div class="fw-bold">{{ vuelo.numero_escalas }}</div>
                                                 </div>
                                                 <div class="col-4">
-                                                    <small class="text-muted">Distancia</small>
+                                                    <small class="text-muted">{% trans "Distancia" %}</small>
                                                     <div class="fw-bold">{{ vuelo.distancia_recorrida }} km</div>
                                                 </div>
                                             </div>
@@ -296,7 +297,7 @@
 
                                         <!-- Escalas Preview -->
                                         <div class="mt-3">
-                                            <small class="text-muted">Ruta:</small>
+                                            <small class="text-muted">{% trans "Ruta" %}:</small>
                                             <div class="escalas-preview">
                                                 {% for escala in vuelo.escalas_vuelo.all %}
                                                     <span class="badge badge-escalas me-1">
@@ -309,18 +310,18 @@
                                     <div class="card-footer d-flex justify-content-between align-items-center">
                                         <div>
                                             {% if vuelo.activo %}
-                                                <span class="badge bg-success">Activo</span>
+                                                <span class="badge bg-success">{% trans "Activo" %}</span>
                                             {% else %}
-                                                <span class="badge bg-secondary">Inactivo</span>
+                                                <span class="badge bg-secondary">{% trans "Inactivo" %}</span>
                                             {% endif %}
                                         </div>
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye"></i> Detalle
+                                                <i class="fas fa-eye"></i> {% trans "Detalle" %}
                                             </a>
                                             {% if user.is_superuser %}
                                                 <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
-                                                    <i class="fas fa-edit"></i> Editar
+                                                    <i class="fas fa-edit"></i> {% trans "Editar" %}
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -332,8 +333,8 @@
                 {% else %}
                     <div class="no-flights">
                         <i class="fas fa-route fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">No hay vuelos con escalas disponibles</h4>
-                        <p class="text-muted">Prueba ajustando los filtros o crea un nuevo vuelo</p>
+                        <h4 class="text-muted">{% trans "No hay vuelos con escalas disponibles" %}</h4>
+                        <p class="text-muted">{% trans "Prueba ajustando los filtros o crea un nuevo vuelo" %}</p>
                     </div>
                 {% endif %}
             </div>
@@ -345,10 +346,10 @@
         <div class="container">
             <div class="no-flights">
                 <i class="fas fa-plane fa-4x text-muted mb-4"></i>
-                <h3 class="text-muted">No se encontraron vuelos</h3>
-                <p class="text-muted">No hay vuelos que coincidan con los filtros seleccionados</p>
+                <h3 class="text-muted">{% trans "No se encontraron vuelos" %}</h3>
+                <p class="text-muted">{% trans "No hay vuelos que coincidan con los filtros seleccionados" %}</p>
                 <a href="{% url 'vuelo_list' %}" class="btn btn-primary">
-                    <i class="fas fa-refresh"></i> Ver todos los vuelos
+                    <i class="fas fa-refresh"></i> {% trans "Ver todos los vuelos" %}
                 </a>
             </div>
         </div>
