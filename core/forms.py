@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from .models import Persona, TipoDocumento, Genero, Localidad
 
 class PersonaForm(forms.ModelForm):
@@ -20,11 +21,28 @@ class PersonaForm(forms.ModelForm):
                 'class': 'form-control', 'type': 'date'
             }),
             'email': forms.EmailInput(attrs={
-                'class': 'form-control', 'placeholder': 'ejemplo@dominio.com'
+                'class': 'form-control', 'placeholder': _('ejemplo@dominio.com')
             }),
             'localidad': forms.Select(attrs={'class': 'form-select'}),
             'genero': forms.Select(attrs={'class': 'form-select'}),
             'activo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'nombre': _('Nombre'),
+            'apellido': _('Apellido'),
+            'tipo_documento': _('Tipo de Documento'),
+            'numero_documento': _('Número de Documento'),
+            'fecha_nacimiento': _('Fecha de Nacimiento'),
+            'email': _('Email'),
+            'localidad': _('Localidad'),
+            'genero': _('Género'),
+            'activo': _('Activo'),
+        }
+        help_texts = {
+            'numero_documento': _('Ingrese el número de documento sin espacios ni guiones'),
+            'fecha_nacimiento': _('Formato: DD/MM/AAAA'),
+            'email': _('Ingrese un email válido'),
+            'activo': _('Marque si la persona está activa'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -35,14 +53,19 @@ class PersonaForm(forms.ModelForm):
         self.fields['genero'].queryset = Genero.objects.filter(activo=True).order_by('nombre')
         self.fields['localidad'].queryset = Localidad.objects.filter(activo=True).order_by('nombre')
 
+        # Etiquetas vacías para los selects
+        self.fields['tipo_documento'].empty_label = _("Seleccione tipo de documento")
+        self.fields['genero'].empty_label = _("Seleccione género")
+        self.fields['localidad'].empty_label = _("Seleccione localidad")
+
     def clean_numero_documento(self):
         numero = self.cleaned_data['numero_documento']
         if Persona.objects.exclude(pk=self.instance.pk).filter(numero_documento=numero).exists():
-            raise ValidationError("Este número de documento ya está en uso.")
+            raise ValidationError(_("Este número de documento ya está en uso."))
         return numero
 
     def clean_email(self):
         email = self.cleaned_data['email']
         if Persona.objects.exclude(pk=self.instance.pk).filter(email=email).exists():
-            raise ValidationError("Este email ya está registrado.")
+            raise ValidationError(_("Este email ya está registrado."))
         return email

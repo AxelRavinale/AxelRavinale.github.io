@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-04 20:36-0300\n"
+"POT-Creation-Date: 2025-07-23 00:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
+
 #: autentificacion/templates/login.html:6
-#: autentificacion/templates/login.html:24
+#: autentificacion/templates/login.html:24 home/templates/home.html:13
 msgid "Iniciar sesión"
 msgstr ""
 
 #: autentificacion/templates/login.html:13
 #: autentificacion/templates/register.html:13
-
 msgid "Nombre de usuario"
 msgstr ""
 
@@ -39,7 +39,7 @@ msgid "¿No tienes cuenta? Regístrate"
 msgstr ""
 
 #: autentificacion/templates/register.html:6
-#: autentificacion/templates/register.html:36
+#: autentificacion/templates/register.html:36 home/templates/home.html:14
 msgid "Registrarse"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgstr ""
 msgid "¿Ya tienes una cuenta? Inicia sesión"
 msgstr ""
 
-#: autentificacion/views.py:24
+#: autentificacion/views.py:25
 msgid "Registro exitoso. ¡Bienvenido/a!"
 msgstr ""
 
@@ -67,14 +67,866 @@ msgstr ""
 msgid "Usuario o contraseña incorrectos."
 msgstr ""
 
-#: autentificacion/views.py:53
+#: autentificacion/views.py:52
 msgid "Sesión cerrada correctamente."
 msgstr ""
 
+#: core/forms.py:24
+msgid "ejemplo@dominio.com"
+msgstr ""
+
+#: core/forms.py:31 core/models.py:5 core/models.py:19 core/models.py:35
+#: core/models.py:51 core/models.py:62 core/models.py:73
+msgid "Nombre"
+msgstr ""
+
+#: core/forms.py:32 core/models.py:74
+msgid "Apellido"
+msgstr ""
+
+#: core/forms.py:33 core/models.py:66 core/models.py:75
+msgid "Tipo de Documento"
+msgstr ""
+
+#: core/forms.py:34 core/models.py:76
+msgid "Número de Documento"
+msgstr ""
+
+#: core/forms.py:35 core/models.py:77
+msgid "Fecha de Nacimiento"
+msgstr ""
+
+#: core/forms.py:36 core/models.py:78
+msgid "Email"
+msgstr ""
+
+#: core/forms.py:37 core/models.py:40 core/models.py:79
+msgid "Localidad"
+msgstr ""
+
+#: core/forms.py:38 core/models.py:55 core/models.py:80
+msgid "Género"
+msgstr ""
+
+#: core/forms.py:39 core/models.py:6 core/models.py:20 core/models.py:36
+#: core/models.py:52 core/models.py:63 core/models.py:81
+#: vuelos/templates/vuelos/vuelo_detail.html:349
+#: vuelos/templates/vuelos/vuelo_detail.html:484
+#: vuelos/templates/vuelos/vuelo_detail.html:515
+#: vuelos/templates/vuelos/vuelo_list.html:194
+#: vuelos/templates/vuelos/vuelo_list.html:313
+msgid "Activo"
+msgstr ""
+
+#: core/forms.py:42
+msgid "Ingrese el número de documento sin espacios ni guiones"
+msgstr ""
+
+#: core/forms.py:43
+msgid "Formato: DD/MM/AAAA"
+msgstr ""
+
+#: core/forms.py:44
+msgid "Ingrese un email válido"
+msgstr ""
+
+#: core/forms.py:45
+msgid "Marque si la persona está activa"
+msgstr ""
+
+#: core/forms.py:57
+msgid "Seleccione tipo de documento"
+msgstr ""
+
+#: core/forms.py:58
+msgid "Seleccione género"
+msgstr ""
+
+#: core/forms.py:59
+msgid "Seleccione localidad"
+msgstr ""
+
+#: core/forms.py:64
+msgid "Este número de documento ya está en uso."
+msgstr ""
+
+#: core/forms.py:70
+msgid "Este email ya está registrado."
+msgstr ""
+
+#: core/models.py:10 core/models.py:18
+#: vuelos/templates/vuelos/provincia_form.html:16
+msgid "País"
+msgstr ""
+
+#: core/models.py:11
+msgid "Países"
+msgstr ""
+
+#: core/models.py:24 core/models.py:34
+msgid "Provincia"
+msgstr ""
+
+#: core/models.py:25
+msgid "Provincias"
+msgstr ""
+
+#: core/models.py:41
+msgid "Localidades"
+msgstr ""
+
+#: core/models.py:56
+msgid "Géneros"
+msgstr ""
+
+#: core/models.py:67
+msgid "Tipos de Documento"
+msgstr ""
+
+#: core/models.py:84
+msgid "Persona"
+msgstr ""
+
+#: core/models.py:85
+msgid "Personas"
+msgstr ""
+
+#: core/templates/core/persona_form.html:5
+msgid "Crear Persona"
+msgstr ""
+
+#: core/templates/core/persona_form.html:13
+msgid "Crear nueva Persona"
+msgstr ""
+
+#: core/templates/core/persona_form.html:29
+#: vuelos/templates/vuelos/localidad_form.html:28
+#: vuelos/templates/vuelos/pais_form.html:20
+#: vuelos/templates/vuelos/provincia_form.html:28
+#: vuelos/templates/vuelos/tripulacion_cargar.html:35
+msgid "Guardar"
+msgstr ""
+
+#: home/templates/base.html:11
+msgid "INICIO"
+msgstr ""
+
+#: home/templates/base.html:15
+msgid "Ver lista de vuelos"
+msgstr ""
+
+#: home/templates/base.html:21
+msgid "Cargar vuelos"
+msgstr ""
+
 #: home/templates/home.html:7
+msgid "¡Bienvenido!"
+msgstr ""
+
+#: home/templates/home.html:11
+msgid "Inicia sesión para poder acceder a todas las funcionalidades."
+msgstr ""
+
+#: home/templates/home.html:18
+msgid "¡Ya has iniciado sesión!"
+msgstr ""
+
+#: home/templates/home.html:21
+msgid "Cerrar sesión"
+msgstr ""
+
+#: home/templates/home.html:27
 msgid "Bienvenido"
 msgstr ""
 
-#: home/templates/home.html:8
+#: home/templates/home.html:28
 msgid "Esta es la página de inicio."
+msgstr ""
+
+#: home/templates/home.html:29
+msgid "Idioma actual"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:6 vuelos/templates/vuelos/cargar.html:24
+msgid "Crear Nuevo Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:6
+#: vuelos/templates/vuelos/update_vuelo.html:5
+#: vuelos/templates/vuelos/update_vuelo.html:21
+msgid "Editar Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:26
+#, python-format
+msgid "Editar Vuelo %(codigo_vuelo)s"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:30
+#: vuelos/templates/vuelos/escala_form.html:24
+#: vuelos/templates/vuelos/update_vuelo.html:28
+#: vuelos/templates/vuelos/vuelo_detail.html:542
+msgid "Volver a la lista"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:50
+#: vuelos/templates/vuelos/update_vuelo.html:66
+msgid "Información Principal"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:57
+#: vuelos/templates/vuelos/update_vuelo.html:75
+msgid "Código de Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:67
+#: vuelos/templates/vuelos/update_vuelo.html:87
+msgid "Avión Asignado"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:77
+#: vuelos/templates/vuelos/update_vuelo.html:101
+msgid "Origen Principal"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:87
+#: vuelos/templates/vuelos/update_vuelo.html:113
+msgid "Destino Principal"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:97
+#: vuelos/templates/vuelos/update_vuelo.html:127
+msgid "Fecha y Hora de Salida"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:107
+#: vuelos/templates/vuelos/update_vuelo.html:139
+msgid "Fecha y Hora de Llegada"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:118
+#: vuelos/templates/vuelos/update_vuelo.html:167
+#: vuelos/templates/vuelos/vuelo_detail.html:270
+msgid "Vuelo Activo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:124
+#: vuelos/templates/vuelos/update_vuelo.html:153
+#: vuelos/templates/vuelos/vuelo_detail.html:307
+#: vuelos/templates/vuelos/vuelo_detail.html:508
+msgid "Kilómetros Totales"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:142
+#: vuelos/templates/vuelos/update_vuelo.html:179
+#: vuelos/templates/vuelos/vuelo_detail.html:400
+msgid "Escalas del Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:146
+msgid "Este vuelo tiene escalas"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:169
+msgid "Agregar Escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:176
+#: vuelos/templates/vuelos/update_vuelo.html:239
+msgid "Tripulación del Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:196
+msgid "Agregar Miembro"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:203
+msgid "Guardar Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:206
+#: vuelos/templates/vuelos/escala_form.html:122
+#: vuelos/templates/vuelos/update_vuelo.html:304
+msgid "Cancelar"
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:243
+msgid "Funcionalidad para agregar escalas dinámicamente no implementada."
+msgstr ""
+
+#: vuelos/templates/vuelos/cargar.html:258
+msgid "Funcionalidad para agregar tripulación dinámicamente no implementada."
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:6
+#: vuelos/templates/vuelos/escala_form.html:20
+msgid "Crear nueva escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:43
+msgid "Información de la escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:63
+#: vuelos/templates/vuelos/escala_form.html:80
+#: vuelos/templates/vuelos/localidad_form.html:6
+msgid "Crear nueva localidad"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:64
+#: vuelos/templates/vuelos/escala_form.html:81
+msgid "Nueva localidad"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:70
+msgid "Selecciona la localidad de origen de esta escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:87
+msgid "Selecciona la localidad de destino de esta escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:97
+#: vuelos/templates/vuelos/update_vuelo.html:224
+#: vuelos/templates/vuelos/vuelo_detail.html:344
+#: vuelos/templates/vuelos/vuelo_detail.html:437
+#: vuelos/templates/vuelos/vuelo_detail.html:508
+#: vuelos/templates/vuelos/vuelo_detail.html:510
+msgid "km"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:102
+msgid "Distancia estimada entre origen y destino en kilómetros"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:116
+msgid "Marcar si esta escala está activa y disponible para uso"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:125
+msgid "Guardar escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:135
+msgid "Información importante:"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:137
+msgid "Los campos marcados con * son obligatorios"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:138
+msgid "Puedes crear nuevas localidades haciendo clic en 'Nueva localidad'"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:139
+msgid "La distancia en kilómetros es opcional pero recomendada"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:140
+msgid "Solo las escalas activas aparecerán disponibles para asignar a vuelos"
+msgstr ""
+
+#: vuelos/templates/vuelos/escala_form.html:166
+msgid "El origen y destino no pueden ser iguales"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:11
+msgid "Nombre de la localidad"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:16
+msgid "Provincia (País)"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:19
+msgid "Agregar nueva provincia"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:25
+#: vuelos/templates/vuelos/provincia_form.html:25
+msgid "¿Está activa?"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:32
+msgid "Localidades existentes"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:35
+#: vuelos/templates/vuelos/provincia_form.html:35
+#: vuelos/templates/vuelos/tripulacion_cargar.html:42
+msgid "—"
+msgstr ""
+
+#: vuelos/templates/vuelos/localidad_form.html:37
+msgid "No hay localidades registradas aún."
+msgstr ""
+
+#: vuelos/templates/vuelos/pais_form.html:6
+msgid "Crear nuevo país"
+msgstr ""
+
+#: vuelos/templates/vuelos/pais_form.html:11
+msgid "Nombre del país"
+msgstr ""
+
+#: vuelos/templates/vuelos/pais_form.html:17
+#: vuelos/templates/vuelos/tripulacion_cargar.html:32
+msgid "¿Está activo?"
+msgstr ""
+
+#: vuelos/templates/vuelos/pais_form.html:24
+msgid "Países existentes"
+msgstr ""
+
+#: vuelos/templates/vuelos/pais_form.html:29
+msgid "No hay países registrados aún."
+msgstr ""
+
+#: vuelos/templates/vuelos/provincia_form.html:6
+msgid "Crear nueva provincia"
+msgstr ""
+
+#: vuelos/templates/vuelos/provincia_form.html:11
+msgid "Nombre de la provincia"
+msgstr ""
+
+#: vuelos/templates/vuelos/provincia_form.html:19
+msgid "Agregar nuevo país"
+msgstr ""
+
+#: vuelos/templates/vuelos/provincia_form.html:32
+msgid "Provincias existentes"
+msgstr ""
+
+#: vuelos/templates/vuelos/provincia_form.html:37
+msgid "No hay provincias registradas aún."
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:6
+msgid "Cargar nueva tripulación"
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:11
+msgid "Nombre del tripulante"
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:16
+msgid "Apellido del tripulante"
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:21
+msgid "Cargo"
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:26
+msgid "Número de documento"
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:39
+msgid "Tripulación existente"
+msgstr ""
+
+#: vuelos/templates/vuelos/tripulacion_cargar.html:44
+msgid "No hay tripulantes registrados aún."
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:25
+#: vuelos/templates/vuelos/update_vuelo.html:301
+#: vuelos/templates/vuelos/vuelo_list.html:144
+#: vuelos/templates/vuelos/vuelo_list.html:247
+msgid "Ver Detalle"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:45
+msgid "Información Actual:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:48
+msgid "Código:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:49
+msgid "Origen:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:50
+msgid "Destino:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:53
+msgid "Avión:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:54
+msgid "Salida:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:55
+msgid "Llegada:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:180
+msgid "escalas"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:191
+msgid "Escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:223
+msgid "Ruta:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:232
+msgid "Agregar Nueva Escala"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:240
+#: vuelos/templates/vuelos/vuelo_detail.html:459
+msgid "miembros"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:283
+msgid "Persona asignada:"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:291
+msgid "Agregar Nuevo Miembro"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:298
+msgid "Actualizar Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:355
+msgid ""
+"Para agregar nuevas escalas, usa el formulario de creación de escalas "
+"independientes y luego actualiza este vuelo."
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:359
+msgid ""
+"Para agregar nuevos miembros a la tripulación, usa el formulario de creación "
+"de personas y luego actualiza este vuelo."
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:367
+msgid "¿Estás seguro de que quieres eliminar este elemento?"
+msgstr ""
+
+#: vuelos/templates/vuelos/update_vuelo.html:385
+msgid "La fecha de llegada debe ser posterior a la fecha de salida."
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:5
+msgid "Detalle del Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:247
+msgid "Vuelos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:274
+msgid "Vuelo Inactivo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:279
+msgid "Con Escalas"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:283
+msgid "Vuelo Directo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:297
+msgid "d"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:298
+#: vuelos/templates/vuelos/vuelo_detail.html:433
+msgid "h"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:299
+#: vuelos/templates/vuelos/vuelo_detail.html:434
+msgid "m"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:301
+msgid "Duración Total"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:313
+#: vuelos/templates/vuelos/vuelo_list.html:288
+msgid "Escalas"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:319
+#: vuelos/templates/vuelos/vuelo_detail.html:459
+msgid "Tripulación"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:328
+msgid "Información del Avión"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:333
+msgid "Matrícula"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:334
+msgid "Capacidad"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:334
+msgid "pasajeros"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:336
+msgid "Fabricante"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:341
+msgid "Año de Fabricación"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:344
+msgid "Autonomía"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:347
+#: vuelos/templates/vuelos/vuelo_detail.html:513
+#: vuelos/templates/vuelos/vuelo_list.html:47
+msgid "Estado"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:351
+#: vuelos/templates/vuelos/vuelo_detail.html:486
+#: vuelos/templates/vuelos/vuelo_detail.html:517
+#: vuelos/templates/vuelos/vuelo_list.html:196
+#: vuelos/templates/vuelos/vuelo_list.html:315
+msgid "Inactivo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:362
+msgid "Horarios y Fechas"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:368
+#: vuelos/templates/vuelos/vuelo_detail.html:422
+msgid "Salida"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:371
+#: vuelos/templates/vuelos/vuelo_detail.html:384
+msgid "hs"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:373
+msgid "Desde"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:381
+#: vuelos/templates/vuelos/vuelo_detail.html:426
+msgid "Llegada"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:386
+msgid "Hasta"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:476
+msgid "Doc"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:479
+msgid "Tel"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:501
+msgid "Información Adicional"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:506
+msgid "Detalles del Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:507
+msgid "Código"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:510
+msgid "Distancia Real"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:522
+msgid "Datos de Carga"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:524
+msgid "Cargado por"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:526
+msgid "Fecha de carga"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:527
+msgid "Tipo de vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:529
+msgid "Vuelo con escalas"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:531
+msgid "Vuelo directo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:546
+msgid "Editar vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:550
+msgid "Imprimir"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:558
+msgid "Cargando..."
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:610
+msgid "Función de reporte en desarrollo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_detail.html:615
+msgid "Función de exportación en desarrollo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:5
+msgid "Lista de Vuelos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:21
+msgid "Sistema de Vuelos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:23
+msgid "Gestiona y consulta todos los vuelos disponibles"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:35
+msgid "Fecha Desde"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:41
+msgid "Fecha Hasta"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:50
+msgid "Todos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:51
+msgid "Activos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:52
+msgid "Inactivos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:57
+msgid "Código Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:60
+msgid "Ej: AA123"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:64
+#: vuelos/templates/vuelos/vuelo_list.html:175
+#: vuelos/templates/vuelos/vuelo_list.html:278
+msgid "Avión"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:67
+msgid "Modelo/Matrícula"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:71
+msgid "Filtrar"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:74
+msgid "Limpiar"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:78
+msgid "Nuevo Vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:93
+msgid "Total de Vuelos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:103
+#: vuelos/templates/vuelos/vuelo_list.html:127
+msgid "Vuelos Directos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:113
+#: vuelos/templates/vuelos/vuelo_list.html:230
+msgid "Vuelos con Escalas"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:150
+#: vuelos/templates/vuelos/vuelo_list.html:205
+#: vuelos/templates/vuelos/vuelo_list.html:253
+#: vuelos/templates/vuelos/vuelo_list.html:324
+msgid "Editar"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:180
+#: vuelos/templates/vuelos/vuelo_list.html:283
+msgid "Sin asignar"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:185
+#: vuelos/templates/vuelos/vuelo_list.html:292
+msgid "Distancia"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:201
+#: vuelos/templates/vuelos/vuelo_list.html:320
+msgid "Detalle"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:217
+msgid "No hay vuelos directos disponibles"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:218
+#: vuelos/templates/vuelos/vuelo_list.html:337
+msgid "Prueba ajustando los filtros o crea un nuevo vuelo"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:300
+msgid "Ruta"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:336
+msgid "No hay vuelos con escalas disponibles"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:349
+msgid "No se encontraron vuelos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:350
+msgid "No hay vuelos que coincidan con los filtros seleccionados"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:352
+msgid "Ver todos los vuelos"
 msgstr ""

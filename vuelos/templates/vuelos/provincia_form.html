@@ -32,7 +32,7 @@
     <h3 class="mt-4">{% trans "Provincias existentes" %}</h3>
     <ul>
       {% for provincia in provincias %}
-        <li>{{ provincia.nombre }} — {{ provincia.pais.nombre }}</li>
+        <li>{{ provincia.nombre }} {% trans "—" %} {{ provincia.pais.nombre }}</li>
       {% empty %}
         <li>{% trans "No hay provincias registradas aún." %}</li>
       {% endfor %}
