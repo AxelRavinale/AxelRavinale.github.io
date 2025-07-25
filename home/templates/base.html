@@ -22,8 +22,8 @@
             </a>
         {% endif %}
         {% if user.is_authenticated and user.is_superuser %}
-            <a href="{% url 'persona_create' %}" class="btn btn-sm btn-warning ms-2">
-                <i class="fas fa-user-plus"></i> Agregar persona
+            <a class="btn btn-warning ms-3" href="{% url 'persona_create' %}">
+                {% trans "Crear personas" %}
             </a>
         {% endif %}
 

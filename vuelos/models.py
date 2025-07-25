@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from aviones.models import Avion
 from core.models import Localidad, Persona
 from .constant import ROLES_TRIPULACION
@@ -7,21 +8,23 @@ from .constant import ROLES_TRIPULACION
 
 class Escala(models.Model):
     """Modelo para definir escalas independientes que pueden ser reutilizadas"""
-    origen = models.ForeignKey(Localidad, related_name='escalas_origen', on_delete=models.CASCADE, null=True, blank=True)
-    destino = models.ForeignKey(Localidad, related_name='escalas_destino', on_delete=models.CASCADE, null=True, blank=True)
-    km_estimados = models.PositiveIntegerField()
-    activo = models.BooleanField(default=True)
+    origen = models.ForeignKey(Localidad, related_name='escalas_origen', on_delete=models.CASCADE, 
+                              null=True, blank=True, verbose_name=_("Origen"))
+    destino = models.ForeignKey(Localidad, related_name='escalas_destino', on_delete=models.CASCADE, 
+                               null=True, blank=True, verbose_name=_("Destino"))
+    km_estimados = models.PositiveIntegerField(verbose_name=_("Kilómetros Estimados"))
+    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
     class Meta:
-        verbose_name = "Escala"
-        verbose_name_plural = "Escalas"
+        verbose_name = _("Escala")
+        verbose_name_plural = _("Escalas")
 
     def __str__(self):
         return f"{self.origen} → {self.destino}"
 
 
 class Vuelo(models.Model):
-    
+    """Modelo principal para vuelos"""
     codigo_vuelo = models.CharField(max_length=20, unique=True)
     origen_principal = models.ForeignKey(Localidad, related_name='vuelos_origen', on_delete=models.CASCADE, null=True, blank=True)
     destino_principal = models.ForeignKey(Localidad, related_name='vuelos_destino', on_delete=models.CASCADE, null=True, blank=True)
@@ -34,8 +37,8 @@ class Vuelo(models.Model):
     fecha_carga = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Vuelo"
-        verbose_name_plural = "Vuelos"
+        verbose_name = _("Vuelo")
+        verbose_name_plural = _("Vuelos")
         ordering = ['fecha_salida_estimada']
 
     def __str__(self):
@@ -60,17 +63,19 @@ class Vuelo(models.Model):
 
 class EscalaVuelo(models.Model):
     """Modelo para escalas específicas de un vuelo"""
-    vuelo = models.ForeignKey(Vuelo, related_name='escalas_vuelo', on_delete=models.CASCADE)
-    escala = models.ForeignKey(Escala, related_name='escalas_vuelo', on_delete=models.CASCADE)
-    orden = models.PositiveIntegerField(default=1)
-    fecha_salida = models.DateTimeField()
-    fecha_llegada = models.DateTimeField()
-    avion = models.ForeignKey(Avion, on_delete=models.CASCADE)
-    activo = models.BooleanField(default=True)
+    vuelo = models.ForeignKey(Vuelo, related_name='escalas_vuelo', on_delete=models.CASCADE, 
+                             verbose_name=_("Vuelo"))
+    escala = models.ForeignKey(Escala, related_name='escalas_vuelo', on_delete=models.CASCADE, 
+                              verbose_name=_("Escala"))
+    orden = models.PositiveIntegerField(default=1, verbose_name=_("Orden"))
+    fecha_salida = models.DateTimeField(verbose_name=_("Fecha de Salida"))
+    fecha_llegada = models.DateTimeField(verbose_name=_("Fecha de Llegada"))
+    avion = models.ForeignKey(Avion, on_delete=models.CASCADE, verbose_name=_("Avión"))
+    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
     class Meta:
-        verbose_name = "Escala de Vuelo"
-        verbose_name_plural = "Escalas de Vuelo"
+        verbose_name = _("Escala de Vuelo")
+        verbose_name_plural = _("Escalas de Vuelo")
         ordering = ['vuelo', 'orden']
         unique_together = ['vuelo', 'orden']
 
@@ -96,14 +101,15 @@ class EscalaVuelo(models.Model):
 
 class TripulacionVuelo(models.Model):
     """Modelo para la tripulación de cada vuelo"""
-    vuelo = models.ForeignKey(Vuelo, related_name='tripulacion', on_delete=models.CASCADE)
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
-    rol = models.CharField(max_length=20, choices=ROLES_TRIPULACION)
-    activo = models.BooleanField(default=True)
+    vuelo = models.ForeignKey(Vuelo, related_name='tripulacion', on_delete=models.CASCADE, 
+                             verbose_name=_("Vuelo"))
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, verbose_name=_("Persona"))
+    rol = models.CharField(max_length=20, choices=ROLES_TRIPULACION, verbose_name=_("Rol"))
+    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
     class Meta:
-        verbose_name = "Tripulación de Vuelo"
-        verbose_name_plural = "Tripulaciones de Vuelo"
+        verbose_name = _("Tripulación de Vuelo")
+        verbose_name_plural = _("Tripulaciones de Vuelo")
         unique_together = ['vuelo', 'persona', 'rol']
 
     def __str__(self):
@@ -112,14 +118,15 @@ class TripulacionVuelo(models.Model):
 
 class TripulacionEscala(models.Model):
     """Modelo para tripulación específica de cada escala (si es diferente)"""
-    escala_vuelo = models.ForeignKey(EscalaVuelo, related_name='tripulacion_escala', on_delete=models.CASCADE)
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
-    rol = models.CharField(max_length=20, choices=ROLES_TRIPULACION)
-    activo = models.BooleanField(default=True)
+    escala_vuelo = models.ForeignKey(EscalaVuelo, related_name='tripulacion_escala', on_delete=models.CASCADE, 
+                                    verbose_name=_("Escala de Vuelo"))
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, verbose_name=_("Persona"))
+    rol = models.CharField(max_length=20, choices=ROLES_TRIPULACION, verbose_name=_("Rol"))
+    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
     class Meta:
-        verbose_name = "Tripulación de Escala"
-        verbose_name_plural = "Tripulaciones de Escala"
+        verbose_name = _("Tripulación de Escala")
+        verbose_name_plural = _("Tripulaciones de Escala")
         unique_together = ['escala_vuelo', 'persona', 'rol']
 
     def __str__(self):
