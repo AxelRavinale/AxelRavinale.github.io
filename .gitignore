@@ -1,5 +1,39 @@
-.env
-/.env
+# Entornos virtuales
 .env/
-__pycaches__
-*.pyc
+venv/
+ENV/
+env/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+
+# Base de datos local (si usás SQLite)
+db.sqlite3
+*.sqlite3
+
+# Archivos de configuración de entorno
+.env
+.env.*
+
+# Archivos de logs
+*.log
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de migraciones si querés ignorarlos (opcional)
+# */migrations/*.py
+# */migrations/*.pyc
+# !*/migrations/__init__.py
+
+# Archivos de compilación (general)
+*.pyo
+*.pyd
+
+# Archivos de cobertura/testeo (opcional)
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/

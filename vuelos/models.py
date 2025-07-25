@@ -25,19 +25,16 @@ class Escala(models.Model):
 
 class Vuelo(models.Model):
     """Modelo principal para vuelos"""
-    codigo_vuelo = models.CharField(max_length=20, unique=True, verbose_name=_("Código de Vuelo"))
-    origen_principal = models.ForeignKey(Localidad, related_name='vuelos_origen', on_delete=models.CASCADE, 
-                                        null=True, blank=True, verbose_name=_("Origen Principal"))
-    destino_principal = models.ForeignKey(Localidad, related_name='vuelos_destino', on_delete=models.CASCADE, 
-                                         null=True, blank=True, verbose_name=_("Destino Principal"))
-    fecha_salida_estimada = models.DateTimeField(verbose_name=_("Fecha de Salida Estimada"))
-    fecha_llegada_estimada = models.DateTimeField(verbose_name=_("Fecha de Llegada Estimada"))
-    km_totales = models.PositiveIntegerField(null=True, blank=True, verbose_name=_("Kilómetros Totales"))
-    avion_asignado = models.ForeignKey(Avion, on_delete=models.SET_NULL, null=True, blank=True, 
-                                      verbose_name=_("Avión Asignado"))
-    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
-    cargado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_("Cargado Por"))
-    fecha_carga = models.DateTimeField(auto_now_add=True, verbose_name=_("Fecha de Carga"))
+    codigo_vuelo = models.CharField(max_length=20, unique=True)
+    origen_principal = models.ForeignKey(Localidad, related_name='vuelos_origen', on_delete=models.CASCADE, null=True, blank=True)
+    destino_principal = models.ForeignKey(Localidad, related_name='vuelos_destino', on_delete=models.CASCADE, null=True, blank=True)
+    fecha_salida_estimada = models.DateTimeField()
+    fecha_llegada_estimada = models.DateTimeField()
+    km_totales = models.PositiveIntegerField(null=True, blank=True)
+    avion_asignado = models.ForeignKey(Avion, on_delete=models.SET_NULL, null=True, blank=True)
+    activo = models.BooleanField(default=True)
+    cargado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    fecha_carga = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = _("Vuelo")

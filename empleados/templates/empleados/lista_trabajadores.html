@@ -1,0 +1,30 @@
+{% extends 'empleados/base.html' %}
+{% block title %}Lista de Trabajadores{% endblock %}
+{% block header %}Trabajadores Registrados{% endblock %}
+
+{% block content %}
+<a href="{% url 'registrar_trabajador' %}" class="btn btn-primary mb-3">Registrar Nuevo</a>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for t in trabajadores %}
+    <tr>
+        <td>{{ t.usuario.first_name }} {{ t.usuario.last_name }}</td>
+        <td>{{ t.cargo }}</td>
+        <td>{{ t.telefono }}</td>
+        <td>
+            <a href="{% url 'editar_trabajador' t.id %}" class="btn btn-sm btn-warning">Editar</a>
+            <a href="{% url 'eliminar_trabajador' t.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
