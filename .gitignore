@@ -8,7 +8,7 @@ env/
 __pycache__/
 *.py[cod]
 
-# Base de datos local (si usás SQLite)
+# Base de datos local 
 db.sqlite3
 *.sqlite3
 

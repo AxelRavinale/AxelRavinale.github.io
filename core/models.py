@@ -58,6 +58,7 @@ class Genero(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=100, verbose_name=_("Nombre"))
     activo = models.BooleanField(default=True, verbose_name=_("Activo"))
@@ -68,6 +69,7 @@ class TipoDocumento(models.Model):
 
     def __str__(self):
         return self.nombre
+
 
 class Persona(models.Model):
     nombre = models.CharField(max_length=100, verbose_name=_("Nombre"))
@@ -86,3 +88,18 @@ class Persona(models.Model):
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} ({self.tipo_documento.nombre} {self.numero_documento})"
+
+
+class TipoVuelo(models.Model):
+    name = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Estado(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre

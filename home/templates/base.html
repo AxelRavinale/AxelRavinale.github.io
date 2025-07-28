@@ -14,16 +14,19 @@
             <a class="btn btn-outline-primary ms-3" href="{% url 'vuelo_template' %}">
                 {% trans "Ver lista de vuelos" %}
             </a>
+
+            <a class="btn btn-success ms-3" href="{% url 'crear_reserva' %}">
+                {% trans "Hacer reserva" %}
+            </a>
         {% endif %}
+
 
         {% if user.is_authenticated and user.is_superuser %}
             <a class="btn btn-warning ms-3" href="{% url 'cargar_vuelo' %}">
                 {% trans "Cargar vuelos" %}
             </a>
-        {% endif %}
-        {% if user.is_authenticated and user.is_superuser %}
-            <a class="btn btn-warning ms-3" href="{% url 'persona_create' %}">
-                {% trans "Crear personas" %}
+            <a href="{% url 'persona_create' %}" class="btn btn-warning ms-3">
+                <i class="fas fa-user-plus"></i> {% trans "Crear personas" %}
             </a>
         {% endif %}
 
