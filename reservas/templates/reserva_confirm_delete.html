@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>¿Estás seguro que deseas eliminar esta reserva?</h2>
+    <p><strong>Vuelo:</strong> {{ object.vuelo }}</p>
+    <p><strong>Fecha de reserva:</strong> {{ object.fecha_reserva }}</p>
+    <p><strong>Pasajero:</strong> {{ object.pasajero }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'reserva_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

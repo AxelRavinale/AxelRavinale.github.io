@@ -1,6 +1,6 @@
 # core/admin.py
 from django.contrib import admin
-from core.models import Localidad, Genero, TipoDocumento, Persona, Provincia, Pais
+from core.models import Localidad, Genero, TipoDocumento, Persona, Provincia, Pais, TipoVuelo, Estado
 
 
 @admin.register(Pais)
@@ -38,3 +38,14 @@ class PersonaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'tipo_documento', 'numero_documento', 'email', 'localidad', 'genero', 'activo')
     list_filter = ('activo', 'genero', 'localidad')
     search_fields = ('nombre', 'apellido', 'numero_documento', 'email')
+
+
+@admin.register(TipoVuelo)
+class TipoVueloAdmin(admin.ModelAdmin):
+    list_display = ('name', 'activo')
+    list_filter = ('activo',)
+    search_fields = ('name',)
+
+@admin.register(Estado)
+class EstadoAdmin(admin.ModelAdmin):
+    list_display = ('nombre',)
