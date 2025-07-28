@@ -30,7 +30,6 @@
         <th>{% trans "Fecha" %}</th>
         <th>{% trans "Asiento" %}</th>
         <th>{% trans "Tipo de Vuelo" %}</th>
-        <th>{% trans "Estado" %}</th>
         <th>{% trans "Acciones" %}</th>
       </tr>
     </thead>
@@ -42,7 +41,6 @@
         <td>{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</td>
         <td>F{{ reserva.fila }} - C{{ reserva.columna }}</td>
         <td>{{ reserva.tipo_vuelo.name }}</td>
-        <td>{{ reserva.estado_pedido.nombre }}</td>
         <td>
           <a href="{% url 'reserva_detail' reserva.pk %}" class="btn btn-sm btn-info">{% trans "Ver" %}</a>
           <a href="{% url 'reserva_update' reserva.pk %}" class="btn btn-sm btn-warning">{% trans "Editar" %}</a>

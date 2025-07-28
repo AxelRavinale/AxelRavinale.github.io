@@ -9,10 +9,9 @@ class Reserva(models.Model):
     fecha_reserva = models.DateTimeField(auto_now_add=True)
     
     fila = models.IntegerField()
-    columna = models.IntegerField()
+    columna = models.CharField(max_length=2)
     
     tipo_vuelo = models.ForeignKey(TipoVuelo, on_delete=models.SET_NULL, null=True)
-    estado_pedido = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
     
     activo = models.BooleanField(default=True)
 
