@@ -347,7 +347,6 @@ class VueloUpdateView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             return self.render_to_response(context)
 
 
-
 class EscalaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Vista para crear escalas independientes"""
     model = Escala
@@ -384,7 +383,6 @@ class PaisCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['paises'] = Pais.objects.order_by('nombre')
         return context
-
 
     
 class ProvinciaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
