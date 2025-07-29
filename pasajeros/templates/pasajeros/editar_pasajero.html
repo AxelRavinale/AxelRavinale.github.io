@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Pasajero{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Pasajero</h2>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="{% url 'lista_pasajeros' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

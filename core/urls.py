@@ -32,6 +32,7 @@ urlpatterns += i18n_patterns(
     path('auth/', include('autentificacion.urls')),
     path('', include('vuelos.urls')),
     path('trabajadores/', include('empleados.urls')),
+    path('pasajeros/', include('pasajeros.urls')),
 )
 
 if settings.DEBUG:

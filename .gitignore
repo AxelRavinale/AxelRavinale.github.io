@@ -4,3 +4,7 @@
 __pycaches__
 *.pyc
 envdb.sqlite3
+env 
+env/
+db.sqlite3
+*.log
