@@ -9,23 +9,28 @@ from django.utils.translation import gettext as _
 from django.utils.translation import activate, get_language, deactivate
 from django.views import View
 
-from .forms import RegisterForm, LoginForm
-
-
+from autentificacion.forms import RegisterForm, LoginForm
+from core.models import Persona
 class RegisterView(View):
     def get(self, request):
         form = RegisterForm()
         return render(request, 'register.html', {'form': form})
-
+    
+    def form_invalid(self, form):
+        print(form.errors)  
+        return super().form_invalid(form)
+    
     def post(self, request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) 
-            messages.success(request, _("Registro exitoso. ¡Bienvenido/a!"))
-            return redirect('home')
+            login(request, user)
+            messages.success(request, "Registro exitoso.")
+            return redirect('home')  # Asegurate que esta ruta exista
         return render(request, 'register.html', {'form': form})
-
+    
+    
+    
 
 class LoginView(View):
     def get(self, request):
