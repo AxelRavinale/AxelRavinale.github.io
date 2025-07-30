@@ -1,24 +1,68 @@
-{% extends 'base.html' %}
+{% extends 'pasajeros/base.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Registrar Pasajero{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Registrar Pasajero</h2>
+    <h2 class="mb-4">Registrar Nuevo Pasajero</h2>
+
     <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
 
-        {% for field in form %}
-            <div class="mb-3">
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.errors %}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.nombre.label_tag }}
+                {{ form.nombre|add_class:"form-control" }}
+                {% if form.nombre.errors %}
                     <div class="invalid-feedback d-block">
-                        {{ field.errors|striptags }}
+                        {{ form.nombre.errors|striptags }}
                     </div>
                 {% endif %}
             </div>
-        {% endfor %}
+
+            <div class="col-md-6 mb-3">
+                {{ form.apellido.label_tag }}
+                {{ form.apellido|add_class:"form-control" }}
+                {% if form.apellido.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.apellido.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.dni.label_tag }}
+                {{ form.dni|add_class:"form-control" }}
+                {% if form.dni.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.dni.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email|add_class:"form-control" }}
+                {% if form.email.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.email.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form.telefono.label_tag }}
+            {{ form.telefono|add_class:"form-control" }}
+            {% if form.telefono.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.telefono.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
 
         <button type="submit" class="btn btn-success">Registrar</button>
         <a href="{% url 'lista_pasajeros' %}" class="btn btn-secondary">Cancelar</a>

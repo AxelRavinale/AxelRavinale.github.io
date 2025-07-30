@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'pasajeros/base.html' %}
 {% load static %}
 
 {% block title %}Lista de Pasajeros{% endblock %}
@@ -6,16 +6,6 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Lista de Pasajeros</h2>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
     <a href="{% url 'registrar_pasajero' %}" class="btn btn-primary mb-3">Registrar nuevo pasajero</a>
 
     <table class="table table-bordered table-hover">
