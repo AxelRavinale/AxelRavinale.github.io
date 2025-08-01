@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Aviones{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Lista de Aviones</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'registrar_avion' %}" class="btn btn-success mb-3">Registrar Nuevo Avión</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fabricante</th>
+                <th>Modelo</th>
+                <th>Matrícula</th>
+                <th>Capacidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for avion in aviones %}
+            <tr>
+                <td>{{ avion.fabricante }}</td>
+                <td>{{ avion.modelo }}</td>
+                <td>{{ avion.matricula }}</td>
+                <td>{{ avion.capacidad }}</td>
+                <td>
+                    <a href="{% url 'editar_avion' avion.id %}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{% url 'eliminar_avion' avion.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5" class="text-center">No hay aviones registrados.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

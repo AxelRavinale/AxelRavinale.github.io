@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Registrar Avión{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Registrar Avión</h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.fabricante.label_tag }}
+            {{ form.fabricante|add_class:"form-control" }}
+            {% if form.fabricante.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.fabricante.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.modelo.label_tag }}
+            {{ form.modelo|add_class:"form-control" }}
+            {% if form.modelo.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.modelo.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.matricula.label_tag }}
+            {{ form.matricula|add_class:"form-control" }}
+            {% if form.matricula.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.matricula.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.capacidad.label_tag }}
+            {{ form.capacidad|add_class:"form-control" }}
+            {% if form.capacidad.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.capacidad.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tipo.label_tag }}
+            {{ form.tipo|add_class:"form-select" }}
+            {% if form.tipo.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.tipo.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.autonomia_km.label_tag }}
+            {{ form.autonomia_km|add_class:"form-control" }}
+            {% if form.autonomia_km.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.autonomia_km.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.fecha_fabricacion.label_tag }}
+            {{ form.fecha_fabricacion|add_class:"form-control" }}
+            {% if form.fecha_fabricacion.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.fecha_fabricacion.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-check mb-3">
+            {{ form.en_mantenimiento|add_class:"form-check-input" }}
+            {{ form.en_mantenimiento.label_tag }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Registrar</button>
+        <a href="{% url 'lista_aviones' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

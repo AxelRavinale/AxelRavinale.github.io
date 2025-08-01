@@ -34,6 +34,7 @@ urlpatterns += i18n_patterns(
     path('', include('vuelos.urls')),
     path('trabajadores/', include('empleados.urls')),
     path('reservas/', include('reservas.urls')),
+    path('flota/', include('flota.urls')),
 )
 
 if settings.DEBUG:
