@@ -1,0 +1,317 @@
+.vuelo-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.vuelo-info h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vuelo-info p {
+    color: #212529;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.vuelo-info small {
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+
+/* Secciones del formulario */
+.form-section {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.form-section-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section-header i {
+    font-size: 1.2rem;
+}
+
+.form-section-body {
+    padding: 1.5rem;
+}
+
+/* Items de tripulación */
+.tripulacion-item {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.tripulacion-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+    transform: translateY(-1px);
+}
+
+.tripulacion-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Numeración de tripulación */
+.tripulacion-numero {
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+/* Botón de eliminar */
+.btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-remove:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220,53,69,0.3);
+}
+
+/* Botón para agregar tripulación */
+.btn-add-tripulacion {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(40,167,69,0.2);
+}
+
+.btn-add-tripulacion:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40,167,69,0.3);
+    color: white;
+}
+
+/* Estilos para los form-controls dentro de tripulación */
+.tripulacion-item .form-control,
+.tripulacion-item .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.tripulacion-item .form-control:focus,
+.tripulacion-item .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Labels dentro de tripulación */
+.tripulacion-item .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.tripulacion-item .form-label i {
+    color: #007bff;
+    margin-right: 0.25rem;
+}
+
+/* Checkbox de activo */
+.tripulacion-item .form-check {
+    padding: 0.5rem;
+    background: rgba(40,167,69,0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(40,167,69,0.2);
+}
+
+.tripulacion-item .form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.tripulacion-item .form-check-label {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Información de roles */
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    margin: 0.125rem;
+}
+
+.role-piloto {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+.role-copiloto {
+    background: linear-gradient(135deg, #fd7e14 0%, #e55a00 100%);
+}
+
+.role-ingeniero {
+    background: linear-gradient(135deg, #6f42c1 0%, #5a2d91 100%);
+}
+
+.role-azafata {
+    background: linear-gradient(135deg, #20c997 0%, #17a085 100%);
+}
+
+/* Botones de navegación */
+.btn-group .btn {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Botones principales */
+.btn-success.btn-lg {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(40,167,69,0.2);
+}
+
+.btn-success.btn-lg:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(40,167,69,0.3);
+}
+
+/* Alerts personalizados */
+.alert-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    border: 1px solid #b3d7e6;
+    border-radius: 8px;
+}
+
+.alert-info h6 {
+    color: #0c5460;
+    font-weight: 600;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .vuelo-info .row > div {
+        margin-bottom: 1rem;
+    }
+    
+    .tripulacion-item {
+        padding: 1rem !important;
+    }
+    
+    .tripulacion-numero {
+        width: 25px;
+        height: 25px;
+        font-size: 0.75rem;
+    }
+    
+    .btn-remove {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .form-section-body {
+        padding: 1rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Animaciones */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tripulacion-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Estados de validación */
+.tripulacion-item .is-invalid {
+    border-color: #dc3545;
+}
+
+.tripulacion-item .is-valid {
+    border-color: #28a745;
+}
+
+/* Text danger para errores */
+.text-danger.small {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    font-weight: 600;
+}

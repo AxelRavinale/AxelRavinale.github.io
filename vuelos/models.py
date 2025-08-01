@@ -32,6 +32,7 @@ class Vuelo(models.Model):
     fecha_llegada_estimada = models.DateTimeField()
     km_totales = models.PositiveIntegerField(null=True, blank=True)
     avion_asignado = models.ForeignKey(Avion, on_delete=models.SET_NULL, null=True, blank=True)
+    tiene_escalas = models.BooleanField(default=False, verbose_name=_("Tiene Escalas"))  # NUEVO CAMPO
     activo = models.BooleanField(default=True)
     cargado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     fecha_carga = models.DateTimeField(auto_now_add=True)
@@ -43,10 +44,6 @@ class Vuelo(models.Model):
 
     def __str__(self):
         return f"Vuelo {self.codigo_vuelo} de {self.origen_principal} a {self.destino_principal}"
-
-    @property
-    def tiene_escalas(self):
-        return self.escalas_vuelo.filter(activo=True).exists()
 
     @property
     def numero_escalas(self):
@@ -100,7 +97,7 @@ class EscalaVuelo(models.Model):
 
 
 class TripulacionVuelo(models.Model):
-    """Modelo para la tripulación de cada vuelo"""
+    """Modelo para la tripulación de vuelo directo (sin escalas)"""
     vuelo = models.ForeignKey(Vuelo, related_name='tripulacion', on_delete=models.CASCADE, 
                              verbose_name=_("Vuelo"))
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, verbose_name=_("Persona"))
@@ -117,7 +114,7 @@ class TripulacionVuelo(models.Model):
 
 
 class TripulacionEscala(models.Model):
-    """Modelo para tripulación específica de cada escala (si es diferente)"""
+    """Modelo para tripulación específica de cada escala"""
     escala_vuelo = models.ForeignKey(EscalaVuelo, related_name='tripulacion_escala', on_delete=models.CASCADE, 
                                     verbose_name=_("Escala de Vuelo"))
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, verbose_name=_("Persona"))

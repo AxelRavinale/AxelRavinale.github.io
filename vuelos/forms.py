@@ -2,30 +2,25 @@ from django import forms
 from django.forms import modelformset_factory, inlineformset_factory
 from django.utils.timezone import localtime
 from django.utils.translation import gettext_lazy as _
-from vuelos.models import Vuelo, EscalaVuelo, TripulacionVuelo, Escala
+from vuelos.models import Vuelo, EscalaVuelo, TripulacionVuelo, Escala, TripulacionEscala
 from core.models import Localidad, Persona
 from aviones.models import Avion
 
 
-class VueloForm(forms.ModelForm):
-    escalas_existentes = forms.ModelMultipleChoiceField(
-        queryset=Escala.objects.filter(activo=True),
-        required=False,
-        widget=forms.SelectMultiple(attrs={'class': 'form-select form-control'}),
-        label=_('Seleccionar Escalas Existentes'),
-        help_text=_('Selecciona las escalas que deseas agregar a este vuelo.')
-    )
-
+class VueloInicialForm(forms.ModelForm):
+    """Formulario simplificado para crear el vuelo inicial"""
+    
     class Meta:
         model = Vuelo
         fields = [
             'codigo_vuelo',
             'origen_principal',
             'destino_principal',
-            'avion_asignado',
             'fecha_salida_estimada',
             'fecha_llegada_estimada',
             'km_totales',
+            'avion_asignado',
+            'tiene_escalas',
             'activo',
         ]
         widgets = {
@@ -36,6 +31,7 @@ class VueloForm(forms.ModelForm):
             'fecha_salida_estimada': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
             'fecha_llegada_estimada': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
             'km_totales': forms.NumberInput(attrs={'class': 'form-control'}),
+            'tiene_escalas': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'activo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         labels = {
@@ -46,6 +42,7 @@ class VueloForm(forms.ModelForm):
             'fecha_salida_estimada': _('Fecha de Salida Estimada'),
             'fecha_llegada_estimada': _('Fecha de Llegada Estimada'),
             'km_totales': _('Kilómetros Totales'),
+            'tiene_escalas': _('¿Este vuelo tiene escalas?'),
             'activo': _('Activo'),
         }
         help_texts = {
@@ -53,6 +50,7 @@ class VueloForm(forms.ModelForm):
             'fecha_salida_estimada': _('Seleccione la fecha y hora de salida'),
             'fecha_llegada_estimada': _('Seleccione la fecha y hora de llegada'),
             'km_totales': _('Distancia total en kilómetros'),
+            'tiene_escalas': _('Marque si el vuelo tendrá escalas intermedias'),
             'activo': _('Marque si el vuelo está activo'),
         }
 
@@ -152,16 +150,8 @@ class EscalaVueloForm(forms.ModelForm):
                 self.initial[field_name] = fecha.strftime('%Y-%m-%dT%H:%M')
 
 
-EscalaVueloFormSet = inlineformset_factory(
-    Vuelo,
-    EscalaVuelo,
-    form=EscalaVueloForm,
-    extra=1,
-    can_delete=True,
-)
-
-
 class TripulacionVueloForm(forms.ModelForm):
+    """Formulario para tripulación de vuelo directo"""
     class Meta:
         model = TripulacionVuelo
         fields = ['persona', 'rol', 'activo']
@@ -189,6 +179,54 @@ class TripulacionVueloForm(forms.ModelForm):
         self.fields['rol'].empty_label = _("Seleccione rol")
 
 
+class TripulacionEscalaForm(forms.ModelForm):
+    """Formulario para tripulación de escalas específicas"""
+    class Meta:
+        model = TripulacionEscala
+        fields = ['persona', 'rol', 'activo']
+        widgets = {
+            'persona': forms.Select(attrs={'class': 'form-select'}),
+            'rol': forms.Select(attrs={'class': 'form-select'}),
+            'activo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'persona': _('Persona'),
+            'rol': _('Rol'),
+            'activo': _('Activo'),
+        }
+        help_texts = {
+            'rol': _('Seleccione el rol de la persona en la tripulación'),
+            'activo': _('Marque si la asignación está activa'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['persona'].queryset = Persona.objects.filter(activo=True)
+        
+        # Etiquetas vacías
+        self.fields['persona'].empty_label = _("Seleccione persona")
+        self.fields['rol'].empty_label = _("Seleccione rol")
+
+
+TripulacionEscalaFormSet = inlineformset_factory(
+    EscalaVuelo,
+    TripulacionEscala,
+    form=TripulacionEscalaForm,
+    extra=1,
+    can_delete=True
+)
+
+
+
+# Formsets
+EscalaVueloFormSet = inlineformset_factory(
+    Vuelo,
+    EscalaVuelo,
+    form=EscalaVueloForm,
+    extra=1,
+    can_delete=True,
+)
+
 TripulacionVueloFormSet = inlineformset_factory(
     Vuelo,
     TripulacionVuelo,
@@ -196,6 +234,8 @@ TripulacionVueloFormSet = inlineformset_factory(
     extra=1,
     can_delete=True
 )
+
+
 
 
 class VueloFiltroForm(forms.Form):
