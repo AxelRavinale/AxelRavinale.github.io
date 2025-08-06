@@ -24,6 +24,7 @@ db.sqlite3
 # Archivos de configuración de entorno
 .env
 .env.*
+env
 
 # Archivos de logs
 *.log

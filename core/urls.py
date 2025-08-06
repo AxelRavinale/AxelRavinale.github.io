@@ -37,6 +37,10 @@ urlpatterns += i18n_patterns(
     path('pasajeros/', include('pasajeros.urls')),
 =======
     path('reservas/', include('reservas.urls')),
+<<<<<<< HEAD
+    path('flota/', include('flota.urls')),
+=======
+>>>>>>> main
 >>>>>>> main
 )
 
