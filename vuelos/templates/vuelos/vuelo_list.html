@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="codigo_vuelo" class="form-label">
-                        <i class="fas fa-search"></i> {% trans "Código Vuelo" %}
+                        <i class="fas fa-search"></i> {% trans "Código" %}
                     </label>
                     <input type="text" name="codigo_vuelo" class="form-control" id="codigo_vuelo" 
                            placeholder="{% trans 'Ej: AA123' %}" value="{{ request.GET.codigo_vuelo }}">
@@ -74,7 +74,7 @@
                         <i class="fas fa-times"></i> {% trans "Limpiar" %}
                     </a>
                     {% if user.is_superuser %}
-                        <a href="{% url 'cargar_vuelo' %}" class="btn btn-success ms-3">
+                        <a href="{% url 'vuelo_create' %}" class="btn btn-success ms-3">
                             <i class="fas fa-plus"></i> {% trans "Nuevo Vuelo" %}
                         </a>
                     {% endif %}
@@ -87,274 +87,288 @@
     <div class="container mb-4">
         <div class="row">
             <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">
-                            <i class="fas fa-plane"></i> {% trans "Total de Vuelos" %}
-                        </h5>
-                        <h2 class="text-primary">{{ total_vuelos }}</h2>
+                <div class="stats-card">
+                    <div class="stats-number">{{ total_vuelos }}</div>
+                    <div class="stats-label">
+                        <i class="fas fa-plane"></i> {% trans "Total Vuelos" %}
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title text-success">
-                            <i class="fas fa-arrow-right"></i> {% trans "Vuelos Directos" %}
-                        </h5>
-                        <h2 class="text-success">{{ vuelos_sin_escalas|length }}</h2>
+                <div class="stats-card">
+                    <div class="stats-number">{{ vuelos_sin_escalas|length }}</div>
+                    <div class="stats-label">
+                        <i class="fas fa-arrow-right"></i> {% trans "Vuelos Directos" %}
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title text-warning">
-                            <i class="fas fa-route"></i> {% trans "Vuelos con Escalas" %}
-                        </h5>
-                        <h2 class="text-warning">{{ vuelos_con_escalas|length }}</h2>
+                <div class="stats-card">
+                    <div class="stats-number">{{ vuelos_con_escalas|length }}</div>
+                    <div class="stats-label">
+                        <i class="fas fa-route"></i> {% trans "Con Escalas" %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Vuelos Sin Escalas -->
+    <!-- Vuelos Directos -->
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="section-title">
-                    <i class="fas fa-arrow-right text-success"></i> {% trans "Vuelos Directos" %}
-                </h2>
-                {% if vuelos_sin_escalas %}
-                    <div class="row">
-                        {% for vuelo in vuelos_sin_escalas %}
-                            <div class="col-lg-6 col-xl-4 mb-4">
-                                <div class="card flight-card h-100">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span class="flight-code">{{ vuelo.codigo_vuelo }}</span>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}">
-                                                        <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
-                                                    </a>
-                                                </li>
-                                                {% if user.is_superuser %}
-                                                    <li>
-                                                        <a class="dropdown-item" href="{% url 'update_vuelo' vuelo.codigo_vuelo %}">
-                                                            <i class="fas fa-edit"></i> {% trans "Editar" %}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="flight-route">
-                                            <div class="flight-location">
-                                                <div class="flight-date">{{ vuelo.origen_principal.nombre }}</div>
-                                                <div class="flight-time">{{ vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</div>
-                                            </div>
-                                            <div class="flight-arrow">
-                                                <i class="fas fa-arrow-right fa-2x"></i>
-                                            </div>
-                                            <div class="flight-location">
-                                                <div class="flight-date">{{ vuelo.destino_principal.nombre }}</div>
-                                                <div class="flight-time">{{ vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mt-3">
-                                            <div class="row text-center">
-                                                <div class="col-6">
-                                                    <small class="text-muted">{% trans "Avión" %}</small>
-                                                    <div class="fw-bold">
-                                                        {% if vuelo.avion_asignado %}
-                                                            {{ vuelo.avion_asignado.modelo }} - {{ vuelo.avion_asignado.matricula }}
-                                                        {% else %}
-                                                            <span class="text-muted">{% trans "Sin asignar" %}</span>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <small class="text-muted">{% trans "Distancia" %}</small>
-                                                    <div class="fw-bold">{{ vuelo.km_totales }} km</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between align-items-center">
-                                        <div>
-                                            {% if vuelo.activo %}
-                                                <span class="badge bg-success">{% trans "Activo" %}</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary">{% trans "Inactivo" %}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="btn-group" role="group">
-                                            <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye"></i> {% trans "Detalle" %}
-                                            </a>
-                                            {% if user.is_superuser %}
-                                                <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
-                                                    <i class="fas fa-edit"></i> {% trans "Editar" %}
-                                                </a>
-                                            {% endif %}
-                                        </div>
+        <h2 class="section-title">
+            <i class="fas fa-arrow-right text-success"></i> {% trans "Vuelos Directos" %}
+        </h2>
+        {% if vuelos_sin_escalas %}
+            <div class="row">
+                {% for vuelo in vuelos_sin_escalas %}
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="card flight-card h-100">
+                            <div class="flight-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="flight-code">{{ vuelo.codigo_vuelo }}</div>
+                                    <div>
+                                        {% if vuelo.activo %}
+                                            <span class="badge bg-success">{% trans "Activo" %}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{% trans "Inactivo" %}</span>
+                                        {% endif %}
+                                        <span class="badge bg-info text-dark ms-1">
+                                            <i class="fas fa-arrow-right"></i> {% trans "Directo" %}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        {% endfor %}
+                            
+                            <div class="card-body">
+                                <div class="flight-route">
+                                    <div class="flight-location">
+                                        <div class="flight-city">{{ vuelo.origen_principal.nombre }}</div>
+                                        <div class="flight-datetime">{{ vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</div>
+                                    </div>
+                                    <div class="flight-arrow">
+                                        <i class="fas fa-arrow-right fa-2x"></i>
+                                    </div>
+                                    <div class="flight-location">
+                                        <div class="flight-city">{{ vuelo.destino_principal.nombre }}</div>
+                                        <div class="flight-datetime">{{ vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flight-info">
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-plane"></i> {% trans "Avión" %}
+                                        </span>
+                                        <span class="info-value">
+                                            {% if vuelo.avion_asignado %}
+                                                {{ vuelo.avion_asignado.modelo }}
+                                            {% else %}
+                                                <span class="text-muted">{% trans "Sin asignar" %}</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-clock"></i> {% trans "Duración" %}
+                                        </span>
+                                        <span class="info-value">{{ vuelo.duracion_calculada }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-route"></i> {% trans "Distancia" %}
+                                        </span>
+                                        <span class="info-value">{{ vuelo.km_totales|default:"N/A" }} km</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-users"></i> {% trans "Tripulación" %}
+                                        </span>
+                                        <span class="info-value">{{ vuelo.total_tripulacion }} {% trans "personas" %}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-footer bg-transparent">
+                                <div class="btn-group-custom text-end">
+                                    <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
+                                    </a>
+                                    {% if user.is_superuser %}
+                                        <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-edit"></i> {% trans "Editar" %}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                {% else %}
-                    <div class="no-flights">
-                        <i class="fas fa-plane fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">{% trans "No hay vuelos directos disponibles" %}</h4>
-                        <p class="text-muted">{% trans "Prueba ajustando los filtros o crea un nuevo vuelo" %}</p>
-                    </div>
-                {% endif %}
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-plane fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">{% trans "No hay vuelos directos" %}</h4>
+                <p class="text-muted">{% trans "No se encontraron vuelos directos con los filtros aplicados" %}</p>
+            </div>
+        {% endif %}
     </div>
 
     <!-- Vuelos Con Escalas -->
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="section-title">
-                    <i class="fas fa-route text-warning"></i> {% trans "Vuelos con Escalas" %}
-                </h2>
-                {% if vuelos_con_escalas %}
-                    <div class="row">
-                        {% for vuelo in vuelos_con_escalas %}
-                            <div class="col-lg-6 col-xl-4 mb-4">
-                                <div class="card flight-card h-100">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span class="flight-code">{{ vuelo.codigo_vuelo }}</span>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}">
-                                                        <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
-                                                    </a>
-                                                </li>
-                                                {% if user.is_superuser %}
-                                                    <li>
-                                                        <a class="dropdown-item" href="{% url 'update_vuelo' vuelo.codigo_vuelo %}">
-                                                            <i class="fas fa-edit"></i> {% trans "Editar" %}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="flight-route">
-                                            <div class="flight-location">
-                                                <div class="flight-date">{{ vuelo.origen_principal.nombre }}</div>
-                                                <div class="flight-time">{{ vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</div>
-                                            </div>
-                                            <div class="flight-arrow">
-                                                <i class="fas fa-route fa-2x"></i>
-                                            </div>
-                                            <div class="flight-location">
-                                                <div class="flight-date">{{ vuelo.destino_principal.nombre }}</div>
-                                                <div class="flight-time">{{ vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mt-3">
-                                            <div class="row text-center">
-                                                <div class="col-4">
-                                                    <small class="text-muted">{% trans "Avión" %}</small>
-                                                    <div class="fw-bold">
-                                                        {% if vuelo.avion_asignado %}
-                                                            {{ vuelo.avion_asignado.modelo }}
-                                                        {% else %}
-                                                            <span class="text-muted">{% trans "Sin asignar" %}</span>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    <small class="text-muted">{% trans "Escalas" %}</small>
-                                                    <div class="fw-bold">{{ vuelo.numero_escalas }}</div>
-                                                </div>
-                                                <div class="col-4">
-                                                    <small class="text-muted">{% trans "Distancia" %}</small>
-                                                    <div class="fw-bold">{{ vuelo.distancia_recorrida }} km</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Escalas Preview -->
-                                        <div class="mt-3">
-                                            <small class="text-muted">{% trans "Ruta" %}:</small>
-                                            <div class="escalas-preview">
-                                                {% for escala in vuelo.escalas_vuelo.all %}
-                                                    <span class="badge badge-escalas me-1">
-                                                        {{ escala.origen.nombre }} → {{ escala.destino.nombre }}
-                                                    </span>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between align-items-center">
-                                        <div>
-                                            {% if vuelo.activo %}
-                                                <span class="badge bg-success">{% trans "Activo" %}</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary">{% trans "Inactivo" %}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="btn-group" role="group">
-                                            <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye"></i> {% trans "Detalle" %}
-                                            </a>
-                                            {% if user.is_superuser %}
-                                                <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
-                                                    <i class="fas fa-edit"></i> {% trans "Editar" %}
-                                                </a>
-                                            {% endif %}
-                                        </div>
+        <h2 class="section-title">
+            <i class="fas fa-route text-warning"></i> {% trans "Vuelos con Escalas" %}
+        </h2>
+        {% if vuelos_con_escalas %}
+            <div class="row">
+                {% for vuelo in vuelos_con_escalas %}
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="card flight-card h-100">
+                            <div class="flight-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="flight-code">{{ vuelo.codigo_vuelo }}</div>
+                                    <div>
+                                        {% if vuelo.activo %}
+                                            <span class="badge bg-success">{% trans "Activo" %}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{% trans "Inactivo" %}</span>
+                                        {% endif %}
+                                        <span class="badge bg-warning text-dark ms-1">
+                                            <i class="fas fa-route"></i> {{ vuelo.numero_escalas }} {% trans "escalas" %}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        {% endfor %}
+                            
+                            <div class="card-body">
+                                <div class="flight-route">
+                                    <div class="flight-location">
+                                        <div class="flight-city">{{ vuelo.origen_principal.nombre }}</div>
+                                        <div class="flight-datetime">{{ vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</div>
+                                    </div>
+                                    <div class="flight-arrow">
+                                        <i class="fas fa-route fa-2x"></i>
+                                    </div>
+                                    <div class="flight-location">
+                                        <div class="flight-city">{{ vuelo.destino_principal.nombre }}</div>
+                                        <div class="flight-datetime">{{ vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flight-info">
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-plane"></i> {% trans "Avión Principal" %}
+                                        </span>
+                                        <span class="info-value">
+                                            {% if vuelo.avion_asignado %}
+                                                {{ vuelo.avion_asignado.modelo }}
+                                            {% else %}
+                                                <span class="text-muted">{% trans "Sin asignar" %}</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-clock"></i> {% trans "Duración Total" %}
+                                        </span>
+                                        <span class="info-value">{{ vuelo.duracion_calculada }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-route"></i> {% trans "Distancia Total" %}
+                                        </span>
+                                        <span class="info-value">{{ vuelo.distancia_recorrida|default:"N/A" }} km</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-users"></i> {% trans "Tripulación Total" %}
+                                        </span>
+                                        <span class="info-value">{{ vuelo.total_tripulacion }} {% trans "personas" %}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Preview de Escalas -->
+                                {% if vuelo.escalas_resumen %}
+                                <div class="escalas-preview">
+                                    <h6 class="mb-2">
+                                        <i class="fas fa-route"></i> {% trans "Escalas" %} 
+                                        ({{ vuelo.escalas_resumen.total }})
+                                    </h6>
+                                    {% for escala in vuelo.escalas_resumen.escalas %}
+                                        <div class="escala-item">
+                                            <div>
+                                                <div class="escala-ruta">
+                                                    <span class="badge badge-custom bg-light text-dark me-1">{{ escala.orden }}</span>
+                                                    {{ escala.ruta }}
+                                                </div>
+                                                <div class="escala-info">
+                                                    <i class="fas fa-plane"></i> {{ escala.avion }}
+                                                    <span class="ms-2">
+                                                        <i class="fas fa-users"></i> {{ escala.tripulacion_count }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    {% if vuelo.escalas_resumen.tiene_mas %}
+                                        <div class="text-center mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-ellipsis-h"></i> 
+                                                {% trans "y más escalas..." %}
+                                            </small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="card-footer bg-transparent">
+                                <div class="btn-group-custom text-end">
+                                    <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
+                                    </a>
+                                    {% if user.is_superuser %}
+                                        <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-edit"></i> {% trans "Editar" %}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                {% else %}
-                    <div class="no-flights">
-                        <i class="fas fa-route fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">{% trans "No hay vuelos con escalas disponibles" %}</h4>
-                        <p class="text-muted">{% trans "Prueba ajustando los filtros o crea un nuevo vuelo" %}</p>
-                    </div>
-                {% endif %}
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-route fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">{% trans "No hay vuelos con escalas" %}</h4>
+                <p class="text-muted">{% trans "No se encontraron vuelos con escalas con los filtros aplicados" %}</p>
+            </div>
+        {% endif %}
     </div>
 
-    <!-- Empty State -->
+    <!-- Estado Vacío General -->
     {% if not vuelos_sin_escalas and not vuelos_con_escalas %}
         <div class="container">
-            <div class="no-flights">
+            <div class="empty-state">
                 <i class="fas fa-plane fa-4x text-muted mb-4"></i>
                 <h3 class="text-muted">{% trans "No se encontraron vuelos" %}</h3>
                 <p class="text-muted">{% trans "No hay vuelos que coincidan con los filtros seleccionados" %}</p>
-                <a href="{% url 'vuelo_list' %}" class="btn btn-primary">
-                    <i class="fas fa-refresh"></i> {% trans "Ver todos los vuelos" %}
-                </a>
+                <div class="mt-4">
+                    <a href="{% url 'vuelo_list' %}" class="btn btn-primary me-2">
+                        <i class="fas fa-refresh"></i> {% trans "Ver todos los vuelos" %}
+                    </a>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'vuelo_create' %}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> {% trans "Crear nuevo vuelo" %}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     {% endif %}
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -365,11 +379,26 @@
         this.form.submit();
     });
 
-    // Mejorar UX con tooltips
+    // Smooth scroll animation for cards
     document.addEventListener('DOMContentLoaded', function() {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
+        const cards = document.querySelectorAll('.flight-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 100);
+                }
+            });
+        });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
         });
     });
 </script>

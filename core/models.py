@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 class Pais(models.Model):
     nombre = models.CharField(max_length=100, verbose_name=_("Nombre"))
@@ -58,6 +59,7 @@ class Genero(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=100, verbose_name=_("Nombre"))
     activo = models.BooleanField(default=True, verbose_name=_("Activo"))
@@ -69,20 +71,34 @@ class TipoDocumento(models.Model):
     def __str__(self):
         return self.nombre
 
-class Persona(models.Model):
-    nombre = models.CharField(max_length=100, verbose_name=_("Nombre"))
-    apellido = models.CharField(max_length=100, verbose_name=_("Apellido"))
-    tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.PROTECT, verbose_name=_("Tipo de Documento"))
-    numero_documento = models.CharField(max_length=30, unique=True, verbose_name=_("Número de Documento"))
-    fecha_nacimiento = models.DateField(verbose_name=_("Fecha de Nacimiento"))
-    email = models.EmailField(unique=True, verbose_name=_("Email"))
-    localidad = models.ForeignKey(Localidad, on_delete=models.PROTECT, verbose_name=_("Localidad"))
-    genero = models.ForeignKey(Genero, on_delete=models.PROTECT, verbose_name=_("Género"))
-    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
-    class Meta:
-        verbose_name = _("Persona")
-        verbose_name_plural = _("Personas")
+
+class Persona(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name=_("Usuario"))
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    tipo_documento = models.CharField(max_length=20)
+    numero_documento = models.CharField(max_length=20)
+    fecha_nacimiento = models.DateField()
+    localidad = models.CharField(max_length=100)
+    email = models.EmailField()
+    activo = models.BooleanField(default=True)
+    genero = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} ({self.tipo_documento.nombre} {self.numero_documento})"
+        return f"{self.nombre} {self.apellido}"
+    
+
+class TipoVuelo(models.Model):
+    name = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Estado(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre

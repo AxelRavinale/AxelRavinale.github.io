@@ -11,19 +11,26 @@
         <a class="navbar-brand" href="{% url 'home' %}">{% trans "INICIO" %}</a>
 
         {% if user.is_authenticated %}
-            <a class="btn btn-outline-primary ms-3" href="{% url 'vuelo_template' %}">
+            <a class="btn btn-outline-primary ms-3" href="{% url 'vuelo_list' %}">
                 {% trans "Ver lista de vuelos" %}
+            </a>
+
+            <a class="btn btn-outline-primary ms-3" href="{% url 'reserva_list' %}">
+                {% trans "Ver lista de reservas" %}
+            </a>
+
+            <a class="btn btn-success ms-3" href="{% url 'crear_reserva' %}">
+                {% trans "Hacer reserva" %}
             </a>
         {% endif %}
 
+
         {% if user.is_authenticated and user.is_superuser %}
-            <a class="btn btn-warning ms-3" href="{% url 'cargar_vuelo' %}">
+            <a class="btn btn-warning ms-3" href="{% url 'vuelo_create' %}">
                 {% trans "Cargar vuelos" %}
             </a>
-        {% endif %}
-        {% if user.is_authenticated and user.is_superuser %}
-            <a href="{% url 'persona_create' %}" class="btn btn-sm btn-warning ms-2">
-                <i class="fas fa-user-plus"></i> Agregar persona
+            <a href="{% url 'persona_create' %}" class="btn btn-warning ms-3">
+                <i class="fas fa-user-plus"></i> {% trans "Crear personas" %}
             </a>
         {% endif %}
 

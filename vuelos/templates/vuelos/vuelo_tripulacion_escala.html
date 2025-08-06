@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% blocktrans with codigo_vuelo=vuelo.codigo_vuelo orden=escala_actual.orden %}Tripulación Escala {{ orden }} - Vuelo {{ codigo_vuelo }}{% endblocktrans %}
+{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="{% static 'css/vuelo_tripulacion.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>
+                    <i class="fas fa-user-friends text-primary"></i>
+                    {% blocktrans with codigo_vuelo=vuelo.codigo_vuelo orden=escala_actual.orden %}Tripulación Escala {{ orden }} - Vuelo {{ codigo_vuelo }}{% endblocktrans %}
+                </h1>
+                <div>
+                    <a href="{% url 'vuelo_escalas' codigo_vuelo=vuelo.codigo_vuelo %}" class="btn btn-outline-info me-2">
+                        <i class="fas fa-route"></i> {% trans "Ver Escalas" %}
+                    </a>
+                    <a href="{% url 'vuelo_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> {% trans "Volver a la lista" %}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Progreso de escalas -->
+            <div class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-map-marked-alt"></i> 
+                            {% trans "Progreso de Configuración" %} 
+                            ({{ escala_numero }} {% trans "de" %} {{ total_escalas }})
+                        </h6>
+                        <div class="progress mb-3">
+                            {% if total_escalas > 0 %}
+                                <div class="progress-bar" role="progressbar" 
+                                    style="width: {% widthratio escala_numero total_escalas 100 %}%;">
+                                    {{ escala_numero }}/{{ total_escalas }}
+                                </div>
+                            {% else %}
+                                <div class="progress-bar" role="progressbar" style="width: 0%;">
+                                    0/{{ total_escalas }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            {% for escala in todas_las_escalas %}
+                                <div class="text-center">
+                                    {% if escala.orden == escala_actual.orden %}
+                                        <span class="badge bg-primary p-2">
+                                            <i class="fas fa-arrow-right"></i> {{ escala.orden }}
+                                        </span>
+                                    {% else %}
+                                        <a href="{% url 'vuelo_tripulacion_escalas' codigo_vuelo=vuelo.codigo_vuelo orden=escala.orden %}" 
+                                           class="badge bg-secondary text-decoration-none p-2">
+                                            {{ escala.orden }}
+                                        </a>
+                                    {% endif %}
+                                    <br>
+                                    <small class="text-muted">{{ escala.escala.origen|truncatechars:8 }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de la escala actual -->
+            <div class="vuelo-info mb-4">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h6><i class="fas fa-sort-numeric-up"></i> {% trans "Escala" %}</h6>
+                        <p class="mb-0">{{ escala_actual.orden }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h6><i class="fas fa-map-marker-alt"></i> {% trans "Ruta" %}</h6>
+                        <p class="mb-0">{{ escala_actual.escala.origen }} → {{ escala_actual.escala.destino }}</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h6><i class="fas fa-plane"></i> {% trans "Avión" %}</h6>
+                        <p class="mb-0">{{ escala_actual.avion.modelo }}</p>
+                        <small class="text-muted">{{ escala_actual.avion.matricula }}</small>
+                    </div>
+                    <div class="col-md-2">
+                        <h6><i class="fas fa-calendar"></i> {% trans "Salida" %}</h6>
+                        <p class="mb-0">{{ escala_actual.fecha_salida|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h6><i class="fas fa-calendar-check"></i> {% trans "Llegada" %}</h6>
+                        <p class="mb-0">{{ escala_actual.fecha_llegada|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensajes -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" id="tripulacionForm" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="action" value="save_and_next" id="formAction">
+
+                <!-- Formset de Tripulación -->
+                <div class="form-section">
+                    <h3 class="form-section-header">
+                        <i class="fas fa-user-friends"></i> 
+                        {% blocktrans with orden=escala_actual.orden %}Tripulación de la Escala {{ orden }}{% endblocktrans %}
+                    </h3>
+                    <div class="form-section-body">
+                        {{ formset.management_form }}
+                        
+                        <div id="tripulacion-list">
+                            {% for form in formset.forms %}
+                                <div class="tripulacion-item mb-4 p-3 position-relative" data-form-index="{{ forloop.counter0 }}">
+                                    <div class="tripulacion-numero">{{ forloop.counter }}</div>
+                                    
+                                    {% if form.instance.pk %}
+                                        <input type="hidden" name="{{ form.prefix }}-id" value="{{ form.instance.pk }}">
+                                    {% endif %}
+
+                                    {% if not form.instance.pk %}
+                                        <button type="button" class="btn btn-danger btn-sm btn-remove" onclick="removeTripulacion(this)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    {% endif %}
+
+                                    <div class="row">
+                                        <div class="col-md-5 mb-3">
+                                            <label for="{{ form.persona.id_for_label }}" class="form-label">
+                                                <i class="fas fa-user"></i> {% trans "Persona" %} *
+                                            </label>
+                                            {{ form.persona }}
+                                            {% for error in form.persona.errors %}
+                                                <div class="text-danger small">{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <label for="{{ form.rol.id_for_label }}" class="form-label">
+                                                <i class="fas fa-user-tag"></i> {% trans "Rol" %} *
+                                            </label>
+                                            {{ form.rol }}
+                                            {% for error in form.rol.errors %}
+                                                <div class="text-danger small">{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <div class="col-md-3 mb-3 d-flex align-items-end">
+                                            <div class="form-check">
+                                                {{ form.activo }}
+                                                <label class="form-check-label" for="{{ form.activo.id_for_label }}">
+                                                    <i class="fas fa-check-circle"></i> {% trans "Activo" %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% if form.DELETE %}
+                                        <div class="form-check mt-2">
+                                            {{ form.DELETE }}
+                                            <label class="form-check-label text-danger" for="{{ form.DELETE.id_for_label }}">
+                                                <i class="fas fa-trash"></i> {% trans "Eliminar este miembro" %}
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Información de roles -->
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle"></i> {% trans "Roles de Tripulación:" %}</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="role-badge role-piloto">{% trans "Piloto" %}</span>
+                                <span class="role-badge role-copiloto">{% trans "Co-piloto" %}</span>
+                                <span class="role-badge role-ingeniero">{% trans "Ingeniero de vuelo" %}</span>
+                                <span class="role-badge role-azafata">{% trans "Azafata/o" %}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones de navegación -->
+                <div class="text-center mb-4">
+                    <!-- Navegación entre escalas -->
+                    <div class="btn-group me-3" role="group">
+                        {% if not es_primera_escala and escala_anterior %}
+                            <button type="submit" class="btn btn-outline-secondary" onclick="setAction('save_and_previous')">
+                                <i class="fas fa-arrow-left"></i> {% trans "Anterior" %}
+                            </button>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary" onclick="setAction('save_and_stay')">
+                            <i class="fas fa-save"></i> {% trans "Agregar tripulacion" %}
+                        </button>
+                        
+                        {% if not es_ultima_escala and escala_siguiente %}
+                            <button type="submit" class="btn btn-outline-primary" onclick="setAction('save_and_next')">
+                                {% trans "Siguiente" %} <i class="fas fa-arrow-right"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Acciones principales -->
+                    {% if es_ultima_escala %}
+                        <button type="submit" class="btn btn-success btn-lg me-3" onclick="setAction('save_and_finish')">
+                            <i class="fas fa-check"></i> {% trans "Finalizar Configuración" %}
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-success me-3" onclick="setAction('save_and_finish')">
+                            <i class="fas fa-check"></i> {% trans "Finalizar" %}
+                        </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'vuelo_detail' codigo_vuelo=vuelo.codigo_vuelo %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> {% trans "Cancelar" %}
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Variables globales para las traducciones
+const translations = {
+    persona: "{% trans 'Persona' %}",
+    rol: "{% trans 'Rol' %}",
+    activo: "{% trans 'Activo' %}",
+    seleccionePersona: "{% trans 'Seleccione persona' %}",
+    seleccioneRol: "{% trans 'Seleccione rol' %}",
+    piloto: "{% trans 'Piloto' %}",
+    copiloto: "{% trans 'Co-piloto' %}",
+    ingeniero: "{% trans 'Ingeniero de vuelo' %}",
+    azafata: "{% trans 'Azafata/o' %}"
+};
+
+// Obtener opciones dinámicamente para los selects
+let personasOptions = '';
+let rolesOptions = '';
+
+function setAction(action) {
+    document.getElementById('formAction').value = action;
+}
+
+function loadSelectOptions() {
+    // Obtener opciones de personas desde el primer select existente
+    const firstPersonaSelect = document.querySelector('[name$="-persona"]');
+    if (firstPersonaSelect) {
+        personasOptions = firstPersonaSelect.innerHTML;
+    }
+    
+    // Crear opciones de roles
+    rolesOptions = `
+        <option value="">${translations.seleccioneRol}</option>
+        <option value="piloto">${translations.piloto}</option>
+        <option value="copiloto">${translations.copiloto}</option>
+        <option value="ingeniero">${translations.ingeniero}</option>
+        <option value="azafata">${translations.azafata}</option>
+    `;
+}
+
+let totalForms = parseInt(document.querySelector('[name$="-TOTAL_FORMS"]').value);
+
+function removeTripulacion(button) {
+    const tripulacionItem = button.closest(".tripulacion-item");
+    const deleteInput = tripulacionItem.querySelector('input[type="checkbox"][name$="-DELETE"]');
+    
+    if (deleteInput) {
+        // Si existe campo DELETE, marcarlo
+        deleteInput.checked = true;
+        tripulacionItem.style.display = 'none';
+    } else {
+        // Si no existe, remover del DOM
+        tripulacionItem.remove();
+        updateFormNumbers();
+    }
+}
+
+function addTripulacion() {
+    const tripulacionContainer = document.getElementById('tripulacion-list');
+    const newForm = createEmptyTripulacionForm(totalForms);
+    tripulacionContainer.insertAdjacentHTML('beforeend', newForm);
+    
+    totalForms++;
+    document.querySelector('[name$="-TOTAL_FORMS"]').value = totalForms;
+    updateFormNumbers();
+}
+
+function createEmptyTripulacionForm(index) {
+    const prefix = document.querySelector('[name$="-TOTAL_FORMS"]').name.replace('-TOTAL_FORMS', '');
+    
+    return `
+        <div class="tripulacion-item mb-4 p-3 position-relative" data-form-index="${index}">
+            <div class="tripulacion-numero">${index + 1}</div>
+            
+            <button type="button" class="btn btn-danger btn-sm btn-remove" onclick="removeTripulacion(this)">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="row">
+                <div class="col-md-5 mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> ${translations.persona} *
+                    </label>
+                    <select name="${prefix}-${index}-persona" class="form-select">
+                        ${personasOptions}
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-user-tag"></i> ${translations.rol} *
+                    </label>
+                    <select name="${prefix}-${index}-rol" class="form-select">
+                        ${rolesOptions}
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3 d-flex align-items-end">
+                    <div class="form-check">
+                        <input type="checkbox" name="${prefix}-${index}-activo" class="form-check-input" checked>
+                        <label class="form-check-label">
+                            <i class="fas fa-check-circle"></i> ${translations.activo}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function updateFormNumbers() {
+    const tripulacion = document.querySelectorAll('.tripulacion-item:not([style*="display: none"])');
+    tripulacion.forEach((item, index) => {
+        const numero = item.querySelector('.tripulacion-numero');
+        if (numero) {
+            numero.textContent = index + 1;
+        }
+    });
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadSelectOptions();
+    updateFormNumbers();
+});
+</script>
+{% endblock %}

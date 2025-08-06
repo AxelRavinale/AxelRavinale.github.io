@@ -1,0 +1,428 @@
+/* ===== ESTILOS PARA GESTIÓN DE ESCALAS ===== */
+
+/* Información del vuelo */
+.vuelo-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 4px solid #0d6efd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.vuelo-info h6 {
+    color: #495057;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.vuelo-info p {
+    color: #212529;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* Secciones del formulario */
+.form-section {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.form-section-header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+    color: white;
+    padding: 15px 25px;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.form-section-header i {
+    margin-right: 10px;
+}
+
+.form-section-body {
+    padding: 25px;
+}
+
+/* Items de escala */
+.escala-item {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.escala-item:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.15);
+    transform: translateY(-2px);
+}
+
+.escala-numero {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+    z-index: 10;
+}
+
+.btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* Botones principales */
+.btn-primary, .btn-success {
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Timeline de escalas */
+.escalas-timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.escalas-timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6c757d);
+}
+
+.escala-timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.escala-timeline-marker {
+    position: absolute;
+    left: -38px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+    z-index: 10;
+}
+
+.escala-timeline-content {
+    margin-left: 15px;
+}
+
+.escala-timeline-item .card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.escala-timeline-item .card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.1);
+}
+
+/* Resumen del vuelo */
+.vuelo-summary {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.vuelo-summary .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.vuelo-summary .card-header h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.vuelo-summary .card-body {
+    padding: 25px;
+}
+
+.vuelo-summary .table-sm td {
+    padding: 8px 12px;
+    border: none;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.vuelo-summary .table-sm td:first-child {
+    color: #6c757d;
+    font-weight: 500;
+    width: 40%;
+}
+
+.vuelo-summary .table-sm td:last-child {
+    color: #212529;
+    font-weight: 600;
+}
+
+/* Badges y estados */
+.badge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Formularios */
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.form-label i {
+    margin-right: 6px;
+    width: 16px;
+    text-align: center;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.form-check-input {
+    border-radius: 4px;
+    border: 2px solid #e9ecef;
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.form-check-label {
+    font-weight: 500;
+    color: #495057;
+    margin-left: 8px;
+}
+
+/* Validación de errores */
+.is-invalid {
+    border-color: #dc3545 !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+    font-weight: 500;
+}
+
+.date-error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+
+/* Alertas */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-weight: 500;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1edff 0%, #a7d5ff 100%);
+    color: #004085;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f1aeb5 100%);
+    color: #721c24;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .vuelo-info {
+        padding: 15px;
+    }
+    
+    .vuelo-info .row > div {
+        margin-bottom: 15px;
+    }
+    
+    .form-section-body {
+        padding: 15px;
+    }
+    
+    .escala-item {
+        padding: 15px !important;
+    }
+    
+    .escala-numero {
+        width: 30px;
+        height: 30px;
+        font-size: 0.875rem;
+    }
+    
+    .btn-remove {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .escalas-timeline {
+        padding-left: 20px;
+    }
+    
+    .escala-timeline-marker {
+        left: -28px;
+        width: 25px;
+        height: 25px;
+        font-size: 0.75rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .d-flex.justify-content-between h1 {
+        font-size: 1.5rem;
+    }
+    
+    .text-center.mb-4 {
+        text-align: center !important;
+    }
+    
+    .text-center.mb-4 .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .text-center.mb-4 .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Estados hover y focus mejorados */
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+}
+
+/* Mejoras visuales adicionales */
+.vuelo-info i {
+    color: #0d6efd;
+}
+
+.form-section-header {
+    border-bottom: none;
+}
+
+.escala-item {
+    margin-top: 20px;
+}
+
+.escala-item:first-child {
+    margin-top: 0;
+    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 20px 25px;
+}
+.vuelo-summary .card-header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 20px 25px;
+}
