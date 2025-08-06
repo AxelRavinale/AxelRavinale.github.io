@@ -21,6 +21,9 @@
                     {% trans "Editar Vuelo" %} {{ vuelo.codigo_vuelo }}
                 </h1>
                 <div>
+                    <a href="{% url 'vuelo_escalas' codigo_vuelo=vuelo.codigo_vuelo %}" class="btn btn-outline-info me-2">
+                        <i class="fas fa-route"></i> {% trans "Ver Escalas" %}
+                    </a>
                     <a href="{% url 'vuelo_detail' codigo_vuelo=vuelo.codigo_vuelo %}" class="btn btn-outline-info me-2">
                         <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
                     </a>
@@ -227,10 +230,6 @@
                             </div>
                         {% endfor %}
                     </div>
-
-                    <button type="button" class="btn btn-outline-primary" onclick="addEscala()">
-                        <i class="fas fa-plus"></i> {% trans "Agregar Nueva Escala" %}
-                    </button>
                 </div>
 
                 <!-- Formset de Tripulación -->
@@ -286,10 +285,6 @@
                             </div>
                         {% endfor %}
                     </div>
-
-                    <button type="button" class="btn btn-outline-primary" onclick="addTripulacion()">
-                        <i class="fas fa-plus"></i> {% trans "Agregar Nuevo Miembro" %}
-                    </button>
                 </div>
 
                 <!-- Acciones -->
@@ -348,15 +343,6 @@
         } else {
             item.remove();
         }
-    }
-
-    // Funciones para agregar nuevos elementos (simplificadas)
-    function addEscala() {
-        alert('{% trans "Para agregar nuevas escalas, usa el formulario de creación de escalas independientes y luego actualiza este vuelo." %}');
-    }
-
-    function addTripulacion() {
-        alert('{% trans "Para agregar nuevos miembros a la tripulación, usa el formulario de creación de personas y luego actualiza este vuelo." %}');
     }
 
     // Confirmar eliminación

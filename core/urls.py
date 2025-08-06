@@ -33,8 +33,15 @@ urlpatterns += i18n_patterns(
     path('auth/', include('autentificacion.urls')),
     path('', include('vuelos.urls')),
     path('trabajadores/', include('empleados.urls')),
+<<<<<<< HEAD
+    path('pasajeros/', include('pasajeros.urls')),
+=======
     path('reservas/', include('reservas.urls')),
+<<<<<<< HEAD
     path('flota/', include('flota.urls')),
+=======
+>>>>>>> main
+>>>>>>> main
 )
 
 if settings.DEBUG:
