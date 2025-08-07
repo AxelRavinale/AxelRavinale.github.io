@@ -1,0 +1,56 @@
+body {
+    background-image: url("../img/—Pngtree—commercial\ airliner\ aviation\ innovation\ boeing_13626628.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+}
+
+.fondo-transparente {
+    background-color: rgba(0, 0, 0, 0.5); /* negro con 50% de opacidad */
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: #fff;
+}
+
+
+/* .btn {
+    background-color: rgba(var(--bs-info-rgb), var(--bs-bg-opacity)) !important
+} */
+
+.flight-card {
+    background-color: #1e1e2f;
+    color: rgb(96, 24, 24);
+    border: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.flight-card .info-label i {
+    color: #0dcaf0; /* color icónico, opcional */
+}
+
+
+.btn-outline-primary {
+    border-color: white;
+    color: white;
+}
+
+.btn-outline-primary:hover {
+    background-color: white;
+    color: black;
+}
+
+.card,
+input,
+select,
+textarea {
+    background-color: rgba(255, 255, 255, 0.9); /* blanco casi sólido */
+    color: #000;
+}
+
+.transparente{
+    background-color: transparent;
+}
+
+.navbar-brand{
+    color: #fff;
+}
