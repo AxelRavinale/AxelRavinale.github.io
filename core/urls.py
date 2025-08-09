@@ -22,6 +22,10 @@ from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import set_language
 from .views import PersonaCreateView
 
+def trigger_error(request):
+    division_by_zero = 1 / 0  # This will raise a ZeroDivisionError
+
+
 urlpatterns = [
     path('set_language/', set_language, name='set_language'),
 ]
@@ -36,7 +40,7 @@ urlpatterns += i18n_patterns(
     path('pasajeros/', include('pasajeros.urls')),
     path('reservas/', include('reservas.urls')),
     path('flota/', include('flota.urls')),
-)
+    path('sentry-debug/', trigger_error),)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

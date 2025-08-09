@@ -4,55 +4,57 @@
 {% block title %}{% trans "Lista de Reservas" %}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="fondo-transparente">
+  <div class="container mt-4" >
 
-  <h2>{% trans "Lista de Reservas" %}</h2>
+    <h2>{% trans "Lista de Reservas" %}</h2>
 
-  <form method="get" class="row g-3 mb-4">
-    <div class="col-md-4">
-      <input type="text" name="pasajero" class="form-control" placeholder="{% trans 'Buscar por pasajero' %}" value="{{ request.GET.pasajero }}">
-    </div>
-    <div class="col-md-4">
-      <input type="text" name="vuelo" class="form-control" placeholder="{% trans 'Buscar por vuelo' %}" value="{{ request.GET.vuelo }}">
-    </div>
-    <div class="col-md-4 d-flex">
-      <button type="submit" class="btn btn-primary me-2">{% trans "Buscar" %}</button>
-      <a href="{% url 'crear_reserva' %}" class="btn btn-success">{% trans "Nueva Reserva" %}</a>
-    </div>
-  </form>
+    <form method="get" class="row g-3 mb-4">
+      <div class="col-md-4">
+        <input type="text" name="pasajero" class="form-control" placeholder="{% trans 'Buscar por pasajero' %}" value="{{ request.GET.pasajero }}">
+      </div>
+      <div class="col-md-4">
+        <input type="text" name="vuelo" class="form-control" placeholder="{% trans 'Buscar por vuelo' %}" value="{{ request.GET.vuelo }}">
+      </div>
+      <div class="col-md-4 d-flex">
+        <button type="submit" class="btn btn-primary me-2">{% trans "Buscar" %}</button>
+        <a href="{% url 'crear_reserva' %}" class="btn btn-success">{% trans "Nueva Reserva" %}</a>
+      </div>
+    </form>
 
-  {% if object_list %}
-  <table class="table table-bordered table-hover">
-    <thead class="table-light">
-      <tr>
-        <th>{% trans "Pasajero" %}</th>
-        <th>{% trans "Vuelo" %}</th>
-        <th>{% trans "Fecha" %}</th>
-        <th>{% trans "Asiento" %}</th>
-        <th>{% trans "Tipo de Vuelo" %}</th>
-        <th>{% trans "Acciones" %}</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for reserva in object_list %}
+    {% if object_list %}
+    <table class="table table-bordered table-hover tabla-oscura">
+
+      <thead>
         <tr>
-          <td>{{ reserva.pasajero.username }}</td>
-          <td>{{ reserva.vuelo.codigo_vuelo }}</td>
-          <td>{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</td>
-          <td>F{{ reserva.fila }} - C{{ reserva.columna }}</td>
-          <td>{{ reserva.tipo_vuelo.nombre }}</td>
-          <td>
-            <a href="{% url 'reserva_detail' reserva.pk %}" class="btn btn-sm btn-info">{% trans "Ver" %}</a>
-            <a href="{% url 'reserva_update' reserva.pk %}" class="btn btn-sm btn-warning">{% trans "Editar" %}</a>
-            <a href="{% url 'reserva_delete' reserva.pk %}" class="btn btn-sm btn-danger">{% trans "Eliminar" %}</a>
-          </td>
+          <th>{% trans "Pasajero" %}</th>
+          <th>{% trans "Vuelo" %}</th>
+          <th>{% trans "Fecha" %}</th>
+          <th>{% trans "Asiento" %}</th>
+          <th>{% trans "Tipo de Vuelo" %}</th>
+          <th>{% trans "Acciones" %}</th>
         </tr>
-        {% endfor %}
-    </tbody>  
-  </table>
-  {% else %}
-    <p class="text-muted">{% trans "No hay reservas para mostrar." %}</p>
-  {% endif %}
-
+      </thead>
+      <tbody>
+          {% for reserva in object_list %}
+          <tr>
+            <td>{{ reserva.pasajero.username }}</td>
+            <td>{{ reserva.vuelo.codigo_vuelo }}</td>
+            <td>{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</td>
+            <td>F{{ reserva.fila }} - C{{ reserva.columna }}</td>
+            <td>{{ reserva.tipo_vuelo.nombre }}</td>
+            <td>
+              <a href="{% url 'reserva_detail' reserva.pk %}" class="btn btn-sm btn-info">{% trans "Ver" %}</a>
+              <a href="{% url 'reserva_update' reserva.pk %}" class="btn btn-sm btn-warning">{% trans "Editar" %}</a>
+              <a href="{% url 'reserva_delete' reserva.pk %}" class="btn btn-sm btn-danger">{% trans "Eliminar" %}</a>
+            </td>
+          </tr>
+          {% endfor %}
+      </tbody>  
+    </table>
+    {% else %}
+      <p class="text-muted">{% trans "No hay reservas para mostrar." %}</p>
+    {% endif %}
+    </div>
 </div>
 {% endblock %}

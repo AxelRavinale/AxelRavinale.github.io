@@ -54,3 +54,21 @@ textarea {
 .navbar-brand{
     color: #fff;
 }
+
+
+.tabla-oscura {
+    background-color: #1e1e2f;
+    color: white;
+}
+
+.tabla-oscura th,
+.tabla-oscura tr {
+    background-color: #1e1e2f !important;
+    color: white !important;
+}
+
+.tabla-oscura .table-light {
+    background-color: #2a2a3a !important;
+    color: white !important;
+}
+

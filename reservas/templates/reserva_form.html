@@ -4,11 +4,37 @@
 {% block title %}{% trans "Hacer una Reserva" %}{% endblock %}
 
 {% block content %}
+<div class="fondo-transparente">
+<style>
+  .card-dark {
+    background-color: #1e1e2f;
+    color: white;
+  }
+
+  .card-dark .form-control {
+    background-color: #2a2a3a;
+    color: white;
+    border: 1px solid #444;
+  }
+
+  .card-dark .form-control::placeholder {
+    color: #ccc;
+  }
+
+  .card-dark .form-text {
+    color: #aaa;
+  }
+
+  .card-dark .text-danger {
+    color: #ff6b6b !important;
+  }
+</style>
+
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
+      <div class="card shadow-sm border-0 card-dark">
+        <div class="card-header text-Dark">
           <h4 class="mb-0">{% trans "Hacer una Reserva" %}</h4>
         </div>
         <div class="card-body">
@@ -31,12 +57,13 @@
             {% endfor %}
 
             <div class="d-flex justify-content-end">
-              <button type="submit" class="btn btn-success">{% trans "Reservar" %}</button>
+              <button type="submit" class="btn btn-outline-success">{% trans "Reservar" %}</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 {% endblock %}
