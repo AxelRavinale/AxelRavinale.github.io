@@ -1,16 +1,19 @@
 {% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Eliminar Reserva" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>¿Estás seguro que deseas eliminar esta reserva?</h2>
-    <p><strong>Vuelo:</strong> {{ object.vuelo }}</p>
-    <p><strong>Fecha de reserva:</strong> {{ object.fecha_reserva }}</p>
-    <p><strong>Pasajero:</strong> {{ object.pasajero }}</p>
+    <h2>{% trans "¿Estás seguro que deseas eliminar esta reserva?" %}</h2>
+    <p><strong>{% trans "Vuelo:" %}</strong> {{ object.vuelo.codigo_vuelo }}</p>
+    <p><strong>{% trans "Fecha de reserva:" %}</strong> {{ object.fecha_reserva|date:"d/m/Y H:i" }}</p>
+    <p><strong>{% trans "Pasajero:" %}</strong> {{ object.pasajero.username }}</p>
 
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
-        <a href="{% url 'reserva_list' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">{% trans "Sí, eliminar" %}</button>
+        <a href="{% if request.user.is_staff %}{% url 'reserva_list' %}{% else %}{% url 'reserva_list_user' %}{% endif %}" class="btn btn-secondary">{% trans "Cancelar" %}</a>
     </form>
 </div>
 {% endblock %}

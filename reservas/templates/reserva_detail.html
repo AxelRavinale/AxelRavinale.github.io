@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Detalle de Reserva" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h4>{% trans "Detalle de la Reserva" %}</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>{% trans "Pasajero:" %}</strong> {{ object.pasajero.username }}</p>
+      <p><strong>{% trans "Vuelo:" %}</strong> {{ object.vuelo.codigo_vuelo }}</p>
+      <p><strong>{% trans "Fecha:" %}</strong> {{ object.fecha_reserva|date:"d/m/Y H:i" }}</p>
+      <p><strong>{% trans "Asiento:" %}</strong> F{{ object.fila }} - C{{ object.columna }}</p>
+      <p><strong>{% trans "Tipo de Vuelo:" %}</strong> {{ object.tipo_vuelo.nombre }}</p>
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+      <a href="{% if request.user.is_staff %}{% url 'reserva_list' %}{% else %}{% url 'reserva_list_user' %}{% endif %}" class="btn btn-secondary me-2">{% trans "Volver" %}</a>
+      <a href="{% url 'reserva_update' object.pk %}" class="btn btn-warning me-2">{% trans "Editar" %}</a>
+      <a href="{% url 'reserva_delete' object.pk %}" class="btn btn-danger">{% trans "Eliminar" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

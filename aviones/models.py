@@ -20,11 +20,7 @@ class Avion(models.Model):
         return f"{self.num_avion} ({self.modelo})"
 
     def generar_asientos(self):
-        """
-        Método para generar automáticamente los asientos del avión
-        según las filas y columnas.
-        """
-        columnas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # Soporta hasta 26 columnas
+        columnas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         for fila in range(1, self.filas + 1):
             for col in range(self.columnas):
                 Asiento.objects.create(
@@ -45,7 +41,7 @@ class Asiento(models.Model):
     avion = models.ForeignKey(Avion, on_delete=models.CASCADE, related_name='asientos', 
                              verbose_name=_("Avión"))
     fila = models.PositiveIntegerField(verbose_name=_("Fila"))
-    columna = models.CharField(max_length=2, verbose_name=_("Columna"))
+    columna = models.CharField(max_length=2, verbose_name=_("Columna"), null=True, blank=True)
     estado = models.CharField(max_length=10, choices=ESTADOS, default='libre', 
                              verbose_name=_("Estado"))
 
