@@ -1,20 +1,29 @@
 from django.contrib import admin
-from reservas.models import Reserva
+from .models import Reserva
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display = [
         'pasajero',
         'vuelo',
         'fecha_reserva',
-        'fila',
-        'columna',
-        'tipo_vuelo',
-        'activo'
-    )
-    list_filter = ('activo', 'tipo_vuelo', )
-    search_fields = ('pasajero__username', 'vuelo__codigo_vuelo')
-    ordering = ('fecha_reserva',)
-    
-    def has_delete_permission(self, request, obj=None):
-        return False
+        'get_fila',
+        'get_columna',
+        'get_tipo_vuelo',
+    ]
+    list_filter = ['vuelo', 'estado', 'activo']
+
+    def get_fila(self, obj):
+        return obj.asiento.fila  # Asumiendo que Asiento tiene atributo fila
+    get_fila.short_description = 'Fila'
+    get_fila.admin_order_field = 'asiento__fila'
+
+    def get_columna(self, obj):
+        return obj.asiento.columna  # Asumiendo que Asiento tiene atributo columna
+    get_columna.short_description = 'Columna'
+    get_columna.admin_order_field = 'asiento__columna'
+
+    def get_tipo_vuelo(self, obj):
+        return obj.vuelo.tipo_vuelo.nombre  # Ajusta según tu relación real
+    get_tipo_vuelo.short_description = 'Tipo de Vuelo'
+    get_tipo_vuelo.admin_order_field = 'vuelo__tipo_vuelo__nombre'
