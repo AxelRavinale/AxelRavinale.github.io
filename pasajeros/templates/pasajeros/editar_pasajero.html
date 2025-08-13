@@ -1,11 +1,12 @@
 {% extends 'pasajeros/base.html' %}
 {% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Editar Pasajero{% endblock %}
+{% block title %}{% trans "Editar Pasajero" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Editar Pasajero</h2>
+    <h2 class="mb-4">{% trans "Editar Pasajero" %}</h2>
 
     <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
@@ -64,8 +65,8 @@
             {% endif %}
         </div>
 
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a href="{% url 'lista_pasajeros' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">{% trans "Guardar Cambios" %}</button>
+        <a href="{% url 'lista_pasajeros' %}" class="btn btn-secondary">{% trans "Cancelar" %}</a>
     </form>
 </div>
 {% endblock %}

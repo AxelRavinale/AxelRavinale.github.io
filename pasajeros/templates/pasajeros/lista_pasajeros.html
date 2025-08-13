@@ -1,21 +1,22 @@
 {% extends 'pasajeros/base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Lista de Pasajeros{% endblock %}
+{% block title %}{% trans "Lista de Pasajeros" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Lista de Pasajeros</h2>
-    <a href="{% url 'registrar_pasajero' %}" class="btn btn-primary mb-3">Registrar nuevo pasajero</a>
+    <h2 class="mb-4">{% trans "Lista de Pasajeros" %}</h2>
+    <a href="{% url 'registrar_pasajero' %}" class="btn btn-primary mb-3">{% trans "Registrar nuevo pasajero" %}</a>
 
     <table class="table table-bordered table-hover">
         <thead class="table-light">
             <tr>
-                <th>Nombre</th>
-                <th>DNI</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                <th>Acciones</th>
+                <th>{% trans "Nombre" %}</th>
+                <th>{% trans "DNI" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Teléfono" %}</th>
+                <th>{% trans "Acciones" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -26,13 +27,16 @@
                     <td>{{ pasajero.email }}</td>
                     <td>{{ pasajero.telefono }}</td>
                     <td>
-                        <a href="{% url 'editar_pasajero' pasajero.id %}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{% url 'eliminar_pasajero' pasajero.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro que querés eliminar este pasajero?')">Eliminar</a>
+                        <a href="{% url 'editar_pasajero' pasajero.id %}" class="btn btn-sm btn-warning">{% trans "Editar" %}</a>
+                        <a href="{% url 'eliminar_pasajero' pasajero.id %}" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Estás seguro que querés eliminar este pasajero?')">
+                        {% trans "Eliminar" %}
+                        </a>
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No hay pasajeros registrados.</td>
+                    <td colspan="5" class="text-center">{% trans "No hay pasajeros registrados." %}</td>
                 </tr>
             {% endfor %}
         </tbody>
