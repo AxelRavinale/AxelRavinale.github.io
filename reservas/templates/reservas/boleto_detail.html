@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Boleto {{ boleto.codigo_barras }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>🎫 Boleto Electrónico</h1>
+        
+        <!-- Código de barras -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <h2 class="text-primary">{{ boleto.codigo_barras }}</h2>
+                <p class="text-muted">Código de Barras</p>
+                <small>Emitido el {{ boleto.fecha_emision|date:"d/m/Y H:i" }}</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Información del pasajero -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>👤 Información del Pasajero</h5>
+                    </div>
+                    <div class="card-body">
+                        {% with pasajero=boleto.pasajero_data %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Nombre:</strong> {{ pasajero.full_name|default:pasajero.username }}</p>
+                                    <p><strong>Email:</strong> {{ pasajero.email }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Reserva:</strong> {{ boleto.reserva.codigo_reserva }}</p>
+                                    <p><strong>Estado:</strong> 
+                                        {% if boleto.usado %}
+                                            <span class="badge bg-secondary">Usado</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Válido</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </div>
+                </div>
+
+                <!-- Información del vuelo -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>✈️ Información del Vuelo</h5>
+                    </div>
+                    <div class="card-body">
+                        {% with vuelo=boleto.vuelo_data %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>{{ vuelo.codigo_vuelo }}</h6>
+                                    <p><strong>Origen:</strong> {{ vuelo.origen }}</p>
+                                    <p><strong>Destino:</strong> {{ vuelo.destino }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Salida:</strong> {{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Llegada:</strong> {{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Información del Pasajero</h6>
+                            <p><strong>Nombre:</strong> {{ pasajero.full_name|default:pasajero.username }}</p>
+                            <p><strong>Reserva:</strong> {{ boleto.reserva.codigo_reserva }}</p>
+                            <p><strong>Emitido:</strong> {{ boleto.fecha_emision|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Estado:</strong> 
+                                {% if boleto.usado %}
+                                    <span class="badge bg-secondary">Usado</span>
+                                {% else %}
+                                    <span class="badge bg-success">Válido</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                {% endwith %}
+                
+                <!-- Asientos -->
+                <hr>
+                <h6>Asientos Asignados</h6>
+                <div class="row">
+                    {% for asiento in boleto.asientos_data %}
+                        <div class="col-md-3 mb-2">
+                            <div class="card">
+                                <div class="card-body py-2 text-center">
+                                    <strong>{{ asiento.numero }}</strong><br>
+                                    <small>{{ asiento.tipo }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'reservas:buscar_boleto' %}" class="btn btn-primary">
+                🔍 Buscar Otro Boleto
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

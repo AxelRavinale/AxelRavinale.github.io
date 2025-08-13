@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}¡Reserva Confirmada!{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="text-center mb-4">
+            <div class="alert alert-success">
+                <h1>🎉 ¡Pago Procesado Exitosamente!</h1>
+                <p class="lead">Tu reserva ha sido confirmada y tu boleto está listo</p>
+            </div>
+        </div>
+        
+        <!-- Información de la reserva -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5>✅ Reserva Confirmada</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Información de la Reserva</h6>
+                        <p><strong>Código de Reserva:</strong> <span class="text-primary fs-5">{{ reserva.codigo_reserva }}</span></p>
+                        <p><strong>Estado:</strong> <span class="badge bg-success">{{ reserva.get_estado_display }}</span></p>
+                        <p><strong>Fecha de Pago:</strong> {{ reserva.fecha_pago|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Total Pagado:</strong> ${{ reserva.precio_total|floatformat:2 }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Información del Vuelo</h6>
+                        <p><strong>Vuelo:</strong> {{ reserva.vuelo.codigo_vuelo }}</p>
+                        <p><strong>Ruta:</strong> {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}</p>
+                        <p><strong>Salida:</strong> {{ reserva.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Llegada:</strong> {{ reserva.vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if booleto %}
+            <!-- Información del boleto -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5>🎫 Tu Boleto</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Tu boleto ha sido generado exitosamente.</p>
+                    <a href="{% url 'reservas:descargar_boleto' boleto.pk %}" class="btn btn-primary btn-lg">
+                        📥 Descargar Boleto
+                    </a>
+                </div>
+            </div>
+        {% endif %} 
+        <div class="text-center">
+            <a href="{% url 'reservas:buscar_vuelo' %}" class="btn btn-primary">
+                🔍 Buscar Otro Vuelo
+            </a>
+        </div>
+                            <p><strong>Asientos:</strong> {{ vuelo.asientos_disponibles }} disponibles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Botón para descargar boleto -->
+        <div class="text-center mt-4">
+            <a href="{% url 'reservas:descargar_boleto' boleto.pk %}" class="btn btn-primary">
+                📥 Descargar Boleto
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

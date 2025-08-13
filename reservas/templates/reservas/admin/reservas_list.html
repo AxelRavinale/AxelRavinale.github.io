@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Reservas - Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>📋 Gestión de Reservas</h1>
+        
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.total }}</h4>
+                        <p>Total</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.sin_pago }}</h4>
+                        <p>Sin Pago</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.pagadas }}</h4>
+                        <p>Pagadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h4>${{ stats.ingresos_total|floatformat:2 }}</h4>
+                        <p>Ingresos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" name="codigo_reserva" class="form-control" 
+                               placeholder="Código reserva" value="{{ filtros.codigo_reserva }}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="vuelo" class="form-control" 
+                               placeholder="Código vuelo" value="{{ filtros.vuelo }}">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="estado" class="form-control">
+                            <option value="">Todos los estados</option>
+                            <option value="CRE" {% if filtros.estado == 'CRE' %}selected{% endif %}>Creada</option>
+                            <option value="RSP" {% if filtros.estado == 'RSP' %}selected{% endif %}>Sin Pago</option>
+                            <option value="CON" {% if filtros.estado == 'CON' %}selected{% endif %}>Confirmada</option>
+                            <option value="CAN" {% if filtros.estado == 'CAN' %}selected{% endif %}>Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="pasajero" class="form-control" 
+                               placeholder="Nombre pasajero" value="{{ filtros.pasajero }}">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                        <a href="{% url 'reservas:admin_reservas_list' %}" class="btn btn-secondary">Limpiar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de reservas -->
+        <div class="card">
+            <div class="card-body">
+                {% if reservas %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Pasajero</th>
+                                    <th>Vuelo</th>
+                                    <th>Estado</th>
+                                    <th>Precio</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reserva in reservas %}
+                                    <tr>
+                                        <td><strong>{{ reserva.codigo_reserva }}</strong></td>
+                                        <td>{{ reserva.pasajero.get_full_name|default:reserva.pasajero.username }}</td>
+                                        <td>
+                                            {{ reserva.vuelo.codigo_vuelo }}<br>
+                                            <small class="text-muted">
+                                                {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            {% if reserva.estado == 'CON' %}
+                                                <span class="badge bg-success">{{ reserva.get_estado_display }}</span>
+                                            {% elif reserva.estado == 'RSP' %}
+                                                <span class="badge bg-warning">{{ reserva.get_estado_display }}</span>
+                                            {% elif reserva.estado == 'CAN' %}
+                                                <span class="badge bg-danger">{{ reserva.get_estado_display }}</span>
+                                            {% else %}
+                                                <span class="badge bg-info">{{ reserva.get_estado_display }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>${{ reserva.precio_total|floatformat:2 }}</td>
+                                        <td>{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            <a href="{% url 'reservas:admin_reserva_detail' reserva.pk %}" 
+                                               class="btn btn-sm btn-primary">Ver</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p>No se encontraron reservas con los filtros aplicados.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

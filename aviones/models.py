@@ -53,3 +53,11 @@ class Asiento(models.Model):
 
     def __str__(self):
         return f"Asiento {self.fila}{self.columna} - {self.avion.num_avion}"
+    
+    @property
+    def numero(self):
+        """Retorna el número de asiento en formato '1A', '2B', etc."""
+        return f"{self.fila}{self.columna}"
+    
+    def __str__(self):
+        return f"Asiento {self.numero} - {self.avion.num_avion}"

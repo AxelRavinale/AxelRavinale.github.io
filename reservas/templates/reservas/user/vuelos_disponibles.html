@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Vuelos Disponibles{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>✈️ Vuelos Disponibles</h1>
+        
+        <!-- Filtros de búsqueda -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" name="origen" class="form-control" 
+                               placeholder="Ciudad de origen" value="{{ filtros.origen }}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="destino" class="form-control" 
+                               placeholder="Ciudad de destino" value="{{ filtros.destino }}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" name="fecha" class="form-control" value="{{ filtros.fecha }}">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                        <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-secondary">Limpiar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de vuelos -->
+        {% if vuelos_con_info %}
+            <div class="row">
+                {% for vuelo_info in vuelos_con_info %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0">{{ vuelo_info.vuelo.codigo_vuelo }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <h6>{{ vuelo_info.vuelo.origen_principal }} → {{ vuelo_info.vuelo.destino_principal }}</h6>
+                                <p class="mb-2">
+                                    <small class="text-muted">
+                                        <strong>Salida:</strong> {{ vuelo_info.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}<br>
+                                        <strong>Llegada:</strong> {{ vuelo_info.vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}
+                                    </small>
+                                </p>
+                                
+                                <div class="mb-2">
+                                    <small>
+                                        <strong>Disponibilidad:</strong> 
+                                        {{ vuelo_info.asientos_disponibles }}/{{ vuelo_info.asientos_totales }} asientos
+                                    </small>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar" style="width: {{ vuelo_info.asientos_ocupados|div:vuelo_info.asientos_totales|mul:100 }}%"></div>
+                                    </div>
+                                </div>
+                                
+                                <p class="mb-0">
+                                    <strong>Desde: ${{ vuelo_info.precio_desde|floatformat:2 }}</strong>
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                {% if vuelo_info.asientos_disponibles > 0 %}
+                                    <a href="{% url 'reservas:seleccion_asientos' vuelo_info.vuelo.pk %}" 
+                                       class="btn btn-primary w-100">
+                                        🎫 Seleccionar Asientos
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        Vuelo Completo
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <h5>No hay vuelos disponibles</h5>
+                <p>No se encontraron vuelos que coincidan con tu búsqueda.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

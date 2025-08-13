@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Boleto {{ boleto.codigo_barras }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-success text-center">
+            <h4>✅ Boleto Encontrado</h4>
+            <p>El boleto con código <strong>{{ boleto.codigo_barras }}</strong> es válido</p>
+        </div>
+        
+        <!-- Información básica del boleto -->
+        <div class="card">
+            <div class="card-header">
+                <h5>🎫 Información del Boleto</h5>
+            </div>
+            <div class="card-body">
+                {% with vuelo=boleto.vuelo_data pasajero=boleto.pasajero_data %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Información del Vuelo</h6>
+                            <p><strong>Código:</strong> {{ vuelo.codigo_vuelo }}</p>
+                            <p><strong>Ruta:</strong> {{ vuelo.origen }} → {{ vuelo.destino }}</p>
+                            <p><strong>Salida:</strong>eto %}
+                            <a href="{% url 'reservas:boleto_detail' boleto.pk %}" 
+                               class="btn btn-primary btn-sm w-100 mb-2">
+                                🎫 Ver Boleto
+                            </a>
+                            <a href="{% url 'reservas:descargar_boleto' boleto.pk %}" 
+                               class="btn btn-outline-primary btn-sm w-100">
+                                📥 Descargar Boleto
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

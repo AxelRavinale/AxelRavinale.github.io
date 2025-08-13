@@ -1,0 +1,89 @@
+{% extends 'reservas/base.html' %}
+{% load i18n %}
+
+{% block title %}Panel de Administración - {% trans "Sistema de Reservas" %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">🔧 Panel de Administración</h1>
+        
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5>{{ stats.vuelos_totales }}</h5>
+                        <p>Vuelos Totales</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5>{{ stats.vuelos_configurados }}</h5>
+                        <p>Vuelos Configurados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h5>{{ stats.vuelos_pendientes }}</h5>
+                        <p>Pendientes Config.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5>${{ stats.ingresos_totales|floatformat:2 }}</h5>
+                        <p>Ingresos Totales</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🎫 Gestión de Reservas</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'reservas:admin_crear_reserva' %}" class="btn btn-primary mb-2">
+                            ➕ Configurar Vuelo para Reservas
+                        </a><br>
+                        <a href="{% url 'reservas:admin_reservas_list' %}" class="btn btn-outline-primary">
+                            📋 Ver Todas las Reservas
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>⚠️ Vuelos Sin Configurar</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if vuelos_sin_configurar %}
+                            {% for vuelo in vuelos_sin_configurar %}
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span>{{ vuelo.codigo_vuelo }} - {{ vuelo.origen_principal }} → {{ vuelo.destino_principal }}</span>
+                                    <a href="{% url 'reservas:admin_configuracion_vuelo' vuelo.pk %}" class="btn btn-sm btn-warning">
+                                        Configurar
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">✅ Todos los vuelos están configurados</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
