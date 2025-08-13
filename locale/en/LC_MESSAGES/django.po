@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 00:56+0000\n"
+"POT-Creation-Date: 2025-08-13 01:11+0000\n"
 "PO-Revision-Date: 2025-07-04 21:00-0300\n"
 "Last-Translator: Danilo Gavari <danilo@example.com>\n"
 "Language-Team: English\n"
@@ -12,17 +12,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: autentificacion/templates/login.html:6
-#: autentificacion/templates/login.html:24 home/templates/home.html:13
+#: autentificacion/templates/login.html:24 home/templates/base.html:75
+#: home/templates/home.html:14
 msgid "Iniciar sesión"
 msgstr "Log in"
 
 #: autentificacion/templates/login.html:13
-#: autentificacion/templates/register.html:13
 msgid "Nombre de usuario"
 msgstr "Username"
 
 #: autentificacion/templates/login.html:19
-#: autentificacion/templates/register.html:25
 msgid "Contraseña"
 msgstr "Password"
 
@@ -31,35 +30,22 @@ msgid "¿No tienes cuenta? Regístrate"
 msgstr "Don't have an account? Sign up"
 
 #: autentificacion/templates/register.html:6
-#: autentificacion/templates/register.html:36 home/templates/home.html:14
+msgid "Registro de Usuario"
+msgstr "User Registration"
+
+#: autentificacion/templates/register.html:19 home/templates/home.html:15
 msgid "Registrarse"
 msgstr "Register"
 
-#: autentificacion/templates/register.html:19
-msgid "Correo Electrónico"
-msgstr "Email"
-
-#: autentificacion/templates/register.html:31
-msgid "Repetir contraseña"
-msgstr "Repeat password"
-
-#: autentificacion/templates/register.html:37
-msgid "¿Ya tienes una cuenta? Inicia sesión"
-msgstr "Already have an account? Log in"
-
-#: autentificacion/views.py:25
-msgid "Registro exitoso. ¡Bienvenido/a!"
-msgstr "Registration successful. Welcome!"
-
-#: autentificacion/views.py:43
+#: autentificacion/views.py:48
 msgid "Inicio de sesión exitoso."
 msgstr "Successfully logged in."
 
-#: autentificacion/views.py:46
+#: autentificacion/views.py:51
 msgid "Usuario o contraseña incorrectos."
 msgstr "Invalid username or password."
 
-#: autentificacion/views.py:52
+#: autentificacion/views.py:57
 msgid "Sesión cerrada correctamente."
 msgstr "Successfully logged out."
 
@@ -67,7 +53,7 @@ msgstr "Successfully logged out."
 msgid "Número de Avión"
 msgstr "Aircraft Number"
 
-#: aviones/models.py:6
+#: aviones/models.py:6 flota/templates/flota/lista_aviones.html:24
 msgid "Modelo"
 msgstr "Model"
 
@@ -79,10 +65,10 @@ msgstr "Rows"
 msgid "Columnas"
 msgstr "Columns"
 
-#: aviones/models.py:9 aviones/models.py:50 vuelos/forms.py:220
-#: vuelos/templates/vuelos/vuelo_detail.html:347
-#: vuelos/templates/vuelos/vuelo_detail.html:513
-#: vuelos/templates/vuelos/vuelo_list.html:47
+#: aviones/models.py:9 aviones/models.py:46 reservas/models.py:48
+#: vuelos/forms.py:260 vuelos/templates/vuelos/vuelo_detail.html:119
+#: vuelos/templates/vuelos/vuelo_detail.html:285
+#: vuelos/templates/vuelos/vuelo_list.html:50
 msgid "Estado"
 msgstr "Status"
 
@@ -94,24 +80,34 @@ msgstr "E.g.: operational, maintenance"
 msgid "Kilómetros Recorridos"
 msgstr "Kilometers Travelled"
 
-#: aviones/models.py:12 core/forms.py:39 core/models.py:6 core/models.py:20
-#: core/models.py:36 core/models.py:52 core/models.py:63 core/models.py:81
-#: vuelos/forms.py:49 vuelos/forms.py:94 vuelos/forms.py:129
-#: vuelos/forms.py:176 vuelos/models.py:16 vuelos/models.py:38
-#: vuelos/models.py:77 vuelos/models.py:111 vuelos/models.py:128
-#: vuelos/templates/vuelos/vuelo_detail.html:349
-#: vuelos/templates/vuelos/vuelo_detail.html:484
-#: vuelos/templates/vuelos/vuelo_detail.html:515
-#: vuelos/templates/vuelos/vuelo_list.html:194
-#: vuelos/templates/vuelos/vuelo_list.html:313
+#: aviones/models.py:12 core/forms.py:39 core/models.py:7 core/models.py:21
+#: core/models.py:37 core/models.py:53 core/models.py:65 reservas/models.py:50
+#: vuelos/forms.py:46 vuelos/forms.py:92 vuelos/forms.py:127
+#: vuelos/forms.py:166 vuelos/forms.py:195 vuelos/models.py:16
+#: vuelos/models.py:71 vuelos/models.py:105 vuelos/models.py:122
+#: vuelos/templates/vuelos/vuelo_detail.html:121
+#: vuelos/templates/vuelos/vuelo_detail.html:256
+#: vuelos/templates/vuelos/vuelo_detail.html:287
+#: vuelos/templates/vuelos/vuelo_escalas.html:124
+#: vuelos/templates/vuelos/vuelo_escalas.html:298
+#: vuelos/templates/vuelos/vuelo_escalas.html:348
+#: vuelos/templates/vuelos/vuelo_list.html:134
+#: vuelos/templates/vuelos/vuelo_list.html:234
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:125
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:187
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:169
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:249
 msgid "Activo"
 msgstr "Active"
 
-#: aviones/models.py:15 aviones/models.py:46 vuelos/forms.py:128
-#: vuelos/forms.py:230 vuelos/models.py:76
-#: vuelos/templates/vuelos/vuelo_list.html:64
-#: vuelos/templates/vuelos/vuelo_list.html:175
-#: vuelos/templates/vuelos/vuelo_list.html:278
+#: aviones/models.py:15 aviones/models.py:42 vuelos/forms.py:126
+#: vuelos/forms.py:270 vuelos/models.py:70
+#: vuelos/templates/vuelos/vuelo_escalas.html:112
+#: vuelos/templates/vuelos/vuelo_escalas.html:347
+#: vuelos/templates/vuelos/vuelo_list.html:67
+#: vuelos/templates/vuelos/vuelo_list.html:163
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:43
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:91
 msgid "Avión"
 msgstr "Aircraft"
 
@@ -119,31 +115,33 @@ msgstr "Aircraft"
 msgid "Aviones"
 msgstr "Aircrafts"
 
-#: aviones/models.py:40
+#: aviones/models.py:36
 msgid "Libre"
 msgstr "Free"
 
-#: aviones/models.py:41
+#: aviones/models.py:37
 msgid "Reservado"
 msgstr "Reserved"
 
-#: aviones/models.py:42
+#: aviones/models.py:38
 msgid "Ocupado"
 msgstr "Occupied"
 
-#: aviones/models.py:47
+#: aviones/models.py:43
 msgid "Fila"
 msgstr "Row"
 
-#: aviones/models.py:48
+#: aviones/models.py:44
 msgid "Columna"
 msgstr "Column"
 
-#: aviones/models.py:53
+#: aviones/models.py:49 reservas/models.py:89
+#: reservas/templates/reserva_list.html:31
+#: reservas/templates/reserva_list_user.html:17
 msgid "Asiento"
 msgstr "Seat"
 
-#: aviones/models.py:54
+#: aviones/models.py:50
 msgid "Asientos"
 msgstr "Seats"
 
@@ -151,36 +149,39 @@ msgstr "Seats"
 msgid "ejemplo@dominio.com"
 msgstr ""
 
-#: core/forms.py:31 core/models.py:5 core/models.py:19 core/models.py:35
-#: core/models.py:51 core/models.py:62 core/models.py:73
+#: core/forms.py:31 core/models.py:6 core/models.py:20 core/models.py:36
+#: core/models.py:52 core/models.py:64
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:15
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:16
 msgid "Nombre"
 msgstr "Name"
 
-#: core/forms.py:32 core/models.py:74
+#: core/forms.py:32 pasajeros/templates/pasajeros/registrar_pasajero.html:26
 msgid "Apellido"
 msgstr "Last Name"
 
-#: core/forms.py:33 core/models.py:66 core/models.py:75
+#: core/forms.py:33 core/models.py:68
 msgid "Tipo de Documento"
 msgstr "Document type"
 
-#: core/forms.py:34 core/models.py:76
+#: core/forms.py:34
 msgid "Número de Documento"
 msgstr "Document number"
 
-#: core/forms.py:35 core/models.py:77
+#: core/forms.py:35
 msgid "Fecha de Nacimiento"
 msgstr "Loading date"
 
-#: core/forms.py:36 core/models.py:78
+#: core/forms.py:36 pasajeros/templates/pasajeros/lista_pasajeros.html:17
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:48
 msgid "Email"
 msgstr ""
 
-#: core/forms.py:37 core/models.py:40 core/models.py:79
+#: core/forms.py:37 core/models.py:41
 msgid "Localidad"
 msgstr "New location"
 
-#: core/forms.py:38 core/models.py:55 core/models.py:80
+#: core/forms.py:38 core/models.py:56
 msgid "Género"
 msgstr "Gender"
 
@@ -220,50 +221,46 @@ msgstr "This document number is already in use."
 msgid "Este email ya está registrado."
 msgstr "This email is already registered."
 
-#: core/models.py:10 core/models.py:18
+#: core/models.py:11 core/models.py:19
 #: vuelos/templates/vuelos/provincia_form.html:16
 msgid "País"
 msgstr "Country"
 
-#: core/models.py:11
+#: core/models.py:12
 msgid "Países"
 msgstr "Countries"
 
-#: core/models.py:24 core/models.py:34
+#: core/models.py:25 core/models.py:35
 msgid "Provincia"
 msgstr "Province"
 
-#: core/models.py:25
+#: core/models.py:26
 msgid "Provincias"
 msgstr "Provinces"
 
-#: core/models.py:41
+#: core/models.py:42
 msgid "Localidades"
 msgstr "Locations"
 
-#: core/models.py:56
+#: core/models.py:57
 msgid "Géneros"
 msgstr "Gender"
 
-#: core/models.py:67
+#: core/models.py:69
 msgid "Tipos de Documento"
 msgstr "Document types"
 
-#: core/models.py:84 vuelos/forms.py:174 vuelos/models.py:109
-#: vuelos/models.py:126
-msgid "Persona"
-msgstr "Person"
-
-#: core/models.py:85
-msgid "Personas"
-msgstr "People"
+#: core/models.py:77
+msgid "Usuario"
+msgstr ""
 
 #: core/templates/core/persona_form.html:5
-#: core/templates/core/persona_form.html:13
+#: core/templates/core/persona_form.html:14
 msgid "Crear nueva Persona"
 msgstr "Create new person"
 
-#: core/templates/core/persona_form.html:29
+#: core/templates/core/persona_form.html:30
+#: reservas/templates/reserva_form.html:48
 #: vuelos/templates/vuelos/localidad_form.html:28
 #: vuelos/templates/vuelos/pais_form.html:20
 #: vuelos/templates/vuelos/provincia_form.html:28
@@ -271,38 +268,150 @@ msgstr "Create new person"
 msgid "Guardar"
 msgstr "Save"
 
-#: home/templates/base.html:11
-msgid "INICIO"
-msgstr "HOME"
+#: flota/templates/flota/editar_avion.html:5
+#: flota/templates/flota/editar_avion.html:9
+msgid "Editar Avión"
+msgstr "Edit Aircraft"
 
-#: home/templates/base.html:15
-msgid "Ver lista de vuelos"
-msgstr "View flight list"
+#: flota/templates/flota/editar_avion.html:89
+msgid "Guardar cambios"
+msgstr "Save changes"
 
-#: home/templates/base.html:21
+#: flota/templates/flota/editar_avion.html:90
+#: flota/templates/flota/registrar_avion.html:89
+#: pasajeros/templates/pasajeros/editar_pasajero.html:69
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:69
+#: reservas/templates/reserva_confirm_delete.html:16
+#: reservas/templates/reserva_list_user.html:32
+#: vuelos/templates/vuelos/cargar.html:162
+#: vuelos/templates/vuelos/escala_form.html:122
+#: vuelos/templates/vuelos/update_vuelo.html:299
+#: vuelos/templates/vuelos/vuelo_escalas.html:205
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:170
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:233
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: flota/templates/flota/lista_aviones.html:5
+#: flota/templates/flota/lista_aviones.html:10
+msgid "Lista de Aviones"
+msgstr "Aircraft List"
+
+#: flota/templates/flota/lista_aviones.html:18
+msgid "Registrar Nuevo Avión"
+msgstr "Register New Aircraft"
+
+#: flota/templates/flota/lista_aviones.html:23
+#: vuelos/templates/vuelos/vuelo_detail.html:108
+msgid "Fabricante"
+msgstr "Manufacturer"
+
+#: flota/templates/flota/lista_aviones.html:25
+#: vuelos/templates/vuelos/vuelo_detail.html:105
+msgid "Matrícula"
+msgstr "Registration"
+
+#: flota/templates/flota/lista_aviones.html:26
+#: vuelos/templates/vuelos/vuelo_detail.html:106
+msgid "Capacidad"
+msgstr "Capacity"
+
+#: flota/templates/flota/lista_aviones.html:27
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:19
+#: reservas/templates/reserva_list.html:33
+#: reservas/templates/reserva_list_user.html:19
+msgid "Acciones"
+msgstr "Actions"
+
+#: flota/templates/flota/lista_aviones.html:38
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:30
+#: reservas/templates/reserva_detail.html:21
+#: reservas/templates/reserva_list.html:46
+#: reservas/templates/reserva_list_user.html:31
+#: vuelos/templates/vuelos/vuelo_list.html:201
+#: vuelos/templates/vuelos/vuelo_list.html:335
+msgid "Editar"
+msgstr "Edit"
+
+#: flota/templates/flota/lista_aviones.html:39
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:33
+#: reservas/templates/reserva_detail.html:22
+#: reservas/templates/reserva_list.html:47
+msgid "Eliminar"
+msgstr "Delete"
+
+#: flota/templates/flota/lista_aviones.html:44
+msgid "No hay aviones registrados."
+msgstr "No aircraft registered."
+
+#: flota/templates/flota/registrar_avion.html:4
+#: flota/templates/flota/registrar_avion.html:8
+msgid "Registrar Avión"
+msgstr "Register Aircraft"
+
+#: flota/templates/flota/registrar_avion.html:88
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:68
+msgid "Registrar"
+msgstr "Register"
+
+#: home/templates/base.html:16
+msgid "Gestión de Aerolíneas"
+msgstr ""
+
+#: home/templates/base.html:18
+msgid "Toggle navigation"
+msgstr ""
+
+#: home/templates/base.html:27 vuelos/models.py:42
+#: vuelos/templates/vuelos/vuelo_detail.html:19
+msgid "Vuelos"
+msgstr "Flights"
+
+#: home/templates/base.html:30 reservas/models.py:54
+#, fuzzy
+#| msgid "Reservado"
+msgid "Reservas"
+msgstr "Reserved"
+
+#: home/templates/base.html:33
+msgid "Hacer reserva"
+msgstr "Make reservation"
+
+#: home/templates/base.html:40
+msgid "Administración"
+msgstr "Administration"
+
+#: home/templates/base.html:43
 msgid "Cargar vuelos"
 msgstr "Load flights"
 
-#: home/templates/base.html:26
-#| msgid "Crear nueva provincia"
+#: home/templates/base.html:44
+msgid "Cargar flota"
+msgstr "Load fleet"
+
+#: home/templates/base.html:45
 msgid "Crear personas"
 msgstr "Create people"
 
-#: home/templates/home.html:7
+#: home/templates/base.html:65
+msgid "Hola,"
+msgstr ""
+
+#: home/templates/base.html:69 home/templates/home.html:22
+msgid "Cerrar sesión"
+msgstr "Log out"
+
+#: home/templates/home.html:8
 msgid "¡Bienvenido!"
 msgstr "¡Welcome!"
 
-#: home/templates/home.html:11
+#: home/templates/home.html:12
 msgid "Inicia sesión para poder acceder a todas las funcionalidades."
 msgstr "Please log in to access all features."
 
-#: home/templates/home.html:18
+#: home/templates/home.html:19
 msgid "¡Ya has iniciado sesión!"
 msgstr "¡You are already logged in!"
-
-#: home/templates/home.html:21
-msgid "Cerrar sesión"
-msgstr "Log out"
 
 #: home/templates/home.html:27
 msgid "Bienvenido"
@@ -316,317 +425,560 @@ msgstr "This is the home page."
 msgid "Idioma actual"
 msgstr "Current language"
 
-#: vuelos/forms.py:15
-#| msgid "Localidades existentes"
-msgid "Seleccionar Escalas Existentes"
-msgstr "Select scale existing"
+#: pasajeros/templates/pasajeros/editar_pasajero.html:5
+#: pasajeros/templates/pasajeros/editar_pasajero.html:9
+msgid "Editar Pasajero"
+msgstr "Edit Passenger"
 
-#: vuelos/forms.py:16
-#| msgid "Selecciona la localidad de destino de esta escala"
-msgid "Selecciona las escalas que deseas agregar a este vuelo."
-msgstr "Select the stopovers you want to add to this flight."
+#: pasajeros/templates/pasajeros/editar_pasajero.html:68
+msgid "Guardar Cambios"
+msgstr "Save Changes"
 
-#: vuelos/forms.py:42 vuelos/forms.py:225 vuelos/models.py:28
-#: vuelos/templates/vuelos/cargar.html:57
-#: vuelos/templates/vuelos/update_vuelo.html:75
-msgid "Código de Vuelo"
-msgstr "Flight Code"
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:5
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:9
+#, fuzzy
+#| msgid "Lista de Vuelos"
+msgid "Lista de Pasajeros"
+msgstr "Flight List"
 
-#: vuelos/forms.py:43 vuelos/models.py:30
-#: vuelos/templates/vuelos/cargar.html:77
-#: vuelos/templates/vuelos/update_vuelo.html:101
-msgid "Origen Principal"
-msgstr "Main Origin"
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:10
+#, fuzzy
+#| msgid "Registrar Nuevo Pasajero"
+msgid "Registrar nuevo pasajero"
+msgstr "Register New Passenger"
 
-#: vuelos/forms.py:44 vuelos/models.py:32
-#: vuelos/templates/vuelos/cargar.html:87
-#: vuelos/templates/vuelos/update_vuelo.html:113
-msgid "Destino Principal"
-msgstr "Main Destination"
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:16
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:38
+msgid "DNI"
+msgstr "ID Number"
 
-#: vuelos/forms.py:45 vuelos/models.py:37
-#: vuelos/templates/vuelos/cargar.html:67
-#: vuelos/templates/vuelos/update_vuelo.html:87
-msgid "Avión Asignado"
-msgstr "Assigned Aircraft"
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:18
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:59
+msgid "Teléfono"
+msgstr "Phone"
 
-#: vuelos/forms.py:46 vuelos/models.py:33
-msgid "Fecha de Salida Estimada"
-msgstr "Departure Date and Time estimated"
+#: pasajeros/templates/pasajeros/lista_pasajeros.html:39
+#, fuzzy
+#| msgid "No hay aviones registrados."
+msgid "No hay pasajeros registrados."
+msgstr "No aircraft registered."
 
-#: vuelos/forms.py:47 vuelos/models.py:34
-msgid "Fecha de Llegada Estimada"
-msgstr "Arrival Date and Time estimated"
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:5
+#: pasajeros/templates/pasajeros/registrar_pasajero.html:9
+msgid "Registrar Nuevo Pasajero"
+msgstr "Register New Passenger"
 
-#: vuelos/forms.py:48 vuelos/models.py:35
-#: vuelos/templates/vuelos/cargar.html:124
-#: vuelos/templates/vuelos/update_vuelo.html:153
-#: vuelos/templates/vuelos/vuelo_detail.html:307
-#: vuelos/templates/vuelos/vuelo_detail.html:508
-msgid "Kilómetros Totales"
-msgstr "Total Kilometers"
+#: reservas/models.py:17 reservas/templates/reserva_list.html:28
+#, fuzzy
+#| msgid "pasajeros"
+msgid "Pasajero"
+msgstr "passengers"
 
-#: vuelos/forms.py:52
-msgid "Ingrese el código único del vuelo (ej: AA123)"
-msgstr "Enter the unique flight code (e.g.: AA123)"
-
-#: vuelos/forms.py:53
-msgid "Seleccione la fecha y hora de salida"
-msgstr "Select departure Date and Time"
-
-#: vuelos/forms.py:54
-msgid "Seleccione la fecha y hora de llegada"
-msgstr "Select arrival Date and Time"
-
-#: vuelos/forms.py:55
-msgid "Distancia total en kilómetros"
-msgstr "Total distance in kilometers"
-
-#: vuelos/forms.py:56
-msgid "Marque si el vuelo está activo"
-msgstr "Check if the flight is active"
-
-#: vuelos/forms.py:66 vuelos/forms.py:105
-msgid "Seleccione origen"
-msgstr "Select origin"
-
-#: vuelos/forms.py:67 vuelos/forms.py:106
-msgid "Seleccione destino"
-msgstr "Select gender"
-
-#: vuelos/forms.py:68 vuelos/forms.py:146
-msgid "Seleccione avión"
-msgstr "Select flight"
-
-#: vuelos/forms.py:91 vuelos/models.py:12
-msgid "Origen"
-msgstr "Origin"
-
-#: vuelos/forms.py:92 vuelos/models.py:14
-msgid "Destino"
-msgstr "Destination"
-
-#: vuelos/forms.py:93 vuelos/models.py:15
-msgid "Kilómetros Estimados"
-msgstr "Estimated Kilometers"
-
-#: vuelos/forms.py:97
-msgid "Distancia estimada en kilómetros"
-msgstr "Estimated distance between in kilometers"
-
-#: vuelos/forms.py:98 vuelos/forms.py:135
-msgid "Marque si la escala está activa"
-msgstr "Check if the scale is active"
-
-#: vuelos/forms.py:124 vuelos/models.py:73
-msgid "Orden"
-msgstr "Order"
-
-#: vuelos/forms.py:125 vuelos/models.py:19 vuelos/models.py:72
-#: vuelos/templates/vuelos/update_vuelo.html:191
-msgid "Escala"
-msgstr "Stopover"
-
-#: vuelos/forms.py:126 vuelos/models.py:74
-msgid "Fecha de Salida"
-msgstr "Departure Date"
-
-#: vuelos/forms.py:127 vuelos/models.py:75
-msgid "Fecha de Llegada"
-msgstr "Arrival Date"
-
-#: vuelos/forms.py:132
-msgid "Orden de la escala en el vuelo"
-msgstr "Stopover order in the flight"
-
-#: vuelos/forms.py:133
-msgid "Fecha y hora de salida de esta escala"
-msgstr "Departure Date and Time"
-
-#: vuelos/forms.py:134
-msgid "Fecha y hora de llegada de esta escala"
-msgstr "Arrival Date and Time"
-
-#: vuelos/forms.py:145
-msgid "Seleccione escala"
-msgstr "Select scale"
-
-#: vuelos/forms.py:175 vuelos/models.py:110 vuelos/models.py:127
-msgid "Rol"
-msgstr ""
-
-#: vuelos/forms.py:179
-msgid "Seleccione el rol de la persona en la tripulación"
-msgstr "Select the person's role in the crew"
-
-#: vuelos/forms.py:180
-msgid "Marque si la asignación está activa"
-msgstr "Check if the asignation is active"
-
-#: vuelos/forms.py:188
-msgid "Seleccione persona"
-msgstr "Select person"
-
-#: vuelos/forms.py:189
-msgid "Seleccione rol"
-msgstr "Select rol"
-
-#: vuelos/forms.py:205 vuelos/templates/vuelos/vuelo_list.html:35
-msgid "Fecha Desde"
-msgstr "Date From"
-
-#: vuelos/forms.py:210 vuelos/templates/vuelos/vuelo_list.html:41
-msgid "Fecha Hasta"
-msgstr "Date To"
-
-#: vuelos/forms.py:215 vuelos/templates/vuelos/vuelo_list.html:50
-msgid "Todos"
-msgstr "All"
-
-#: vuelos/forms.py:216 vuelos/templates/vuelos/vuelo_list.html:51
-msgid "Activos"
-msgstr "Active"
-
-#: vuelos/forms.py:217 vuelos/templates/vuelos/vuelo_list.html:52
-msgid "Inactivos"
-msgstr "Inactive"
-
-#: vuelos/forms.py:224 vuelos/templates/vuelos/vuelo_list.html:60
-msgid "Ej: AA123"
-msgstr "Ex: AA123"
-
-#: vuelos/forms.py:229
-msgid "Modelo o Matrícula"
-msgstr "Model/Registration"
-
-#: vuelos/models.py:20 vuelos/templates/vuelos/vuelo_detail.html:313
-#: vuelos/templates/vuelos/vuelo_list.html:288
-msgid "Escalas"
-msgstr "Stopovers"
-
-#: vuelos/models.py:39
-msgid "Cargado Por"
-msgstr "Upload by"
-
-#: vuelos/models.py:40
-msgid "Fecha de Carga"
-msgstr "Upload date"
-
-#: vuelos/models.py:43 vuelos/models.py:70 vuelos/models.py:108
+#: reservas/models.py:23 reservas/templates/reserva_list.html:29
+#: reservas/templates/reserva_list_user.html:15 vuelos/models.py:41
+#: vuelos/models.py:64 vuelos/models.py:102
+#: vuelos/templates/vuelos/vuelo_escalas.html:34
 msgid "Vuelo"
 msgstr "Flight"
 
-#: vuelos/models.py:44 vuelos/templates/vuelos/vuelo_detail.html:247
-msgid "Vuelos"
-msgstr "Flights"
+#: reservas/models.py:25
+#, fuzzy
+#| msgid "Fecha de Carga"
+msgid "Fecha de Reserva"
+msgstr "Upload date"
 
-#: vuelos/models.py:80 vuelos/models.py:125
+#: reservas/models.py:30
+#, fuzzy
+#| msgid "Duración Total"
+msgid "Precio Total"
+msgstr "Total Duration"
+
+#: reservas/models.py:36
+#, fuzzy
+#| msgid "Código de Vuelo"
+msgid "Código de Reserva"
+msgstr "Flight Code"
+
+#: reservas/models.py:40
+msgid "Creada"
+msgstr ""
+
+#: reservas/models.py:41
+msgid "Confirmada"
+msgstr ""
+
+#: reservas/models.py:42
+#, fuzzy
+#| msgid "Cancelar"
+msgid "Cancelada"
+msgstr "Cancel"
+
+#: reservas/models.py:53 reservas/models.py:84
+#, fuzzy
+#| msgid "Reservado"
+msgid "Reserva"
+msgstr "Reserved"
+
+#: reservas/models.py:94
+msgid "Precio"
+msgstr ""
+
+#: reservas/models.py:98 reservas/templates/reserva_detail.html:4
+#, fuzzy
+#| msgid "Detalle del Vuelo"
+msgid "Detalle de Reserva"
+msgstr "Flight Detail"
+
+#: reservas/models.py:99
+#, fuzzy
+#| msgid "Detalles del Vuelo"
+msgid "Detalles de Reservas"
+msgstr "Flight Details"
+
+#: reservas/models.py:109
+msgid "El asiento no pertenece al avión asignado al vuelo."
+msgstr ""
+
+#: reservas/models.py:111
+msgid "El precio debe ser mayor a 0."
+msgstr ""
+
+#: reservas/templates/reserva_confirm_delete.html:4
+#, fuzzy
+#| msgid "Eliminar"
+msgid "Eliminar Reserva"
+msgstr "Delete"
+
+#: reservas/templates/reserva_confirm_delete.html:8
+#, fuzzy
+#| msgid "¿Estás seguro que querés eliminar este pasajero?"
+msgid "¿Estás seguro que deseas eliminar esta reserva?"
+msgstr "Are you sure you want to delete this passenger?"
+
+#: reservas/templates/reserva_confirm_delete.html:9
+#: reservas/templates/reserva_detail.html:14
+#, fuzzy
+#| msgid "Vuelo"
+msgid "Vuelo:"
+msgstr "Flight"
+
+#: reservas/templates/reserva_confirm_delete.html:10
+#, fuzzy
+#| msgid "Fecha de Carga"
+msgid "Fecha de reserva:"
+msgstr "Upload date"
+
+#: reservas/templates/reserva_confirm_delete.html:11
+#: reservas/templates/reserva_detail.html:13
+#, fuzzy
+#| msgid "pasajeros"
+msgid "Pasajero:"
+msgstr "passengers"
+
+#: reservas/templates/reserva_confirm_delete.html:15
+#, fuzzy
+#| msgid "Eliminar"
+msgid "Sí, eliminar"
+msgstr "Delete"
+
+#: reservas/templates/reserva_detail.html:10
+#, fuzzy
+#| msgid "Detalle del Vuelo"
+msgid "Detalle de la Reserva"
+msgstr "Flight Detail"
+
+#: reservas/templates/reserva_detail.html:15
+msgid "Fecha:"
+msgstr ""
+
+#: reservas/templates/reserva_detail.html:16
+#, fuzzy
+#| msgid "Asiento"
+msgid "Asiento:"
+msgstr "Seat"
+
+#: reservas/templates/reserva_detail.html:17
+#, fuzzy
+#| msgid "Tipo de vuelo"
+msgid "Tipo de Vuelo:"
+msgstr "Flight type"
+
+#: reservas/templates/reserva_detail.html:20
+msgid "Volver"
+msgstr ""
+
+#: reservas/templates/reserva_form.html:4
+#: reservas/templates/reserva_form.html:29
+#, fuzzy
+#| msgid "Hacer reserva"
+msgid "Hacer una Reserva"
+msgstr "Make reservation"
+
+#: reservas/templates/reserva_form.html:29
+#, fuzzy
+#| msgid "Editar Pasajero"
+msgid "Editar Reserva"
+msgstr "Edit Passenger"
+
+#: reservas/templates/reserva_list.html:4
+#: reservas/templates/reserva_list.html:9
+#, fuzzy
+msgid "Lista de Reservas"
+msgstr "View reservation list"
+
+#: reservas/templates/reserva_list.html:13
+#, fuzzy
+#| msgid "Registrar Nuevo Pasajero"
+msgid "Buscar por pasajero"
+msgstr "Register New Passenger"
+
+#: reservas/templates/reserva_list.html:16
+#, fuzzy
+#| msgid "Cargar vuelos"
+msgid "Buscar por vuelo"
+msgstr "Load flights"
+
+#: reservas/templates/reserva_list.html:19
+msgid "Buscar"
+msgstr ""
+
+#: reservas/templates/reserva_list.html:20
+#, fuzzy
+#| msgid "Reservado"
+msgid "Nueva Reserva"
+msgstr "Reserved"
+
+#: reservas/templates/reserva_list.html:30
+#: reservas/templates/reserva_list_user.html:16
+#, fuzzy
+#| msgid "Fecha Desde"
+msgid "Fecha"
+msgstr "Date From"
+
+#: reservas/templates/reserva_list.html:32
+#: reservas/templates/reserva_list_user.html:18
+#, fuzzy
+#| msgid "Tipo de vuelo"
+msgid "Tipo de Vuelo"
+msgstr "Flight type"
+
+#: reservas/templates/reserva_list.html:45
+#: reservas/templates/reserva_list_user.html:30
+msgid "Ver"
+msgstr ""
+
+#: reservas/templates/reserva_list.html:54
+msgid "No hay reservas para mostrar."
+msgstr ""
+
+#: reservas/templates/reserva_list_user.html:4
+#: reservas/templates/reserva_list_user.html:9
+#, fuzzy
+#| msgid "Reservado"
+msgid "Mis Reservas"
+msgstr "Reserved"
+
+#: reservas/templates/reserva_list_user.html:39
+#, fuzzy
+#| msgid "No hay aviones registrados."
+msgid "No tienes reservas."
+msgstr "No aircraft registered."
+
+#: vuelos/forms.py:38 vuelos/forms.py:265
+#: vuelos/templates/vuelos/cargar.html:55
+#: vuelos/templates/vuelos/update_vuelo.html:78
+msgid "Código de Vuelo"
+msgstr "Flight Code"
+
+#: vuelos/forms.py:39 vuelos/templates/vuelos/cargar.html:77
+#: vuelos/templates/vuelos/update_vuelo.html:104
+msgid "Origen Principal"
+msgstr "Main Origin"
+
+#: vuelos/forms.py:40 vuelos/templates/vuelos/cargar.html:87
+#: vuelos/templates/vuelos/update_vuelo.html:116
+msgid "Destino Principal"
+msgstr "Main Destination"
+
+#: vuelos/forms.py:41 vuelos/templates/vuelos/cargar.html:65
+#: vuelos/templates/vuelos/update_vuelo.html:90
+msgid "Avión Asignado"
+msgstr "Assigned Aircraft"
+
+#: vuelos/forms.py:42
+msgid "Fecha de Salida Estimada"
+msgstr "Departure Date and Time estimated"
+
+#: vuelos/forms.py:43
+msgid "Fecha de Llegada Estimada"
+msgstr "Arrival Date and Time estimated"
+
+#: vuelos/forms.py:44 vuelos/templates/vuelos/cargar.html:121
+#: vuelos/templates/vuelos/update_vuelo.html:156
+#: vuelos/templates/vuelos/vuelo_detail.html:79
+#: vuelos/templates/vuelos/vuelo_detail.html:280
+msgid "Kilómetros Totales"
+msgstr "Total Kilometers"
+
+#: vuelos/forms.py:45
+#, fuzzy
+#| msgid "Este vuelo tiene escalas"
+msgid "¿Este vuelo tiene escalas?"
+msgstr "This flight has stopovers"
+
+#: vuelos/forms.py:49
+msgid "Ingrese el código único del vuelo (ej: AA123)"
+msgstr "Enter the unique flight code (e.g.: AA123)"
+
+#: vuelos/forms.py:50
+msgid "Seleccione la fecha y hora de salida"
+msgstr "Select departure Date and Time"
+
+#: vuelos/forms.py:51
+msgid "Seleccione la fecha y hora de llegada"
+msgstr "Select arrival Date and Time"
+
+#: vuelos/forms.py:52
+msgid "Distancia total en kilómetros"
+msgstr "Total distance in kilometers"
+
+#: vuelos/forms.py:53
+#, fuzzy
+#| msgid "Marque si el vuelo está activo"
+msgid "Marque si el vuelo tendrá escalas intermedias"
+msgstr "Check if the flight is active"
+
+#: vuelos/forms.py:54
+msgid "Marque si el vuelo está activo"
+msgstr "Check if the flight is active"
+
+#: vuelos/forms.py:64 vuelos/forms.py:103
+msgid "Seleccione origen"
+msgstr "Select origin"
+
+#: vuelos/forms.py:65 vuelos/forms.py:104
+msgid "Seleccione destino"
+msgstr "Select gender"
+
+#: vuelos/forms.py:66 vuelos/forms.py:144
+#: vuelos/templates/vuelos/vuelo_escalas.html:352
+msgid "Seleccione avión"
+msgstr "Select flight"
+
+#: vuelos/forms.py:89 vuelos/models.py:12
+msgid "Origen"
+msgstr "Origin"
+
+#: vuelos/forms.py:90 vuelos/models.py:14
+msgid "Destino"
+msgstr "Destination"
+
+#: vuelos/forms.py:91 vuelos/models.py:15
+msgid "Kilómetros Estimados"
+msgstr "Estimated Kilometers"
+
+#: vuelos/forms.py:95
+msgid "Distancia estimada en kilómetros"
+msgstr "Estimated distance between in kilometers"
+
+#: vuelos/forms.py:96 vuelos/forms.py:133
+msgid "Marque si la escala está activa"
+msgstr "Check if the scale is active"
+
+#: vuelos/forms.py:122 vuelos/models.py:67
+#: vuelos/templates/vuelos/vuelo_escalas.html:92
+#: vuelos/templates/vuelos/vuelo_escalas.html:345
+msgid "Orden"
+msgstr "Order"
+
+#: vuelos/forms.py:123 vuelos/models.py:19 vuelos/models.py:66
+#: vuelos/templates/vuelos/update_vuelo.html:194
+#: vuelos/templates/vuelos/vuelo_escalas.html:102
+#: vuelos/templates/vuelos/vuelo_escalas.html:346
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:83
+msgid "Escala"
+msgstr "Stopover"
+
+#: vuelos/forms.py:124 vuelos/models.py:68
+#: vuelos/templates/vuelos/vuelo_escalas.html:133
+#: vuelos/templates/vuelos/vuelo_escalas.html:349
+msgid "Fecha de Salida"
+msgstr "Departure Date"
+
+#: vuelos/forms.py:125 vuelos/models.py:69
+#: vuelos/templates/vuelos/vuelo_escalas.html:143
+#: vuelos/templates/vuelos/vuelo_escalas.html:350
+msgid "Fecha de Llegada"
+msgstr "Arrival Date"
+
+#: vuelos/forms.py:130
+msgid "Orden de la escala en el vuelo"
+msgstr "Stopover order in the flight"
+
+#: vuelos/forms.py:131
+msgid "Fecha y hora de salida de esta escala"
+msgstr "Departure Date and Time"
+
+#: vuelos/forms.py:132
+msgid "Fecha y hora de llegada de esta escala"
+msgstr "Arrival Date and Time"
+
+#: vuelos/forms.py:143 vuelos/templates/vuelos/vuelo_escalas.html:351
+msgid "Seleccione escala"
+msgstr "Select scale"
+
+#: vuelos/forms.py:164 vuelos/forms.py:193 vuelos/models.py:103
+#: vuelos/models.py:120 vuelos/templates/vuelos/vuelo_tripulacion.html:103
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:185
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:147
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:247
+msgid "Persona"
+msgstr "Person"
+
+#: vuelos/forms.py:165 vuelos/forms.py:194 vuelos/models.py:104
+#: vuelos/models.py:121 vuelos/templates/vuelos/vuelo_tripulacion.html:113
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:186
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:157
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:248
+msgid "Rol"
+msgstr ""
+
+#: vuelos/forms.py:169 vuelos/forms.py:198
+msgid "Seleccione el rol de la persona en la tripulación"
+msgstr "Select the person's role in the crew"
+
+#: vuelos/forms.py:170 vuelos/forms.py:199
+msgid "Marque si la asignación está activa"
+msgstr "Check if the asignation is active"
+
+#: vuelos/forms.py:178 vuelos/forms.py:207
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:188
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:250
+msgid "Seleccione persona"
+msgstr "Select person"
+
+#: vuelos/forms.py:179 vuelos/forms.py:208
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:189
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:251
+msgid "Seleccione rol"
+msgstr "Select rol"
+
+#: vuelos/forms.py:245 vuelos/templates/vuelos/vuelo_list.html:38
+msgid "Fecha Desde"
+msgstr "Date From"
+
+#: vuelos/forms.py:250 vuelos/templates/vuelos/vuelo_list.html:44
+msgid "Fecha Hasta"
+msgstr "Date To"
+
+#: vuelos/forms.py:255 vuelos/templates/vuelos/vuelo_list.html:53
+msgid "Todos"
+msgstr "All"
+
+#: vuelos/forms.py:256 vuelos/templates/vuelos/vuelo_list.html:54
+msgid "Activos"
+msgstr "Active"
+
+#: vuelos/forms.py:257 vuelos/templates/vuelos/vuelo_list.html:55
+msgid "Inactivos"
+msgstr "Inactive"
+
+#: vuelos/forms.py:264 vuelos/templates/vuelos/vuelo_list.html:63
+msgid "Ej: AA123"
+msgstr "Ex: AA123"
+
+#: vuelos/forms.py:269
+msgid "Modelo o Matrícula"
+msgstr "Model/Registration"
+
+#: vuelos/models.py:20 vuelos/templates/vuelos/vuelo_detail.html:85
+#: vuelos/templates/vuelos/vuelo_list.html:297
+msgid "Escalas"
+msgstr "Stopovers"
+
+#: vuelos/models.py:35
+#, fuzzy
+#| msgid "Con Escalas"
+msgid "Tiene Escalas"
+msgstr "With Stopovers"
+
+#: vuelos/models.py:74 vuelos/models.py:119
 msgid "Escala de Vuelo"
 msgstr "Flight Stop"
 
-#: vuelos/models.py:81
+#: vuelos/models.py:75
 msgid "Escalas de Vuelo"
 msgstr "Flight Stops"
 
-#: vuelos/models.py:114
+#: vuelos/models.py:108
 msgid "Tripulación de Vuelo"
 msgstr "Flight Crew"
 
-#: vuelos/models.py:115
+#: vuelos/models.py:109
 msgid "Tripulaciones de Vuelo"
 msgstr "Flight Crews"
 
-#: vuelos/models.py:131
+#: vuelos/models.py:125
 msgid "Tripulación de Escala"
 msgstr "Scale Crew"
 
-#: vuelos/models.py:132
+#: vuelos/models.py:126
 msgid "Tripulaciones de Escala"
 msgstr "Scale Crews"
 
 #: vuelos/templates/vuelos/cargar.html:6 vuelos/templates/vuelos/cargar.html:24
+#, fuzzy
+#| msgid "Crear nuevo vuelo"
 msgid "Crear Nuevo Vuelo"
-msgstr "Create New Flight"
+msgstr "Create new flight"
 
-#: vuelos/templates/vuelos/cargar.html:6
-#: vuelos/templates/vuelos/update_vuelo.html:5
-#: vuelos/templates/vuelos/update_vuelo.html:21
-msgid "Editar Vuelo"
-msgstr "Edit Flight"
-
-#: vuelos/templates/vuelos/cargar.html:26
-#, python-format
-msgid "Editar Vuelo %(codigo_vuelo)s"
-msgstr "Edit Flight %(codigo_vuelo)s"
-
-#: vuelos/templates/vuelos/cargar.html:30
+#: vuelos/templates/vuelos/cargar.html:27
 #: vuelos/templates/vuelos/escala_form.html:24
-#: vuelos/templates/vuelos/update_vuelo.html:28
-#: vuelos/templates/vuelos/vuelo_detail.html:542
+#: vuelos/templates/vuelos/update_vuelo.html:31
+#: vuelos/templates/vuelos/vuelo_detail.html:314
+#: vuelos/templates/vuelos/vuelo_escalas.html:26
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:30
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:30
 msgid "Volver a la lista"
 msgstr "Back to list"
 
-#: vuelos/templates/vuelos/cargar.html:50
-#: vuelos/templates/vuelos/update_vuelo.html:66
-msgid "Información Principal"
-msgstr "Main Information"
+#: vuelos/templates/vuelos/cargar.html:47
+#, fuzzy
+#| msgid "Información de la escala"
+msgid "Información del Vuelo"
+msgstr "Stopover information"
 
-#: vuelos/templates/vuelos/cargar.html:97
-#: vuelos/templates/vuelos/update_vuelo.html:127
+#: vuelos/templates/vuelos/cargar.html:99
+#: vuelos/templates/vuelos/update_vuelo.html:130
 msgid "Fecha y Hora de Salida"
 msgstr "Departure Date and Time"
 
-#: vuelos/templates/vuelos/cargar.html:107
-#: vuelos/templates/vuelos/update_vuelo.html:139
+#: vuelos/templates/vuelos/cargar.html:109
+#: vuelos/templates/vuelos/update_vuelo.html:142
 msgid "Fecha y Hora de Llegada"
 msgstr "Arrival Date and Time"
 
-#: vuelos/templates/vuelos/cargar.html:118
-#: vuelos/templates/vuelos/update_vuelo.html:167
-#: vuelos/templates/vuelos/vuelo_detail.html:270
+#: vuelos/templates/vuelos/cargar.html:133
+#: vuelos/templates/vuelos/update_vuelo.html:170
+#: vuelos/templates/vuelos/vuelo_detail.html:42
 msgid "Vuelo Activo"
 msgstr "Active Flight"
 
-#: vuelos/templates/vuelos/cargar.html:142
-#: vuelos/templates/vuelos/update_vuelo.html:179
-#: vuelos/templates/vuelos/vuelo_detail.html:400
-msgid "Escalas del Vuelo"
-msgstr "Flight Stopovers"
-
-#: vuelos/templates/vuelos/cargar.html:146
-msgid "Este vuelo tiene escalas"
+#: vuelos/templates/vuelos/cargar.html:145
+#, fuzzy
+#| msgid "Este vuelo tiene escalas"
+msgid "¿Este vuelo tiene escalas intermedias?"
 msgstr "This flight has stopovers"
 
-#: vuelos/templates/vuelos/cargar.html:169
-msgid "Agregar Escala"
-msgstr "Add Stopover"
+#: vuelos/templates/vuelos/cargar.html:148
+msgid "Si marca esta opción, podrá agregar escalas después de crear el vuelo."
+msgstr ""
 
-#: vuelos/templates/vuelos/cargar.html:176
-#: vuelos/templates/vuelos/update_vuelo.html:239
-msgid "Tripulación del Vuelo"
-msgstr "Flight Crew"
-
-#: vuelos/templates/vuelos/cargar.html:196
-msgid "Agregar Miembro"
-msgstr "Add Member"
-
-#: vuelos/templates/vuelos/cargar.html:203
-msgid "Guardar Vuelo"
-msgstr "Save Flight"
-
-#: vuelos/templates/vuelos/cargar.html:206
-#: vuelos/templates/vuelos/escala_form.html:122
-#: vuelos/templates/vuelos/update_vuelo.html:304
-msgid "Cancelar"
-msgstr "Cancel"
-
-#: vuelos/templates/vuelos/cargar.html:243
-msgid "Funcionalidad para agregar escalas dinámicamente no implementada."
-msgstr "Functionality to add stopovers dynamically not implemented."
-
-#: vuelos/templates/vuelos/cargar.html:258
-msgid "Funcionalidad para agregar tripulación dinámicamente no implementada."
-msgstr "Functionality to add crew dynamically not implemented."
+#: vuelos/templates/vuelos/cargar.html:159
+#, fuzzy
+#| msgid "Crear Nuevo Vuelo"
+msgid "Crear Vuelo"
+msgstr "Create New Flight"
 
 #: vuelos/templates/vuelos/escala_form.html:6
 #: vuelos/templates/vuelos/escala_form.html:20
@@ -657,11 +1009,11 @@ msgid "Selecciona la localidad de destino de esta escala"
 msgstr "Select the destination location for this stopover"
 
 #: vuelos/templates/vuelos/escala_form.html:97
-#: vuelos/templates/vuelos/update_vuelo.html:224
-#: vuelos/templates/vuelos/vuelo_detail.html:344
-#: vuelos/templates/vuelos/vuelo_detail.html:437
-#: vuelos/templates/vuelos/vuelo_detail.html:508
-#: vuelos/templates/vuelos/vuelo_detail.html:510
+#: vuelos/templates/vuelos/update_vuelo.html:227
+#: vuelos/templates/vuelos/vuelo_detail.html:116
+#: vuelos/templates/vuelos/vuelo_detail.html:209
+#: vuelos/templates/vuelos/vuelo_detail.html:280
+#: vuelos/templates/vuelos/vuelo_detail.html:282
 msgid "km"
 msgstr "km"
 
@@ -801,91 +1153,99 @@ msgstr "Existing crew"
 msgid "No hay tripulantes registrados aún."
 msgstr "No crew members registered yet."
 
+#: vuelos/templates/vuelos/update_vuelo.html:5
+#: vuelos/templates/vuelos/update_vuelo.html:21
+msgid "Editar Vuelo"
+msgstr "Edit Flight"
+
 #: vuelos/templates/vuelos/update_vuelo.html:25
-#: vuelos/templates/vuelos/update_vuelo.html:301
-#: vuelos/templates/vuelos/vuelo_list.html:144
-#: vuelos/templates/vuelos/vuelo_list.html:247
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:27
+#, fuzzy
+#| msgid "Escalas"
+msgid "Ver Escalas"
+msgstr "Stopovers"
+
+#: vuelos/templates/vuelos/update_vuelo.html:28
+#: vuelos/templates/vuelos/update_vuelo.html:296
+#: vuelos/templates/vuelos/vuelo_list.html:197
+#: vuelos/templates/vuelos/vuelo_list.html:331
 msgid "Ver Detalle"
 msgstr "View Detail"
 
-#: vuelos/templates/vuelos/update_vuelo.html:45
+#: vuelos/templates/vuelos/update_vuelo.html:48
 msgid "Información Actual:"
 msgstr "Current Information:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:48
+#: vuelos/templates/vuelos/update_vuelo.html:51
+#: vuelos/templates/vuelos/vuelo_escalas.html:224
 msgid "Código:"
 msgstr "Code:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:49
+#: vuelos/templates/vuelos/update_vuelo.html:52
 msgid "Origen:"
 msgstr "Origin:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:50
+#: vuelos/templates/vuelos/update_vuelo.html:53
 msgid "Destino:"
 msgstr "Destination:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:53
+#: vuelos/templates/vuelos/update_vuelo.html:56
+#: vuelos/templates/vuelos/vuelo_escalas.html:294
 msgid "Avión:"
 msgstr "Aircraft:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:54
+#: vuelos/templates/vuelos/update_vuelo.html:57
+#: vuelos/templates/vuelos/vuelo_escalas.html:288
 msgid "Salida:"
 msgstr "Departure:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:55
+#: vuelos/templates/vuelos/update_vuelo.html:58
+#: vuelos/templates/vuelos/vuelo_escalas.html:290
 msgid "Llegada:"
 msgstr "Arrival:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:180
+#: vuelos/templates/vuelos/update_vuelo.html:69
+msgid "Información Principal"
+msgstr "Main Information"
+
+#: vuelos/templates/vuelos/update_vuelo.html:182
+#: vuelos/templates/vuelos/vuelo_detail.html:172
+#: vuelos/templates/vuelos/vuelo_escalas.html:69
+msgid "Escalas del Vuelo"
+msgstr "Flight Stopovers"
+
+#: vuelos/templates/vuelos/update_vuelo.html:183
+#: vuelos/templates/vuelos/vuelo_list.html:239
 msgid "escalas"
 msgstr "stopovers"
 
-#: vuelos/templates/vuelos/update_vuelo.html:223
+#: vuelos/templates/vuelos/update_vuelo.html:226
 msgid "Ruta:"
 msgstr "Route:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:232
-msgid "Agregar Nueva Escala"
-msgstr "Add New Stopover"
+#: vuelos/templates/vuelos/update_vuelo.html:238
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:80
+msgid "Tripulación del Vuelo"
+msgstr "Flight Crew"
 
-#: vuelos/templates/vuelos/update_vuelo.html:240
-#: vuelos/templates/vuelos/vuelo_detail.html:459
+#: vuelos/templates/vuelos/update_vuelo.html:239
+#: vuelos/templates/vuelos/vuelo_detail.html:231
 msgid "miembros"
 msgstr "members"
 
-#: vuelos/templates/vuelos/update_vuelo.html:283
+#: vuelos/templates/vuelos/update_vuelo.html:282
 msgid "Persona asignada:"
 msgstr "Assigned person:"
 
-#: vuelos/templates/vuelos/update_vuelo.html:291
-msgid "Agregar Nuevo Miembro"
-msgstr "Add New Member"
-
-#: vuelos/templates/vuelos/update_vuelo.html:298
+#: vuelos/templates/vuelos/update_vuelo.html:293
 msgid "Actualizar Vuelo"
 msgstr "Update Flight"
 
-#: vuelos/templates/vuelos/update_vuelo.html:355
-msgid ""
-"Para agregar nuevas escalas, usa el formulario de creación de escalas "
-"independientes y luego actualiza este vuelo."
-msgstr ""
-"To add new stopovers, use the independent stopover creation form and then "
-"update this flight."
-
-#: vuelos/templates/vuelos/update_vuelo.html:359
-msgid ""
-"Para agregar nuevos miembros a la tripulación, usa el formulario de creación "
-"de personas y luego actualiza este vuelo."
-msgstr ""
-"To add new crew members, use the person creation form and then update this "
-"flight."
-
-#: vuelos/templates/vuelos/update_vuelo.html:367
+#: vuelos/templates/vuelos/update_vuelo.html:353
 msgid "¿Estás seguro de que quieres eliminar este elemento?"
 msgstr "Are you sure you want to delete this item?"
 
-#: vuelos/templates/vuelos/update_vuelo.html:385
+#: vuelos/templates/vuelos/update_vuelo.html:371
 msgid "La fecha de llegada debe ser posterior a la fecha de salida."
 msgstr "Arrival date must be after departure date."
 
@@ -893,268 +1253,605 @@ msgstr "Arrival date must be after departure date."
 msgid "Detalle del Vuelo"
 msgstr "Flight Detail"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:274
+#: vuelos/templates/vuelos/vuelo_detail.html:46
 msgid "Vuelo Inactivo"
 msgstr "Inactive Flight"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:279
+#: vuelos/templates/vuelos/vuelo_detail.html:51
+#: vuelos/templates/vuelos/vuelo_list.html:112
 msgid "Con Escalas"
 msgstr "With Stopovers"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:283
+#: vuelos/templates/vuelos/vuelo_detail.html:55
 msgid "Vuelo Directo"
 msgstr "Direct Flight"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:297
+#: vuelos/templates/vuelos/vuelo_detail.html:69
 msgid "d"
 msgstr "d"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:298
-#: vuelos/templates/vuelos/vuelo_detail.html:433
+#: vuelos/templates/vuelos/vuelo_detail.html:70
+#: vuelos/templates/vuelos/vuelo_detail.html:205
 msgid "h"
 msgstr "h"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:299
-#: vuelos/templates/vuelos/vuelo_detail.html:434
+#: vuelos/templates/vuelos/vuelo_detail.html:71
+#: vuelos/templates/vuelos/vuelo_detail.html:206
 msgid "m"
 msgstr "m"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:301
+#: vuelos/templates/vuelos/vuelo_detail.html:73
+#: vuelos/templates/vuelos/vuelo_list.html:275
 msgid "Duración Total"
 msgstr "Total Duration"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:319
-#: vuelos/templates/vuelos/vuelo_detail.html:459
+#: vuelos/templates/vuelos/vuelo_detail.html:91
+#: vuelos/templates/vuelos/vuelo_detail.html:231
+#: vuelos/templates/vuelos/vuelo_list.html:187
 msgid "Tripulación"
 msgstr "Crew"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:328
+#: vuelos/templates/vuelos/vuelo_detail.html:100
 msgid "Información del Avión"
 msgstr "Aircraft Information"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:333
-msgid "Matrícula"
-msgstr "Registration"
-
-#: vuelos/templates/vuelos/vuelo_detail.html:334
-msgid "Capacidad"
-msgstr "Capacity"
-
-#: vuelos/templates/vuelos/vuelo_detail.html:334
+#: vuelos/templates/vuelos/vuelo_detail.html:106
 msgid "pasajeros"
 msgstr "passengers"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:336
-msgid "Fabricante"
-msgstr "Manufacturer"
-
-#: vuelos/templates/vuelos/vuelo_detail.html:341
+#: vuelos/templates/vuelos/vuelo_detail.html:113
 msgid "Año de Fabricación"
 msgstr "Manufacturing Year"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:344
+#: vuelos/templates/vuelos/vuelo_detail.html:116
 msgid "Autonomía"
 msgstr "Range"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:351
-#: vuelos/templates/vuelos/vuelo_detail.html:486
-#: vuelos/templates/vuelos/vuelo_detail.html:517
-#: vuelos/templates/vuelos/vuelo_list.html:196
-#: vuelos/templates/vuelos/vuelo_list.html:315
+#: vuelos/templates/vuelos/vuelo_detail.html:123
+#: vuelos/templates/vuelos/vuelo_detail.html:258
+#: vuelos/templates/vuelos/vuelo_detail.html:289
+#: vuelos/templates/vuelos/vuelo_escalas.html:300
+#: vuelos/templates/vuelos/vuelo_list.html:136
+#: vuelos/templates/vuelos/vuelo_list.html:236
 msgid "Inactivo"
 msgstr "Inactive"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:362
+#: vuelos/templates/vuelos/vuelo_detail.html:134
 msgid "Horarios y Fechas"
 msgstr "Schedules and Dates"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:368
-#: vuelos/templates/vuelos/vuelo_detail.html:422
+#: vuelos/templates/vuelos/vuelo_detail.html:140
+#: vuelos/templates/vuelos/vuelo_detail.html:194
+#: vuelos/templates/vuelos/vuelo_escalas.html:42
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:48
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:96
 msgid "Salida"
 msgstr "Departure"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:371
-#: vuelos/templates/vuelos/vuelo_detail.html:384
+#: vuelos/templates/vuelos/vuelo_detail.html:143
+#: vuelos/templates/vuelos/vuelo_detail.html:156
 msgid "hs"
 msgstr "hrs"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:373
+#: vuelos/templates/vuelos/vuelo_detail.html:145
 msgid "Desde"
 msgstr "From"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:381
-#: vuelos/templates/vuelos/vuelo_detail.html:426
+#: vuelos/templates/vuelos/vuelo_detail.html:153
+#: vuelos/templates/vuelos/vuelo_detail.html:198
+#: vuelos/templates/vuelos/vuelo_escalas.html:46
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:52
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:100
 msgid "Llegada"
 msgstr "Arrival"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:386
+#: vuelos/templates/vuelos/vuelo_detail.html:158
 msgid "Hasta"
 msgstr "To"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:476
+#: vuelos/templates/vuelos/vuelo_detail.html:248
 msgid "Doc"
 msgstr "Doc"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:479
+#: vuelos/templates/vuelos/vuelo_detail.html:251
 msgid "Tel"
 msgstr "Tel"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:501
+#: vuelos/templates/vuelos/vuelo_detail.html:273
 msgid "Información Adicional"
 msgstr "Additional Information"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:506
+#: vuelos/templates/vuelos/vuelo_detail.html:278
 msgid "Detalles del Vuelo"
 msgstr "Flight Details"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:507
+#: vuelos/templates/vuelos/vuelo_detail.html:279
+#: vuelos/templates/vuelos/vuelo_list.html:60
 msgid "Código"
 msgstr "Code"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:510
+#: vuelos/templates/vuelos/vuelo_detail.html:282
 msgid "Distancia Real"
 msgstr "Real Distance"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:522
+#: vuelos/templates/vuelos/vuelo_detail.html:294
 msgid "Datos de Carga"
 msgstr "Loading Data"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:524
+#: vuelos/templates/vuelos/vuelo_detail.html:296
 msgid "Cargado por"
 msgstr "Loaded by"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:526
+#: vuelos/templates/vuelos/vuelo_detail.html:298
 msgid "Fecha de carga"
 msgstr "Loading date"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:527
+#: vuelos/templates/vuelos/vuelo_detail.html:299
 msgid "Tipo de vuelo"
 msgstr "Flight type"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:529
+#: vuelos/templates/vuelos/vuelo_detail.html:301
 msgid "Vuelo con escalas"
 msgstr "Flight with stopovers"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:531
+#: vuelos/templates/vuelos/vuelo_detail.html:303
 msgid "Vuelo directo"
 msgstr "Direct flight"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:546
+#: vuelos/templates/vuelos/vuelo_detail.html:318
 msgid "Editar vuelo"
 msgstr "Edit flight"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:550
+#: vuelos/templates/vuelos/vuelo_detail.html:322
 msgid "Imprimir"
 msgstr "Print"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:558
+#: vuelos/templates/vuelos/vuelo_detail.html:330
 msgid "Cargando..."
 msgstr "Loading..."
 
-#: vuelos/templates/vuelos/vuelo_detail.html:610
+#: vuelos/templates/vuelos/vuelo_detail.html:382
 msgid "Función de reporte en desarrollo"
 msgstr "Report function under development"
 
-#: vuelos/templates/vuelos/vuelo_detail.html:615
+#: vuelos/templates/vuelos/vuelo_detail.html:387
 msgid "Función de exportación en desarrollo"
 msgstr "Export function under development"
 
-#: vuelos/templates/vuelos/vuelo_list.html:5
-msgid "Lista de Vuelos"
-msgstr "Flight List"
+#: vuelos/templates/vuelos/vuelo_escalas.html:6
+#: vuelos/templates/vuelos/vuelo_escalas.html:23
+#, fuzzy, python-format
+#| msgid "Editar Vuelo %(codigo_vuelo)s"
+msgid "Escalas del Vuelo %(codigo_vuelo)s"
+msgstr "Edit Flight %(codigo_vuelo)s"
 
-#: vuelos/templates/vuelos/vuelo_list.html:21
-msgid "Sistema de Vuelos"
-msgstr "Flight System"
-
-#: vuelos/templates/vuelos/vuelo_list.html:23
-msgid "Gestiona y consulta todos los vuelos disponibles"
-msgstr "Manage and query all available flights"
-
-#: vuelos/templates/vuelos/vuelo_list.html:57
-msgid "Código Vuelo"
-msgstr "Flight Code"
-
-#: vuelos/templates/vuelos/vuelo_list.html:67
-msgid "Modelo/Matrícula"
-msgstr "Model/Registration"
-
-#: vuelos/templates/vuelos/vuelo_list.html:71
-msgid "Filtrar"
-msgstr "Filter"
-
-#: vuelos/templates/vuelos/vuelo_list.html:74
-msgid "Limpiar"
-msgstr "Clear"
-
-#: vuelos/templates/vuelos/vuelo_list.html:78
-msgid "Nuevo Vuelo"
-msgstr "New Flight"
-
-#: vuelos/templates/vuelos/vuelo_list.html:93
-msgid "Total de Vuelos"
-msgstr "Total Flights"
-
-#: vuelos/templates/vuelos/vuelo_list.html:103
-#: vuelos/templates/vuelos/vuelo_list.html:127
-msgid "Vuelos Directos"
-msgstr "Direct Flights"
-
-#: vuelos/templates/vuelos/vuelo_list.html:113
-#: vuelos/templates/vuelos/vuelo_list.html:230
-msgid "Vuelos con Escalas"
-msgstr "Flights with Stopovers"
-
-#: vuelos/templates/vuelos/vuelo_list.html:150
-#: vuelos/templates/vuelos/vuelo_list.html:205
-#: vuelos/templates/vuelos/vuelo_list.html:253
-#: vuelos/templates/vuelos/vuelo_list.html:324
-msgid "Editar"
-msgstr "Edit"
-
-#: vuelos/templates/vuelos/vuelo_list.html:180
-#: vuelos/templates/vuelos/vuelo_list.html:283
-msgid "Sin asignar"
-msgstr "Unassigned"
-
-#: vuelos/templates/vuelos/vuelo_list.html:185
-#: vuelos/templates/vuelos/vuelo_list.html:292
-msgid "Distancia"
-msgstr "Distance"
-
-#: vuelos/templates/vuelos/vuelo_list.html:201
-#: vuelos/templates/vuelos/vuelo_list.html:320
-msgid "Detalle"
-msgstr "Detail"
-
-#: vuelos/templates/vuelos/vuelo_list.html:217
-msgid "No hay vuelos directos disponibles"
-msgstr "No direct flights available"
-
-#: vuelos/templates/vuelos/vuelo_list.html:218
-#: vuelos/templates/vuelos/vuelo_list.html:337
-msgid "Prueba ajustando los filtros o crea un nuevo vuelo"
-msgstr "Try adjusting the filters or create a new flight"
-
-#: vuelos/templates/vuelos/vuelo_list.html:300
+#: vuelos/templates/vuelos/vuelo_escalas.html:38
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:39
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:87
 msgid "Ruta"
 msgstr "Route"
 
-#: vuelos/templates/vuelos/vuelo_list.html:336
-msgid "No hay vuelos con escalas disponibles"
+#: vuelos/templates/vuelos/vuelo_escalas.html:162
+#, fuzzy
+#| msgid "miembros"
+msgid "miembro"
+msgstr "members"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:167
+#, fuzzy
+#| msgid "Tripulación"
+msgid "Sin tripulación"
+msgstr "Crew"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:175
+#, fuzzy
+#| msgid "Tripulación"
+msgid "Gestionar Tripulación"
+msgstr "Crew"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:185
+#: vuelos/templates/vuelos/vuelo_escalas.html:467
+msgid "Guarde la escala para poder asignar tripulación"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:199
+#, fuzzy
+#| msgid "Agregar Escala"
+msgid "Agregar otra escala"
+msgstr "Add Stopover"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:202
+#, fuzzy
+#| msgid "Guardar escala"
+msgid "Guardar Escalas y Continuar"
+msgstr "Save stopover"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:215
+#, fuzzy
+#| msgid "Detalle del Vuelo"
+msgid "Resumen del Vuelo"
+msgstr "Flight Detail"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:221
+#, fuzzy
+#| msgid "Información Principal"
+msgid "Información General"
+msgstr "Main Information"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:228
+#, fuzzy
+#| msgid "Destino Principal"
+msgid "Ruta Principal:"
+msgstr "Main Destination"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:232
+#, fuzzy
+#| msgid "Origen Principal"
+msgid "Avión Principal:"
+msgstr "Main Origin"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:236
+#, fuzzy
+#| msgid "Con Escalas"
+msgid "Total Escalas:"
+msgstr "With Stopovers"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:242
+msgid "Tiempos"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:245
+#, fuzzy
+#| msgid "Fecha de Salida Estimada"
+msgid "Salida Estimada:"
+msgstr "Departure Date and Time estimated"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:249
+#, fuzzy
+#| msgid "Fecha de Llegada Estimada"
+msgid "Llegada Estimada:"
+msgstr "Arrival Date and Time estimated"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:253
+#, fuzzy
+#| msgid "Duración Total"
+msgid "Duración Total:"
+msgstr "Total Duration"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:258
+msgid "No calculada"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:263
+#, fuzzy
+#| msgid "Distancia Real"
+msgid "Distancia Total:"
+msgstr "Real Distance"
+
+#: vuelos/templates/vuelos/vuelo_escalas.html:271
+msgid "Escalas Configuradas"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:5
+#, fuzzy
+msgid "Lista de Vuelos"
+msgstr "Flight List"
+
+#: vuelos/templates/vuelos/vuelo_list.html:24
+msgid "Sistema de Vuelos"
+msgstr "Flight System"
+
+#: vuelos/templates/vuelos/vuelo_list.html:26
+msgid "Gestiona y consulta todos los vuelos disponibles"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:70
+msgid "Modelo/Matrícula"
+msgstr "Model/Registration"
+
+#: vuelos/templates/vuelos/vuelo_list.html:74
+msgid "Filtrar"
+msgstr "Filter"
+
+#: vuelos/templates/vuelos/vuelo_list.html:77
+msgid "Limpiar"
+msgstr "Clear"
+
+#: vuelos/templates/vuelos/vuelo_list.html:81
+msgid "Nuevo Vuelo"
+msgstr "New Flight"
+
+#: vuelos/templates/vuelos/vuelo_list.html:96
+#, fuzzy
+#| msgid "Total de Vuelos"
+msgid "Total Vuelos"
+msgstr "Total Flights"
+
+#: vuelos/templates/vuelos/vuelo_list.html:104
+#: vuelos/templates/vuelos/vuelo_list.html:122
+msgid "Vuelos Directos"
+msgstr "Direct Flights"
+
+#: vuelos/templates/vuelos/vuelo_list.html:139
+#, fuzzy
+#| msgid "Vuelo Directo"
+msgid "Directo"
+msgstr "Direct Flight"
+
+#: vuelos/templates/vuelos/vuelo_list.html:169
+#: vuelos/templates/vuelos/vuelo_list.html:269
+msgid "Sin asignar"
+msgstr "Unassigned"
+
+#: vuelos/templates/vuelos/vuelo_list.html:175
+#, fuzzy
+#| msgid "Duración Total"
+msgid "Duración"
+msgstr "Total Duration"
+
+#: vuelos/templates/vuelos/vuelo_list.html:181
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:56
+msgid "Distancia"
+msgstr "Distance"
+
+#: vuelos/templates/vuelos/vuelo_list.html:189
+#: vuelos/templates/vuelos/vuelo_list.html:289
+#, fuzzy
+#| msgid "Personas"
+msgid "personas"
+msgstr "People"
+
+#: vuelos/templates/vuelos/vuelo_list.html:213
+#, fuzzy
+#| msgid "No hay vuelos directos disponibles"
+msgid "No hay vuelos directos"
+msgstr "No direct flights available"
+
+#: vuelos/templates/vuelos/vuelo_list.html:214
+#, fuzzy
+#| msgid "No hay vuelos que coincidan con los filtros seleccionados"
+msgid "No se encontraron vuelos directos con los filtros aplicados"
+msgstr "No flights match the selected filters"
+
+#: vuelos/templates/vuelos/vuelo_list.html:222
+msgid "Vuelos con Escalas"
+msgstr "Flights with Stopovers"
+
+#: vuelos/templates/vuelos/vuelo_list.html:263
+#, fuzzy
+#| msgid "Origen Principal"
+msgid "Avión Principal"
+msgstr "Main Origin"
+
+#: vuelos/templates/vuelos/vuelo_list.html:281
+#, fuzzy
+#| msgid "Distancia Real"
+msgid "Distancia Total"
+msgstr "Real Distance"
+
+#: vuelos/templates/vuelos/vuelo_list.html:287
+#, fuzzy
+#| msgid "Tripulación"
+msgid "Tripulación Total"
+msgstr "Crew"
+
+#: vuelos/templates/vuelos/vuelo_list.html:320
+msgid "y más escalas..."
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_list.html:347
+#, fuzzy
+#| msgid "No hay vuelos con escalas disponibles"
+msgid "No hay vuelos con escalas"
 msgstr "No connecting flights available"
 
-#: vuelos/templates/vuelos/vuelo_list.html:349
+#: vuelos/templates/vuelos/vuelo_list.html:348
+#, fuzzy
+#| msgid "No hay vuelos que coincidan con los filtros seleccionados"
+msgid "No se encontraron vuelos con escalas con los filtros aplicados"
+msgstr "No flights match the selected filters"
+
+#: vuelos/templates/vuelos/vuelo_list.html:358
 msgid "No se encontraron vuelos"
 msgstr "No flights found"
 
-#: vuelos/templates/vuelos/vuelo_list.html:350
+#: vuelos/templates/vuelos/vuelo_list.html:359
 msgid "No hay vuelos que coincidan con los filtros seleccionados"
 msgstr "No flights match the selected filters"
 
-#: vuelos/templates/vuelos/vuelo_list.html:352
+#: vuelos/templates/vuelos/vuelo_list.html:362
 msgid "Ver todos los vuelos"
 msgstr "View all flights"
+
+#: vuelos/templates/vuelos/vuelo_list.html:366
+msgid "Crear nuevo vuelo"
+msgstr "Create new flight"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:6
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:23
+#, fuzzy, python-format
+#| msgid "Editar Vuelo %(codigo_vuelo)s"
+msgid "Tripulación - Vuelo %(codigo_vuelo)s"
+msgstr "Edit Flight %(codigo_vuelo)s"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:27
+#, fuzzy
+#| msgid "Vuelo"
+msgid "Ver Vuelo"
+msgstr "Flight"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:135
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:179
+msgid "Eliminar este miembro"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:146
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:189
+#, fuzzy
+#| msgid "Tripulación"
+msgid "Roles de Tripulación:"
+msgstr "Crew"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:148
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:190
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:191
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:252
+msgid "Piloto"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:149
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:191
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:192
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:253
+msgid "Co-piloto"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:150
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:192
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:193
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:254
+#, fuzzy
+#| msgid "Tipo de vuelo"
+msgid "Ingeniero de vuelo"
+msgstr "Flight type"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:151
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:193
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:194
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:255
+msgid "Azafata/o"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:161
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:211
+#, fuzzy
+#| msgid "Cargar nueva tripulación"
+msgid "Agregar tripulacion"
+msgstr "Load new crew"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion.html:166
+#, fuzzy
+#| msgid "Actualizar Vuelo"
+msgid "Finalizar y Ver Vuelo"
+msgstr "Update Flight"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:6
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:23
+#, fuzzy, python-format
+#| msgid "Editar Vuelo %(codigo_vuelo)s"
+msgid "Tripulación Escala %(orden)s - Vuelo %(codigo_vuelo)s"
+msgstr "Edit Flight %(codigo_vuelo)s"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:41
+msgid "Progreso de Configuración"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:42
+#, fuzzy
+#| msgid "d"
+msgid "de"
+msgstr "d"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:124
+#, fuzzy, python-format
+#| msgid "Tripulación de Escala"
+msgid "Tripulación de la Escala %(orden)s"
+msgstr "Scale Crew"
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:206
+msgid "Anterior"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:216
+msgid "Siguiente"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:224
+msgid "Finalizar Configuración"
+msgstr ""
+
+#: vuelos/templates/vuelos/vuelo_tripulacion_escala.html:228
+msgid "Finalizar"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Lista de vuelos"
+#~ msgstr "Flight List"
+
+#, fuzzy
+#~ msgid "Lista de reservas"
+#~ msgstr "View reservation list"
+
+#~ msgid "INICIO"
+#~ msgstr "HOME"
+
+#~ msgid "Ver lista de reservas"
+#~ msgstr "View reservation list"
+
+#~ msgid "Correo Electrónico"
+#~ msgstr "Email"
+
+#~ msgid "Repetir contraseña"
+#~ msgstr "Repeat password"
+
+#~ msgid "¿Ya tienes una cuenta? Inicia sesión"
+#~ msgstr "Already have an account? Log in"
+
+#~ msgid "Registro exitoso. ¡Bienvenido/a!"
+#~ msgstr "Registration successful. Welcome!"
+
+#~| msgid "Localidades existentes"
+#~ msgid "Seleccionar Escalas Existentes"
+#~ msgstr "Select scale existing"
+
+#~| msgid "Selecciona la localidad de destino de esta escala"
+#~ msgid "Selecciona las escalas que deseas agregar a este vuelo."
+#~ msgstr "Select the stopovers you want to add to this flight."
+
+#~ msgid "Cargado Por"
+#~ msgstr "Upload by"
+
+#~ msgid "Agregar Miembro"
+#~ msgstr "Add Member"
+
+#~ msgid "Guardar Vuelo"
+#~ msgstr "Save Flight"
+
+#~ msgid "Funcionalidad para agregar escalas dinámicamente no implementada."
+#~ msgstr "Functionality to add stopovers dynamically not implemented."
+
+#~ msgid ""
+#~ "Funcionalidad para agregar tripulación dinámicamente no implementada."
+#~ msgstr "Functionality to add crew dynamically not implemented."
+
+#~ msgid "Agregar Nueva Escala"
+#~ msgstr "Add New Stopover"
+
+#~ msgid "Agregar Nuevo Miembro"
+#~ msgstr "Add New Member"
+
+#~ msgid ""
+#~ "Para agregar nuevas escalas, usa el formulario de creación de escalas "
+#~ "independientes y luego actualiza este vuelo."
+#~ msgstr ""
+#~ "To add new stopovers, use the independent stopover creation form and then "
+#~ "update this flight."
+
+#~ msgid ""
+#~ "Para agregar nuevos miembros a la tripulación, usa el formulario de "
+#~ "creación de personas y luego actualiza este vuelo."
+#~ msgstr ""
+#~ "To add new crew members, use the person creation form and then update "
+#~ "this flight."
+
+#~ msgid "Código Vuelo"
+#~ msgstr "Flight Code"
+
+#~ msgid "Detalle"
+#~ msgstr "Detail"
+
+#~ msgid "Prueba ajustando los filtros o crea un nuevo vuelo"
+#~ msgstr "Try adjusting the filters or create a new flight"
 
 #~ msgid "Agregar persona"
 #~ msgstr "Create new person"
@@ -1164,3 +1861,8 @@ msgstr "View all flights"
 
 #~ msgid "Inicio"
 #~ msgstr "Home"
+
+#~ msgid "Aerolinea"
+#~ msgstr "Airline"
+
+#~ msgid ""

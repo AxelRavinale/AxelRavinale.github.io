@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Editar Avión{% endblock %}
+{% block title %}{% trans "Editar Avión" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Editar Avión</h2>
+    <h2 class="mb-4">{% trans "Editar Avión" %}</h2>
 
     <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
@@ -85,8 +86,8 @@
             {{ form.en_mantenimiento.label_tag }}
         </div>
 
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <a href="{% url 'lista_aviones' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">{% trans "Guardar cambios" %}</button>
+        <a href="{% url 'lista_aviones' %}" class="btn btn-secondary">{% trans "Cancelar" %}</a>
     </form>
 </div>
 {% endblock %}

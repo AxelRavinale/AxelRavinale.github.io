@@ -6,7 +6,7 @@ from django.contrib import messages
 
 def lista_trabajadores(request):
     trabajadores = Trabajador.objects.filter(activo=True)
-    return render(request, 'empleados/lista_trabajadores.html', {'trabajadores': trabajadores})
+    return render(request, 'lista_trabajadores.html', {'trabajadores': trabajadores})
 
 def registrar_trabajador(request):
     if request.method == 'POST':
@@ -24,7 +24,7 @@ def registrar_trabajador(request):
     else:
         usuario_form = UsuarioForm()
         trabajador_form = TrabajadorForm()
-    return render(request, 'empleados/registrar_trabajador.html', {
+    return render(request, 'registrar_trabajador.html', {
         'usuario_form': usuario_form,
         'trabajador_form': trabajador_form
     })
@@ -52,7 +52,7 @@ def editar_trabajador(request, trabajador_id):
         usuario_form = UsuarioForm(instance=usuario)
         trabajador_form = TrabajadorForm(instance=trabajador)
 
-    return render(request, 'empleados/editar_trabajador.html', {
+    return render(request, 'editar_trabajador.html', {
         'usuario_form': usuario_form,
         'trabajador_form': trabajador_form
     })
