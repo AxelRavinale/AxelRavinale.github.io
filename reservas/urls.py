@@ -24,6 +24,7 @@ urlpatterns = [
     path('reserva-confirmada/<int:pk>/', views.ReservaConfirmadaView.as_view(), name='reserva_confirmada'),
     path('mis-reservas/', views.MisReservasView.as_view(), name='mis_reservas'),
     path('reserva/<int:pk>/', views.ReservaDetailUserView.as_view(), name='reserva_detail_user'),
+    path('confirmar-seleccion/<int:pk>/', views.ConfirmarSeleccionView.as_view(), name='confirmar_seleccion'),
     
     # RUTAS PARA BOLETOS
     path('boleto/<int:pk>/', views.BoletoDetailView.as_view(), name='boleto_detail'),

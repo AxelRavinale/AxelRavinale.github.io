@@ -1,191 +1,393 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
-from datetime import datetime, timedelta
+from django.db import models
+from datetime import datetime
+import re
+from .models import AsientoVuelo, Vuelo, Reserva, ReservaDetalle
 
-from .models import Reserva, AsientoVuelo, Boleto
-from vuelos.models import Vuelo
 
-
-class ReservaForm(forms.ModelForm):
-    """Formulario para crear reservas (usado principalmente por admin)"""
+class SeleccionAsientosForm(forms.Form):
+    """Formulario mejorado para seleccionar asientos"""
     
-    class Meta:
-        model = Reserva
-        fields = ['pasajero', 'vuelo']
-        widgets = {
-            'pasajero': forms.Select(attrs={'class': 'form-control'}),
-            'vuelo': forms.Select(attrs={'class': 'form-control'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+    def __init__(self, vuelo, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.vuelo = vuelo
+        self.asientos_data = self._get_asientos_data()
         
-        if user:
-            if user.is_superuser:
-                # Admin puede crear reservas para cualquier usuario
-                self.fields['pasajero'].queryset = User.objects.filter(
-                    is_active=True, is_superuser=False
-                ).order_by('username')
-                
-                # Admin puede ver todos los vuelos configurados
-                self.fields['vuelo'].queryset = Vuelo.objects.filter(
-                    activo=True,
-                    configuracion_reserva__configurado=True,
-                    fecha_salida_estimada__gt=timezone.now()
-                ).order_by('fecha_salida_estimada')
-            else:
-                # Usuario normal solo puede crear reservas para sí mismo
-                self.fields['pasajero'].initial = user
-                self.fields['pasajero'].widget = forms.HiddenInput()
-                
-                # Solo vuelos disponibles
-                self.fields['vuelo'].queryset = Vuelo.objects.filter(
-                    activo=True,
-                    configuracion_reserva__configurado=True,
-                    fecha_salida_estimada__gt=timezone.now()
-                ).order_by('fecha_salida_estimada')
-
-    def clean_vuelo(self):
-        vuelo = self.cleaned_data['vuelo']
-        
-        # Verificar que el vuelo esté configurado
-        try:
-            if not vuelo.configuracion_reserva.configurado:
-                raise ValidationError(_("Este vuelo no está disponible para reservas"))
-        except:
-            raise ValidationError(_("Este vuelo no está configurado"))
-        
-        # Verificar que no haya pasado la fecha límite
-        if vuelo.fecha_salida_estimada <= timezone.now():
-            raise ValidationError(_("Este vuelo ya no acepta reservas"))
-        
-        return vuelo
-
-
-class ConfiguracionAsientoForm(forms.ModelForm):
-    """Formulario para configurar asientos individuales"""
+        # Crear campos dinámicamente
+        self._create_filter_field()
+        self._create_seats_field()
     
-    class Meta:
-        model = AsientoVuelo
-        fields = ['tipo_asiento', 'precio', 'habilitado_para_reserva']
-        widgets = {
-            'tipo_asiento': forms.Select(attrs={'class': 'form-control form-control-sm'}),
-            'precio': forms.NumberInput(attrs={
-                'class': 'form-control form-control-sm',
-                'min': '0',
-                'step': '0.01'
-            }),
-            'habilitado_para_reserva': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        }
-
-    def clean_precio(self):
-        precio = self.cleaned_data['precio']
-        if precio <= 0:
-            raise ValidationError(_("El precio debe ser mayor a 0"))
-        return precio
+    def _create_filter_field(self):
+        """Crear campo de filtros por tipo"""
+        tipos_disponibles = set()
+        for asiento_data in self.asientos_data:
+            tipos_disponibles.add(asiento_data['tipo_asiento'])
+        
+        if tipos_disponibles:
+            choices = []
+            tipo_dict = dict(AsientoVuelo.TipoAsientoChoices.choices)
+            for tipo in sorted(tipos_disponibles):
+                choices.append((tipo, tipo_dict.get(tipo, tipo)))
+            
+            self.fields['filtro_tipo'] = forms.MultipleChoiceField(
+                choices=choices,
+                required=False,
+                widget=forms.CheckboxSelectMultiple(attrs={
+                    'class': 'form-check-input'
+                })
+            )
+    
+    def _create_seats_field(self):
+        """Crear campo de asientos disponibles"""
+        choices = []
+        filtro_activo = self.data.getlist('filtro_tipo', []) if self.data else []
+        
+        for asiento_data in self.asientos_data:
+            # Aplicar filtro si existe
+            if filtro_activo and asiento_data['tipo_asiento'] not in filtro_activo:
+                continue
+                
+            label = self._format_seat_label(asiento_data)
+            choices.append((asiento_data['id'], label))
+        
+        self.fields['asientos_seleccionados'] = forms.MultipleChoiceField(
+            choices=choices,
+            required=False,
+            widget=forms.CheckboxSelectMultiple(attrs={
+                'class': 'form-check-input asiento-checkbox'
+            })
+        )
+    
+    def _get_asientos_data(self):
+        """Obtener datos de asientos disponibles - lógica mejorada"""
+        asientos_data = []
+        
+        # Obtener asientos ocupados una sola vez
+        asientos_ocupados = set(
+            ReservaDetalle.objects.filter(
+                asiento_vuelo__vuelo=self.vuelo,
+                reserva__activo=True,
+                reserva__estado__in=['CRE', 'CON', 'RSP']
+            ).values_list('asiento_vuelo_id', flat=True)
+        )
+        
+        if self.vuelo.tiene_escalas:
+            # Vuelos con escalas
+            for escala_vuelo in self.vuelo.escalas_vuelo.filter(activo=True).order_by('orden'):
+                asientos_vuelo = AsientoVuelo.objects.filter(
+                    vuelo=self.vuelo,
+                    escala_vuelo=escala_vuelo,
+                    activo=True,
+                    habilitado_para_reserva=True
+                ).select_related('asiento').exclude(id__in=asientos_ocupados)
+                
+                for av in asientos_vuelo:
+                    asientos_data.append({
+                        'id': av.id,
+                        'numero': av.asiento.numero,
+                        'fila': av.asiento.fila,
+                        'columna': av.asiento.columna,
+                        'tipo_asiento': av.tipo_asiento,
+                        'tipo_display': av.get_tipo_asiento_display(),
+                        'precio': float(av.precio),  # Convertir a float para JS
+                        'escala_vuelo': escala_vuelo,
+                        'escala_info': f"Escala {escala_vuelo.orden}: {escala_vuelo.origen} → {escala_vuelo.destino}"
+                    })
+        else:
+            # Vuelos directos
+            asientos_vuelo = AsientoVuelo.objects.filter(
+                vuelo=self.vuelo,
+                escala_vuelo__isnull=True,
+                activo=True,
+                habilitado_para_reserva=True
+            ).select_related('asiento').exclude(id__in=asientos_ocupados)
+            
+            for av in asientos_vuelo:
+                asientos_data.append({
+                    'id': av.id,
+                    'numero': av.asiento.numero,
+                    'fila': av.asiento.fila,
+                    'columna': av.asiento.columna,
+                    'tipo_asiento': av.tipo_asiento,
+                    'tipo_display': av.get_tipo_asiento_display(),
+                    'precio': float(av.precio),  # Convertir a float para JS
+                    'escala_vuelo': None,
+                    'escala_info': None
+                })
+        
+        # Ordenar por fila y columna
+        return sorted(asientos_data, key=lambda x: (x['fila'], x['columna']))
+    
+    def _format_seat_label(self, asiento_data):
+        """Formatear etiqueta del asiento de forma más clara"""
+        label = f"{asiento_data['numero']} - {asiento_data['tipo_display']} - ${asiento_data['precio']:.2f}"
+        if asiento_data['escala_info']:
+            label = f"{asiento_data['escala_info']} | {label}"
+        return label
+    
+    def clean_asientos_seleccionados(self):
+        """Validar asientos seleccionados"""
+        selected_ids = self.cleaned_data.get('asientos_seleccionados', [])
+        
+        if not selected_ids:
+            raise ValidationError(_("Debe seleccionar al menos un asiento"))
+        
+        # Convertir a enteros
+        try:
+            selected_ids = [int(id_) for id_ in selected_ids]
+        except ValueError:
+            raise ValidationError(_("IDs de asientos inválidos"))
+        
+        # Verificar que existan y estén disponibles
+        valid_ids = [data['id'] for data in self.asientos_data]
+        invalid_ids = [id_ for id_ in selected_ids if id_ not in valid_ids]
+        
+        if invalid_ids:
+            raise ValidationError(_("Algunos asientos ya no están disponibles"))
+        
+        # Verificar disponibilidad en tiempo real
+        asientos_ocupados_ahora = set(
+            ReservaDetalle.objects.filter(
+                asiento_vuelo_id__in=selected_ids,
+                reserva__activo=True,
+                reserva__estado__in=['CRE', 'CON', 'RSP']
+            ).values_list('asiento_vuelo_id', flat=True)
+        )
+        
+        if asientos_ocupados_ahora:
+            raise ValidationError(_("Algunos asientos fueron reservados por otro usuario. Actualice la página."))
+        
+        return selected_ids
+    
+    def get_precio_total(self):
+        """Calcular precio total"""
+        if not self.is_valid():
+            return 0
+        
+        selected_ids = self.cleaned_data.get('asientos_seleccionados', [])
+        if not selected_ids:
+            return 0
+        
+        # Buscar precios en los datos cargados
+        total = 0
+        selected_ids = [int(id_) for id_ in selected_ids]
+        
+        for asiento_data in self.asientos_data:
+            if asiento_data['id'] in selected_ids:
+                total += asiento_data['precio']
+        
+        return total
+    
+    def get_asientos_info(self):
+        """Obtener información detallada de asientos seleccionados"""
+        if not self.is_valid():
+            return []
+        
+        selected_ids = self.cleaned_data.get('asientos_seleccionados', [])
+        if not selected_ids:
+            return []
+        
+        selected_ids = [int(id_) for id_ in selected_ids]
+        info = []
+        
+        for asiento_data in self.asientos_data:
+            if asiento_data['id'] in selected_ids:
+                info.append({
+                    'id': asiento_data['id'],
+                    'numero': asiento_data['numero'],
+                    'tipo': asiento_data['tipo_display'],
+                    'precio': asiento_data['precio'],
+                    'escala': asiento_data['escala_vuelo'].orden if asiento_data['escala_vuelo'] else None,
+                    'escala_info': asiento_data['escala_info']
+                })
+        
+        return info
 
 
 class PagoForm(forms.Form):
-    """Formulario para procesar pagos ficticios"""
+    """Formulario mejorado para procesar el pago de una reserva"""
     
     METODOS_PAGO = [
-        ('tarjeta_credito', 'Tarjeta de Crédito'),
-        ('tarjeta_debito', 'Tarjeta de Débito'),
-        ('efectivo', 'Efectivo (en sucursal)'),
+        ('tarjeta_credito', _('Tarjeta de Crédito')),
+        ('tarjeta_debito', _('Tarjeta de Débito')),
+        ('transferencia', _('Transferencia Bancaria')),
+        ('paypal', _('PayPal')),
     ]
     
     metodo_pago = forms.ChoiceField(
         choices=METODOS_PAGO,
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        initial='tarjeta_credito',
+        widget=forms.Select(attrs={
+            'class': 'form-select form-select-lg',
+            'required': True
+        }),
         label=_("Método de Pago")
     )
     
-    # Campos para tarjeta (ficticios)
+    # Campos de tarjeta
     numero_tarjeta = forms.CharField(
         max_length=19,
+        initial='4111111111111111',  # Número de prueba
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': '1234 5678 9012 3456',
-            'pattern': '[0-9\s]{13,19}',
+            'class': 'form-control form-control-lg',
+            'placeholder': '4111 1111 1111 1111',
+            'pattern': r'[0-9\s]{13,19}',
+            'title': 'Ingrese un número de tarjeta válido'
         }),
         label=_("Número de Tarjeta"),
-        required=False
+        help_text=_("Use 4111111111111111 para pruebas")
     )
     
     titular = forms.CharField(
         max_length=100,
+        initial='JUAN PEREZ',
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Nombre como aparece en la tarjeta'
+            'class': 'form-control form-control-lg',
+            'placeholder': 'JUAN PEREZ',
+            'style': 'text-transform: uppercase;'
         }),
-        label=_("Titular de la Tarjeta"),
-        required=False
+        label=_("Nombre del Titular")
     )
     
     mes_expiracion = forms.ChoiceField(
         choices=[(i, f"{i:02d}") for i in range(1, 13)],
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label=_("Mes de Expiración"),
-        required=False
+        initial=12,
+        widget=forms.Select(attrs={
+            'class': 'form-select form-select-lg'
+        }),
+        label=_("Mes")
     )
     
     año_expiracion = forms.ChoiceField(
-        choices=[(i, str(i)) for i in range(datetime.now().year, datetime.now().year + 10)],
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label=_("Año de Expiración"),
-        required=False
+        choices=[(i, str(i)) for i in range(datetime.now().year, datetime.now().year + 11)],
+        initial=datetime.now().year + 2,
+        widget=forms.Select(attrs={
+            'class': 'form-select form-select-lg'
+        }),
+        label=_("Año")
     )
     
     cvv = forms.CharField(
         max_length=4,
+        min_length=3,
+        initial='123',
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
+            'class': 'form-control form-control-lg',
             'placeholder': '123',
             'pattern': '[0-9]{3,4}',
+            'title': 'Código de 3 o 4 dígitos',
+            'type': 'password'
         }),
-        label=_("CVV"),
-        required=False
+        label=_("CVV")
     )
-
+    
     def __init__(self, *args, **kwargs):
         self.reserva = kwargs.pop('reserva', None)
         super().__init__(*args, **kwargs)
-
+        
+        if self.reserva:
+            # Agregar información de la reserva al formulario
+            self.fields['total'] = forms.DecimalField(
+                initial=self.reserva.precio_total,
+                widget=forms.HiddenInput()
+            )
+    
+    def clean_numero_tarjeta(self):
+        numero = self.cleaned_data['numero_tarjeta']
+        # Remover espacios y guiones
+        numero_limpio = re.sub(r'[\s-]', '', numero)
+        
+        # Para demo, aceptamos números de prueba comunes
+        numeros_prueba = [
+            '4111111111111111',  # Visa
+            '5555555555554444',  # MasterCard
+            '378282246310005',   # American Express
+        ]
+        
+        if numero_limpio in numeros_prueba:
+            return numero_limpio
+        
+        # Validar que solo contenga números
+        if not numero_limpio.isdigit():
+            raise ValidationError(_("El número de tarjeta debe contener solo números"))
+        
+        # Validar longitud
+        if len(numero_limpio) < 13 or len(numero_limpio) > 19:
+            raise ValidationError(_("El número de tarjeta debe tener entre 13 y 19 dígitos"))
+        
+        # Para demo, aceptamos cualquier número que pase las validaciones básicas
+        return numero_limpio
+    
+    def clean_titular(self):
+        titular = self.cleaned_data['titular'].strip().upper()
+        
+        # Validar que contenga al menos letras
+        if not re.search(r'[A-Z]', titular):
+            raise ValidationError(_("El nombre del titular debe contener letras"))
+        
+        if len(titular) < 2:
+            raise ValidationError(_("El nombre del titular debe tener al menos 2 caracteres"))
+        
+        return titular
+    
+    def clean_cvv(self):
+        cvv = self.cleaned_data['cvv']
+        
+        # Validar que solo contenga números
+        if not cvv.isdigit():
+            raise ValidationError(_("El CVV debe contener solo números"))
+        
+        return cvv
+    
     def clean(self):
         cleaned_data = super().clean()
-        metodo_pago = cleaned_data.get('metodo_pago')
+        mes = cleaned_data.get('mes_expiracion')
+        año = cleaned_data.get('año_expiracion')
         
-        # Si es pago con tarjeta, validar campos de tarjeta
-        if metodo_pago in ['tarjeta_credito', 'tarjeta_debito']:
-            campos_requeridos = ['numero_tarjeta', 'titular', 'mes_expiracion', 'año_expiracion', 'cvv']
+        if mes and año:
+            # Validar que la fecha no esté vencida
+            fecha_actual = datetime.now()
+            año_int = int(año)
+            mes_int = int(mes)
             
-            for campo in campos_requeridos:
-                if not cleaned_data.get(campo):
-                    raise ValidationError(f"El campo {campo} es requerido para pagos con tarjeta")
-            
-            # Validar número de tarjeta (ficticio)
-            numero_tarjeta = cleaned_data.get('numero_tarjeta', '').replace(' ', '')
-            if len(numero_tarjeta) < 13 or len(numero_tarjeta) > 19:
-                raise ValidationError(_("Número de tarjeta inválido"))
-            
-            # Validar CVV
-            cvv = cleaned_data.get('cvv', '')
-            if len(cvv) < 3 or len(cvv) > 4:
-                raise ValidationError(_("CVV inválido"))
+            if año_int < fecha_actual.year or (año_int == fecha_actual.year and mes_int < fecha_actual.month):
+                raise ValidationError(_("La tarjeta está vencida"))
         
         return cleaned_data
 
 
+class BusquedaBoletoForm(forms.Form):
+    """Formulario para buscar boletos por código de barras"""
+    
+    codigo_barras = forms.CharField(
+        max_length=16,
+        min_length=8,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control form-control-lg',
+            'placeholder': 'Ingrese el código del boleto',
+            'style': 'text-transform: uppercase;'
+        }),
+        label=_("Código de Boleto")
+    )
+    
+    def clean_codigo_barras(self):
+        codigo = self.cleaned_data['codigo_barras'].strip().upper()
+        
+        # Validar formato alfanumérico
+        if not re.match(r'^[A-Z0-9]+,', codigo):
+            raise ValidationError(_("El código debe contener solo letras y números"))
+        
+        return codigo
+
+
 class FiltroReservaForm(forms.Form):
-    """Formulario para filtrar reservas"""
+    """Formulario para filtrar reservas en el admin"""
     
     codigo_reserva = forms.CharField(
-        max_length=16,
         required=False,
+        max_length=16,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Código de reserva'
@@ -194,8 +396,8 @@ class FiltroReservaForm(forms.Form):
     )
     
     vuelo = forms.CharField(
-        max_length=20,
         required=False,
+        max_length=20,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Código de vuelo'
@@ -204,77 +406,79 @@ class FiltroReservaForm(forms.Form):
     )
     
     estado = forms.ChoiceField(
-        choices=[('', 'Todos los estados')] + Reserva.EstadoChoices.choices,
         required=False,
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        choices=[('', _('Todos los estados'))] + [
+            ('CRE', _('Creada')),
+            ('RSP', _('Reservado Sin Pago')),
+            ('CON', _('Confirmada y Pagada')),
+            ('CAN', _('Cancelada')),
+            ('EXP', _('Expirada')),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        }),
         label=_("Estado")
     )
     
     pasajero = forms.CharField(
-        max_length=100,
         required=False,
+        max_length=100,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Nombre o email del pasajero'
         }),
         label=_("Pasajero")
     )
-
-
-class BusquedaBoletoForm(forms.Form):
-    """Formulario para buscar boletos por código de barras"""
     
-    codigo_barras = forms.CharField(
-        max_length=16,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ingrese el código de barras del boleto',
-            'autofocus': True
-        }),
-        label=_("Código de Barras")
-    )
-
-    def clean_codigo_barras(self):
-        codigo = self.cleaned_data['codigo_barras'].upper().strip()
-        if len(codigo) < 8:
-            raise ValidationError(_("El código debe tener al menos 8 caracteres"))
-        return codigo
-
-
-class BusquedaVuelosForm(forms.Form):
-    """Formulario para buscar vuelos disponibles"""
-    
-    origen = forms.CharField(
-        max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ciudad de origen'
-        }),
-        label=_("Origen")
-    )
-    
-    destino = forms.CharField(
-        max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ciudad de destino'
-        }),
-        label=_("Destino")
-    )
-    
-    fecha = forms.DateField(
+    fecha_desde = forms.DateField(
         required=False,
         widget=forms.DateInput(attrs={
             'class': 'form-control',
             'type': 'date'
         }),
-        label=_("Fecha de Salida")
+        label=_("Fecha Desde")
+    )
+    
+    fecha_hasta = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'type': 'date'
+        }),
+        label=_("Fecha Hasta")
     )
 
-    def clean_fecha(self):
-        fecha = self.cleaned_data.get('fecha')
-        if fecha and fecha <= timezone.now().date():
-            raise ValidationError(_("La fecha debe ser futura"))
-        return fecha
+
+class ReservaForm(forms.ModelForm):
+    """Formulario básico para reservas (si es necesario)"""
+    class Meta:
+        model = Reserva
+        fields = ['vuelo']  # Ajustar según necesidades
+
+
+class ConfiguracionAsientoForm(forms.Form):
+    """Formulario para configuración masiva de asientos"""
+    tipo_asiento = forms.ChoiceField(
+        choices=AsientoVuelo.TipoAsientoChoices.choices,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label=_("Tipo de Asiento")
+    )
+    
+    precio = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        min_value=0.01,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01'
+        }),
+        label=_("Precio")
+    )
+    
+    habilitado_para_reserva = forms.BooleanField(
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label=_("Habilitado para Reserva")
+    )

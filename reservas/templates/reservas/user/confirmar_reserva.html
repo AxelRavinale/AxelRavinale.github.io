@@ -1,33 +1,38 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% load reservas_extras %}
 
 {% block title %}Confirmar Reserva{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8">
+<div class="row justify-content-center">
+    <div class="col-md-10">
         <h1>✅ Confirmar Reserva</h1>
+        
+        <div class="alert alert-info">
+            <h6>📋 Resumen de tu Reserva</h6>
+            <p class="mb-0">Por favor revisa los detalles antes de continuar</p>
+        </div>
         
         <!-- Información del vuelo -->
         <div class="card mb-4">
-            <div class="card-header">
-                <h5>📋 Resumen de la Reserva</h5>
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">✈️ Información del Vuelo</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <h6>Información del Vuelo</h6>
                         <p><strong>Código:</strong> {{ reserva.vuelo.codigo_vuelo }}</p>
                         <p><strong>Ruta:</strong> {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}</p>
                         <p><strong>Salida:</strong> {{ reserva.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</p>
                         <p><strong>Llegada:</strong> {{ reserva.vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</p>
                     </div>
                     <div class="col-md-6">
-                        <h6>Información del Pasajero</h6>
-                        <p><strong>Nombre:</strong> {{ reserva.pasajero.get_full_name|default:reserva.pasajero.username }}</p>
+                        <p><strong>Pasajero:</strong> {{ reserva.pasajero.get_full_name|default:reserva.pasajero.username }}</p>
                         <p><strong>Email:</strong> {{ reserva.pasajero.email }}</p>
-                        <p><strong>Código de Reserva:</strong> <strong class="text-primary">{{ reserva.codigo_reserva }}</strong></p>
+                        <p><strong>Código de Reserva:</strong> <span class="badge bg-primary fs-6">{{ reserva.codigo_reserva }}</span></p>
+                        <p><strong>Estado:</strong> <span class="badge bg-info">{{ reserva.get_estado_display }}</span></p>
                     </div>
                 </div>
             </div>
@@ -35,74 +40,145 @@
 
         <!-- Asientos seleccionados -->
         <div class="card mb-4">
-            <div class="card-header">
-                <h5>🪑 Asientos Seleccionados</h5>
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">🪑 Asientos Seleccionados</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Asiento</th>
-                                <th>Tipo</th>
-                                <th>Precio</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for info in asientos_info %}
-                                <tr>
-                                    <td><strong>{{ info.asiento.numero }}</strong></td>
-                                    <td>{{ info.tipo }}</td>
-                                    <td>${{ info.precio|floatformat:2 }}</td>
-                                </tr>
-                            {% endfor %}
-                            <tr class="table-success">
-                                <td colspan="2"><strong>TOTAL</strong></td>
-                                <td><strong>${{ reserva.precio_total|floatformat:2 }}</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    {% for detalle in reserva.detalles.all %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-success">
+                            <div class="card-body text-center">
+                                <h4 class="text-success mb-2">{{ detalle.asiento_vuelo.asiento.numero }}</h4>
+                                <p class="mb-1"><strong>Tipo:</strong> {{ detalle.asiento_vuelo.get_tipo_asiento_display }}</p>
+                                <p class="mb-1"><strong>Precio:</strong> <span class="text-success fw-bold">${{ detalle.precio_pagado|floatformat:2 }}</span></p>
+                                {% if detalle.asiento_vuelo.escala_vuelo %}
+                                    <p class="mb-0"><small class="text-muted">Escala {{ detalle.asiento_vuelo.escala_vuelo.orden }}</small></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Total -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="alert alert-success text-center">
+                            <h4 class="mb-0">💰 Total a Pagar: <span class="fw-bold">${{ reserva.precio_total|floatformat:2 }}</span></h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="col-md-4">
-        <!-- Opciones de pago -->
-        <div class="card">
-            <div class="card-header">
-                <h5>💳 Opciones de Pago</h5>
+        
+        <!-- Información importante -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">⚠️ Información Importante</h6>
             </div>
             <div class="card-body">
-                <div class="d-grid gap-2">
-                    <form method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="mb-0">
+                            <li>Si eliges pagar más tarde, tendrás <strong>72 horas</strong> para completar el pago</li>
+                            <li>Los asientos quedan reservados durante este periodo</li>
+                            <li>Si no pagas en el tiempo límite, la reserva será cancelada automáticamente</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        {% if reserva.fecha_limite_pago %}
+                        <div class="alert alert-info mb-0">
+                            <strong>⏰ Límite de Pago:</strong><br>
+                            {{ reserva.fecha_limite_pago|date:"d/m/Y H:i" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botones de acción -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <form method="post" class="h-100">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="pagar_ahora">
+                            <button type="submit" class="btn btn-success btn-lg w-100 h-100 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <div><i class="fas fa-credit-card fa-2x mb-2"></i></div>
+                                    <div><strong>💳 Pagar Ahora</strong></div>
+                                    <div><small>Procesar pago inmediatamente</small></div>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <form method="post" class="h-100">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="pagar_despues">
+                            <button type="submit" class="btn btn-warning btn-lg w-100 h-100 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <div><i class="fas fa-clock fa-2x mb-2"></i></div>
+                                    <div><strong>⏰ Pagar Más Tarde</strong></div>
+                                    <div><small>Reservar ahora, pagar después</small></div>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <form method="post" class="d-inline">
                         {% csrf_token %}
-                        <input type="hidden" name="accion" value="pagar_ahora">
-                        <button type="submit" class="btn btn-success btn-lg w-100 mb-2">
-                            💳 Pagar Ahora
+                        <input type="hidden" name="accion" value="cancelar">
+                        <button type="submit" class="btn btn-outline-danger" 
+                                onclick="return confirm('¿Estás seguro de cancelar esta reserva?')">
+                            ❌ Cancelar Reserva
                         </button>
                     </form>
                     
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="accion" value="pagar_despues">
-                        <button type="submit" class="btn btn-warning btn-lg w-100">
-                            ⏰ Pagar Más Tarde
-                        </button>
-                    </form>
-                </div>
-                
-                <hr>
-                
-                <div class="alert alert-info">
-                    <small>
-                        <strong>Importante:</strong> Si eliges pagar más tarde, tendrás hasta 
-                        <strong>72 horas antes del vuelo</strong> para completar el pago, 
-                        o la reserva será cancelada automáticamente.
-                    </small>
+                    <a href="{% url 'reservas:seleccion_asientos' reserva.vuelo.pk %}" class="btn btn-outline-secondary ms-2">
+                        ⬅️ Volver a Selección
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.card-header {
+    font-weight: 600;
+}
+
+.btn-lg {
+    min-height: 120px;
+}
+
+.alert-success {
+    border-left: 5px solid #28a745;
+}
+
+.alert-warning {
+    border-left: 5px solid #ffc107;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .btn-lg {
+        min-height: auto;
+        padding: 1rem;
+    }
+}
+</style>
 {% endblock %}

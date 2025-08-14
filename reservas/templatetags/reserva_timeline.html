@@ -1,0 +1,84 @@
+{% load reservas_extras %}
+
+<div class="timeline">
+  {% for estado in estados %}
+    <div class="timeline-item {% if estado.completado %}completed{% endif %} {% if estado.activo %}active{% endif %} {% if estado.error %}error{% endif %}">
+      <div class="timeline-marker">
+        <span class="timeline-icon">{{ estado.icono }}</span>
+      </div>
+      <div class="timeline-content">
+        <h6 class="timeline-title">{{ estado.titulo }}</h6>
+        {% if estado.fecha %}
+          <p class="timeline-date text-muted small">
+            {{ estado.fecha|date:"d/m/Y H:i" }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+.timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 25px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #dee2e6;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 30px 60px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  border: 3px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-item.completed .timeline-marker {
+  background: #d1e7dd;
+  border-color: #198754;
+}
+
+.timeline-item.active .timeline-marker {
+  background: #cff4fc;
+  border-color: #0dcaf0;
+  box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.25);
+}
+
+.timeline-item.error .timeline-marker {
+  background: #f8d7da;
+  border-color: #dc3545;
+}
+
+.timeline-icon {
+  font-size: 1.2em;
+}
+
+.timeline-title {
+  margin: 0 0 5px 0;
+  font-weight: 600;
+}
+
+.timeline-date {
+  margin: 0;
+}
+</style>

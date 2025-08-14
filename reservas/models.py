@@ -659,6 +659,10 @@ class ConfiguracionVuelo(models.Model):
 
     def actualizar_contadores(self):
         """Actualiza los contadores de asientos"""
-        asientos_vuelo = AsientoVuelo.objects.filter(vuelo=self.vuelo, activo=True)
+        # CORRECCIÓN: El filtro activo=True debe aplicarse a AsientoVuelo, no a Asiento
+        asientos_vuelo = AsientoVuelo.objects.filter(
+            vuelo=self.vuelo, 
+            activo=True  # Este campo SÍ existe en AsientoVuelo
+        )
         self.total_asientos_configurados = asientos_vuelo.count()
         self.asientos_habilitados = asientos_vuelo.filter(habilitado_para_reserva=True).count()

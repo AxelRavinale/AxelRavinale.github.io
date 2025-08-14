@@ -5,56 +5,39 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, View, TemplateView
 )
+from django.db import models, transaction
 from django.urls import reverse, reverse_lazy
-from django.db import transaction
 from django.db.models import Q, Count, Sum, Prefetch
 from django.http import HttpResponse, JsonResponse, Http404
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.paginator import Paginator
+from django.contrib.auth.models import User
 import json
+import logging
 from datetime import timedelta
 
+# Imports de modelos
 from .models import (
     Reserva, ReservaDetalle, Boleto, AsientoVuelo, ConfiguracionVuelo
 )
-from .forms import (
-    ReservaForm, FiltroReservaForm, PagoForm, BusquedaBoletoForm, 
-    ConfiguracionAsientoForm
-)
 from vuelos.models import Vuelo, EscalaVuelo
 from aviones.models import Asiento
+
+# Imports de formularios (faltaba SeleccionAsientosForm)
+from .forms import (
+    ReservaForm, FiltroReservaForm, PagoForm, BusquedaBoletoForm, 
+    ConfiguracionAsientoForm, SeleccionAsientosForm  # <- Esta importación faltaba
+)
+
+# Import de mixins (si tienes archivo mixins.py separado)
+from .mixins import AdminRequiredMixin, UserRequiredMixin  # <- Opcional
+
+# Imports de utils
 from .utils import generar_pdf_boleto, generar_pdf_detalle_reserva
-from django.contrib.auth.models import User
-import logging
 
 logger = logging.getLogger(__name__)
-
-# ================================
-# MIXINS DE PERMISOS
-# ================================
-
-class AdminRequiredMixin(UserPassesTestMixin):
-    """Mixin que requiere permisos de administrador"""
-    def test_func(self):
-        return self.request.user.is_superuser
-    
-    def handle_no_permission(self):
-        messages.error(self.request, _("No tienes permisos para acceder a esta sección"))
-        return redirect('home')
-
-
-class UserRequiredMixin(UserPassesTestMixin):
-    """Mixin que requiere que NO sea admin (usuarios normales)"""
-    def test_func(self):
-        return self.request.user.is_authenticated and not self.request.user.is_superuser
-    
-    def handle_no_permission(self):
-        if not self.request.user.is_authenticated:
-            return redirect('login')
-        messages.error(self.request, _("Esta sección es solo para usuarios"))
-        return redirect('home')
 
 
 # ================================
@@ -872,14 +855,22 @@ class VuelosDisponiblesView(UserRequiredMixin, LoginRequiredMixin, ListView):
                 activo=True, 
                 habilitado_para_reserva=True
             ).aggregate(precio_min=models.Min('precio'))['precio_min'] or 0
-            
+
+            # 📌 Cálculo del porcentaje ocupado
+            if asientos_totales > 0:
+                porcentaje_ocupado = (asientos_ocupados / asientos_totales) * 100
+            else:
+                porcentaje_ocupado = 0
+
             vuelos_con_disponibilidad.append({
                 'vuelo': vuelo,
                 'asientos_totales': asientos_totales,
                 'asientos_ocupados': asientos_ocupados,
                 'asientos_disponibles': disponibles,
-                'precio_desde': precio_min
+                'precio_desde': precio_min,
+                'porcentaje_ocupado': porcentaje_ocupado  # <- agregado
             })
+
         
         context['vuelos_con_info'] = vuelos_con_disponibilidad
         
@@ -893,136 +884,230 @@ class VuelosDisponiblesView(UserRequiredMixin, LoginRequiredMixin, ListView):
         return context
 
 
-class SeleccionAsientosView(UserRequiredMixin, LoginRequiredMixin, DetailView):
-    """Vista para seleccionar asientos de un vuelo"""
-    model = Vuelo
-    template_name = 'reservas/user/seleccion_asientos.html'
-    context_object_name = 'vuelo'
 
-    def get_object(self):
-        vuelo = super().get_object()
+
+class SeleccionAsientosView(UserRequiredMixin, LoginRequiredMixin, View):
+    """Vista simplificada para seleccionar asientos sin mostrar precios"""
+    template_name = 'reservas/user/seleccion_asientos.html'
+
+    def get_vuelo(self, pk):
+        """Obtener y validar vuelo"""
+        vuelo = get_object_or_404(Vuelo, pk=pk)
         
-        # Verificar que el vuelo esté configurado y disponible
+        # Verificar que esté configurado
         try:
             config = vuelo.configuracion_reserva
             if not config.configurado:
                 raise Http404(_("Este vuelo no está disponible para reservas"))
         except ConfiguracionVuelo.DoesNotExist:
             raise Http404(_("Este vuelo no está configurado"))
-        
-        # Verificar que no sea muy tarde para reservar
+
+        # Verificar fecha
         if vuelo.fecha_salida_estimada <= timezone.now():
             raise Http404(_("Este vuelo ya no acepta reservas"))
-        
+
         return vuelo
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        vuelo = self.object
+    def get(self, request, pk):
+        """Mostrar formulario de selección"""
+        vuelo = self.get_vuelo(pk)
+        form = SeleccionAsientosForm(vuelo=vuelo)
         
-        # Obtener asientos configurados
-        if vuelo.tiene_escalas:
-            # Para vuelos con escalas
-            escalas_data = []
-            for escala_vuelo in vuelo.escalas_vuelo.filter(activo=True).order_by('orden'):
-                asientos_configurados = AsientoVuelo.objects.filter(
-                    vuelo=vuelo,
-                    escala_vuelo=escala_vuelo,
-                    activo=True,
-                    habilitado_para_reserva=True
-                ).select_related('asiento').order_by('asiento__fila', 'asiento__columna')
+        context = {
+            'vuelo': vuelo,
+            'form': form,
+            'filtros_aplicados': [],
+        }
+        
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        """Procesar formulario"""
+        vuelo = self.get_vuelo(pk)
+        accion = request.POST.get('accion', 'filtrar')
+
+        # Crear formulario con datos POST
+        form = SeleccionAsientosForm(vuelo=vuelo, data=request.POST)
+        
+        if accion == 'filtrar':
+            # Solo aplicar filtros, no validar selección
+            filtros_aplicados = request.POST.getlist('filtro_tipo', [])
+            
+            context = {
+                'vuelo': vuelo,
+                'form': form,
+                'filtros_aplicados': filtros_aplicados,
+            }
+            
+            return render(request, self.template_name, context)
+        
+        elif accion == 'continuar':
+            # Solo validar que haya seleccionado asientos
+            if form.is_valid():
+                selected_ids = form.cleaned_data['asientos_seleccionados']
                 
-                # Marcar asientos ocupados
-                asientos_ocupados = set(
-                    ReservaDetalle.objects.filter(
-                        asiento_vuelo__vuelo=vuelo,
-                        asiento_vuelo__escala_vuelo=escala_vuelo,
-                        reserva__activo=True,
-                        reserva__estado__in=[
-                            Reserva.EstadoChoices.CONFIRMADA,
-                            Reserva.EstadoChoices.RESERVADO_SIN_PAGO
-                        ]
-                    ).values_list('asiento_vuelo__asiento__id', flat=True)
+                if not selected_ids:
+                    messages.error(request, _('Debe seleccionar al menos un asiento'))
+                    filtros_aplicados = request.POST.getlist('filtro_tipo', [])
+                    context = {
+                        'vuelo': vuelo,
+                        'form': form,
+                        'filtros_aplicados': filtros_aplicados,
+                    }
+                    return render(request, self.template_name, context)
+                
+                # Guardar selección en sesión y redirigir a confirmación
+                request.session['asientos_seleccionados'] = selected_ids
+                request.session['vuelo_id'] = vuelo.pk
+                
+                messages.success(
+                    request, 
+                    f"✅ Asientos seleccionados exitosamente. "
+                    f"Cantidad: {len(selected_ids)}"
                 )
                 
-                escalas_data.append({
-                    'escala_vuelo': escala_vuelo,
-                    'asientos': asientos_configurados,
-                    'asientos_ocupados': asientos_ocupados
-                })
+                # Redirigir a página de confirmación con cálculo de precios
+                return redirect('reservas:confirmar_seleccion', pk=vuelo.pk)
             
-            context['escalas_data'] = escalas_data
-        else:
-            # Para vuelos directos
-            asientos_configurados = AsientoVuelo.objects.filter(
-                vuelo=vuelo,
-                escala_vuelo__isnull=True,
-                activo=True,
-                habilitado_para_reserva=True
-            ).select_related('asiento').order_by('asiento__fila', 'asiento__columna')
-            
-            # Marcar asientos ocupados
-            asientos_ocupados = set(
-                ReservaDetalle.objects.filter(
-                    asiento_vuelo__vuelo=vuelo,
-                    asiento_vuelo__escala_vuelo__isnull=True,
-                    reserva__activo=True,
-                    reserva__estado__in=[
-                        Reserva.EstadoChoices.CONFIRMADA,
-                        Reserva.EstadoChoices.RESERVADO_SIN_PAGO
-                    ]
-                ).values_list('asiento_vuelo__asiento__id', flat=True)
-            )
-            
-            context['asientos'] = asientos_configurados
-            context['asientos_ocupados'] = asientos_ocupados
+            else:
+                # Mostrar errores del formulario
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, error)
+                
+                # Si hay errores, mantener filtros aplicados
+                filtros_aplicados = request.POST.getlist('filtro_tipo', [])
+                context = {
+                    'vuelo': vuelo,
+                    'form': form,
+                    'filtros_aplicados': filtros_aplicados,
+                }
+                return render(request, self.template_name, context)
         
-        # Tipos de asiento disponibles para filtrado
-        tipos_disponibles = AsientoVuelo.objects.filter(
-            vuelo=vuelo,
-            activo=True,
-            habilitado_para_reserva=True
-        ).values('tipo_asiento').distinct()
-        
-        context['tipos_asiento'] = [
-            {'value': t['tipo_asiento'], 'label': dict(AsientoVuelo.TipoAsientoChoices.choices)[t['tipo_asiento']]}
-            for t in tipos_disponibles
-        ]
-        
-        return context
+        # Acción no válida
+        messages.error(request, _('Acción no válida'))
+        return redirect('reservas:seleccion_asientos', pk=pk)
 
-    def post(self, request, *args, **kwargs):
-        vuelo = self.get_object()
-        asientos_seleccionados = request.POST.getlist('asientos')
+
+class ConfirmarSeleccionView(UserRequiredMixin, LoginRequiredMixin, View):
+    """Vista para confirmar selección y mostrar precios antes de crear reserva"""
+    template_name = 'reservas/user/confirmar_seleccion.html'
+
+    def get(self, request, pk):
+        """Mostrar resumen de selección con precios"""
+        # Verificar que haya selección en sesión
+        asientos_ids = request.session.get('asientos_seleccionados')
+        vuelo_id_session = request.session.get('vuelo_id')
+        
+        if not asientos_ids or vuelo_id_session != pk:
+            messages.error(request, _('No hay asientos seleccionados. Seleccione asientos primero.'))
+            return redirect('reservas:seleccion_asientos', pk=pk)
+        
+        vuelo = get_object_or_404(Vuelo, pk=pk)
+        
+        # Obtener detalles de asientos seleccionados
+        asientos_seleccionados = []
+        precio_total = 0
+        
+        for asiento_id in asientos_ids:
+            try:
+                asiento_vuelo = AsientoVuelo.objects.select_related('asiento').get(
+                    id=asiento_id,
+                    vuelo=vuelo
+                )
+                
+                # Verificar que siga disponible
+                if not ReservaDetalle.objects.filter(
+                    asiento_vuelo=asiento_vuelo,
+                    reserva__activo=True,
+                    reserva__estado__in=['CRE', 'CON', 'RSP']
+                ).exists():
+                    asientos_seleccionados.append({
+                        'asiento_vuelo': asiento_vuelo,
+                        'numero': asiento_vuelo.asiento.numero,
+                        'tipo': asiento_vuelo.asiento.get_tipo_display(),
+                        'precio': asiento_vuelo.precio,
+                    })
+                    precio_total += asiento_vuelo.precio
+                else:
+                    # Asiento ya no disponible
+                    messages.warning(
+                        request, 
+                        f'El asiento {asiento_vuelo.asiento.numero} ya no está disponible.'
+                    )
+                    
+            except AsientoVuelo.DoesNotExist:
+                messages.warning(request, 'Algunos asientos seleccionados ya no existen.')
         
         if not asientos_seleccionados:
-            messages.error(request, _('Debe seleccionar al menos un asiento'))
-            return self.get(request, *args, **kwargs)
+            messages.error(request, _('Los asientos seleccionados ya no están disponibles.'))
+            # Limpiar sesión
+            if 'asientos_seleccionados' in request.session:
+                del request.session['asientos_seleccionados']
+            if 'vuelo_id' in request.session:
+                del request.session['vuelo_id']
+            return redirect('reservas:seleccion_asientos', pk=pk)
+        
+        context = {
+            'vuelo': vuelo,
+            'asientos_seleccionados': asientos_seleccionados,
+            'precio_total': precio_total,
+            'cantidad_asientos': len(asientos_seleccionados),
+        }
+        
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        """Crear la reserva definitiva"""
+        # Verificar sesión
+        asientos_ids = request.session.get('asientos_seleccionados')
+        vuelo_id_session = request.session.get('vuelo_id')
+        
+        if not asientos_ids or vuelo_id_session != pk:
+            messages.error(request, _('Sesión expirada. Seleccione asientos nuevamente.'))
+            return redirect('reservas:seleccion_asientos', pk=pk)
+        
+        vuelo = get_object_or_404(Vuelo, pk=pk)
         
         try:
             with transaction.atomic():
+                # Verificar que no tenga reserva activa para este vuelo
+                reserva_existente = Reserva.objects.filter(
+                    pasajero=request.user,
+                    vuelo=vuelo,
+                    activo=True,
+                    estado__in=['CRE', 'CON', 'RSP']
+                ).first()
+                
+                if reserva_existente:
+                    raise ValidationError(_('Ya tiene una reserva activa para este vuelo'))
+                
                 # Crear reserva
                 reserva = Reserva.objects.create(
                     pasajero=request.user,
                     vuelo=vuelo,
-                    estado=Reserva.EstadoChoices.CREADA
+                    estado='CRE'
                 )
                 
-                # Agregar asientos seleccionados
+                # Agregar detalles de asientos
+                asientos_agregados = []
                 precio_total = 0
-                for asiento_vuelo_id in asientos_seleccionados:
+                
+                for asiento_id in asientos_ids:
                     try:
-                        asiento_vuelo = AsientoVuelo.objects.get(
-                            id=asiento_vuelo_id,
-                            vuelo=vuelo,
-                            activo=True,
-                            habilitado_para_reserva=True
+                        asiento_vuelo = AsientoVuelo.objects.select_for_update().get(
+                            id=asiento_id,
+                            vuelo=vuelo
                         )
                         
-                        # Verificar disponibilidad
-                        if asiento_vuelo.esta_reservado:
+                        # Verificar disponibilidad nuevamente
+                        if ReservaDetalle.objects.filter(
+                            asiento_vuelo=asiento_vuelo,
+                            reserva__activo=True,
+                            reserva__estado__in=['CRE', 'CON', 'RSP']
+                        ).exists():
                             raise ValidationError(
-                                _('El asiento {} ya no está disponible').format(asiento_vuelo.asiento.numero)
+                                f"El asiento {asiento_vuelo.asiento.numero} ya no está disponible"
                             )
                         
                         ReservaDetalle.objects.create(
@@ -1030,85 +1115,116 @@ class SeleccionAsientosView(UserRequiredMixin, LoginRequiredMixin, DetailView):
                             asiento_vuelo=asiento_vuelo,
                             precio_pagado=asiento_vuelo.precio
                         )
+                        
+                        asientos_agregados.append(asiento_vuelo.asiento.numero)
                         precio_total += asiento_vuelo.precio
                         
                     except AsientoVuelo.DoesNotExist:
-                        raise ValidationError(_('Asiento no válido seleccionado'))
+                        raise ValidationError("Un asiento seleccionado ya no existe")
                 
-                reserva.calcular_precio_total()
+                if not asientos_agregados:
+                    raise ValidationError("No se pudieron reservar los asientos seleccionados")
+                
+                # Guardar precio total
+                reserva.precio_total = precio_total
+                reserva.save()
+                
+                # Limpiar sesión
+                if 'asientos_seleccionados' in request.session:
+                    del request.session['asientos_seleccionados']
+                if 'vuelo_id' in request.session:
+                    del request.session['vuelo_id']
                 
                 messages.success(
                     request,
-                    _('Asientos seleccionados exitosamente. Total: ${}'.format(reserva.precio_total))
+                    f"✅ Reserva creada exitosamente. "
+                    f"Asientos: {', '.join(asientos_agregados)}. "
+                    f"Total: ${precio_total:.2f}"
                 )
                 
-                return redirect('reservas:confirmar_reserva', pk=reserva.pk)
+                # Redirigir a detalles de la reserva
+                return redirect('reservas:reserva_detail', pk=reserva.pk)
                 
         except ValidationError as e:
             messages.error(request, str(e))
-            return self.get(request, *args, **kwargs)
+            return redirect('reservas:seleccion_asientos', pk=pk)
         except Exception as e:
-            messages.error(request, _('Error al procesar la selección: {}').format(str(e)))
-            return self.get(request, *args, **kwargs)
+            messages.error(request, f'Error inesperado: {str(e)}')
+            return redirect('reservas:seleccion_asientos', pk=pk)
 
 
-class ConfirmarReservaView(UserRequiredMixin, LoginRequiredMixin, DetailView):
-    """Vista para confirmar reserva y elegir método de pago"""
-    model = Reserva
+class ConfirmarReservaView(UserRequiredMixin, LoginRequiredMixin, View):
+    """Vista mejorada para confirmar reserva"""
+    
     template_name = 'reservas/user/confirmar_reserva.html'
-    context_object_name = 'reserva'
+    
+    def get(self, request, pk):
+        """Muestra la página de confirmación"""
+        reserva = self._get_reserva(request, pk)
+        
+        context = {
+            'reserva': reserva,
+            'puede_pagar': reserva.puede_pagarse,
+            'horas_limite': reserva.horas_para_expiracion,
+        }
+        
+        return render(request, self.template_name, context)
+    
+    def post(self, request, pk):
+        """Procesa la confirmación de reserva"""
+        reserva = self._get_reserva(request, pk)
+        accion = request.POST.get('accion')
+        
+        try:
+            if accion == 'pagar_ahora':
+                return redirect('reservas:procesar_pago', pk=reserva.pk)
+            
+            elif accion == 'pagar_despues':
+                # Cambiar estado a reservado sin pago
+                reserva.estado = Reserva.EstadoChoices.RESERVADO_SIN_PAGO
+                reserva.save()
+                
+                messages.success(
+                    request,
+                    f'✅ Reserva guardada exitosamente. '
+                    f'Código: {reserva.codigo_reserva}. '
+                    f'Tienes hasta {reserva.fecha_limite_pago.strftime("%d/%m/%Y %H:%M") if reserva.fecha_limite_pago else "N/A"} '
+                    f'para realizar el pago.'
+                )
+                return redirect('reservas:mis_reservas')
+            
+            elif accion == 'cancelar':
+                reserva.cancelar()
+                messages.success(request, _('Reserva cancelada exitosamente'))
+                return redirect('reservas:vuelos_disponibles')
+            
+            else:
+                messages.error(request, _('Acción no válida'))
+                
+        except ValidationError as e:
+            messages.error(request, str(e))
+        except Exception as e:
+            logger.error(f"Error en ConfirmarReservaView: {str(e)}")
+            messages.error(request, f'⚠️ Error al procesar la confirmación: {str(e)}')
+        
+        return redirect('reservas:confirmar_reserva', pk=reserva.pk)
+    
+    def _get_reserva(self, request, pk):
+        """Helper para obtener reserva del usuario"""
+        return get_object_or_404(
+            Reserva.objects.select_related('vuelo', 'pasajero').prefetch_related(
+                'detalles__asiento_vuelo__asiento',
+                'detalles__asiento_vuelo__escala_vuelo'
+            ),
+            pk=pk,
+            pasajero=request.user,
+            activo=True
+        )
 
-    def get_object(self):
-        reserva = super().get_object()
-        
-        # Verificar que sea del usuario actual
-        if reserva.pasajero != self.request.user:
-            raise Http404()
-        
-        # Verificar que esté en estado correcto
-        if reserva.estado not in [Reserva.EstadoChoices.CREADA]:
-            raise Http404(_("Esta reserva no puede ser modificada"))
-        
-        return reserva
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        reserva = self.object() 
-        context['boleto'] = None
-        context['metodos_pago'] = PagoForm.METODOS_PAGO
-        context['total'] = reserva.precio_total
-        context['puede_pagar'] = reserva.puede_pagarse
-        context['horas_limite'] = reserva.horas_para_expiracion
-        context['asientos'] = reserva.detalles.select_related('asiento_vuelo__asiento')
-        context['puede_modificar'] = reserva.estado != Reserva.EstadoChoices.CANCELADA
-        context['puede_validar_pago'] = reserva.estado in [
-            Reserva.EstadoChoices.CREADA, 
-            Reserva.EstadoChoices.RESERVADO_SIN_PAGO
-        ]
-        # Información de asientos
-        context['asientos_info'] = []
-        for detalle in reserva.detalles.all():
-            context['asientos_info'].append({
-                'asiento': detalle.asiento_vuelo.asiento,
-                'tipo': detalle.asiento_vuelo.tipo_asiento,
-                'precio': detalle.precio_pagado
-            })
-        # Información del vuelo
-        context['vuelo'] = reserva.vuelo
-        if reserva.vuelo.tiene_escalas:
-            context['escalas'] = reserva.vuelo.escalas_vuelo.filter(activo=True).order_by('orden')
-        else:
-            context['escalas'] = None
-        # Información del pasajero
-        context['pasajero'] = reserva.pasajero
-        # Información adicional
-        context['puede_cancelar'] = reserva.estado not in [
-            Reserva.EstadoChoices.CONFIRMADA, 
-            Reserva.EstadoChoices.CANCELADA
-        ]
-        context['puede_modificar'] = reserva.estado != Reserva.EstadoChoices.CANCELADA
-        context['puede_validar_pago'] = reserva.estado in [
-            Reserva.EstadoChoices.CREADA, 
-            Reserva.EstadoChoices.RESERVADO_SIN_PAGO
-        ]
-        return context
+    def _get_asientos_info(self, reserva):
+        """Helper para obtener información de asientos"""
+        return [{
+            'asiento': detalle.asiento_vuelo.asiento,
+            'tipo': detalle.asiento_vuelo.get_tipo_asiento_display(),
+            'precio': detalle.precio_pagado,
+        } for detalle in reserva.detalles.select_related('asiento_vuelo__asiento')]

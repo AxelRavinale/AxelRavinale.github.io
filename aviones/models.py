@@ -44,6 +44,7 @@ class Asiento(models.Model):
     columna = models.CharField(max_length=2, verbose_name=_("Columna"), null=True, blank=True)
     estado = models.CharField(max_length=10, choices=ESTADOS, default='libre', 
                              verbose_name=_("Estado"))
+    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
     class Meta:
         verbose_name = _("Asiento")
