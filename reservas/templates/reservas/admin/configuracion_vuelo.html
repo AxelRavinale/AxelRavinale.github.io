@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 {% load static %}
 {% load i18n %}
 {% load reservas_extras %}
@@ -111,46 +112,46 @@
                 </div>
                 <div class="card-body">
                     <div class="row" id="escala_{{ escala_data.escala_vuelo.id }}_asientos">
-                        {% for asiento in escala_data.asientos_avion %}
-                            {% with config=escala_data.asientos_configurados|default_if_none:""|get_item:asiento.id %}
-                                <div class="col-md-4 col-lg-3 mb-3">
-                                    <div class="card h-100 asiento-card" 
-                                         data-asiento-numero="{{ asiento.numero }}"
-                                         data-asiento-fila="{{ asiento.fila }}"
-                                         data-asiento-id="{{ asiento.id }}">
-                                        <div class="card-header py-2">
-                                            <small><strong>{{ asiento.numero }}</strong></small>
-                                            <input type="checkbox" class="form-check-input float-right asiento-selector">
-                                        </div>
-                                        <div class="card-body py-2">
-                                            <div class="mb-2">
-                                                <select name="asiento_{{ asiento.id }}_tipo" class="form-control form-control-sm asiento-tipo">
-                                                    <option value="ECO" {% if config.tipo_asiento == 'ECO' %}selected{% endif %}>Económico</option>
-                                                    <option value="PRE" {% if config.tipo_asiento == 'PRE' %}selected{% endif %}>Premium</option>
-                                                    <option value="EJE" {% if config.tipo_asiento == 'EJE' %}selected{% endif %}>Ejecutivo</option>
-                                                    <option value="PRI" {% if config.tipo_asiento == 'PRI' %}selected{% endif %}>Primera</option>
-                                                </select>
-                                            </div>
-                                            <div class="mb-2">
-                                                <input type="number" name="asiento_{{ asiento.id }}_precio" 
-                                                       class="form-control form-control-sm asiento-precio" 
-                                                       placeholder="Precio" 
-                                                       value="{{ config.precio|default:'' }}" 
-                                                       min="0" step="0.01">
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" name="asiento_{{ asiento.id }}_habilitado" 
-                                                       class="form-check-input asiento-habilitado" id="hab_{{ asiento.id }}"
-                                                       {% if config.habilitado_para_reserva %}checked{% endif %}>
-                                                <label class="form-check-label" for="hab_{{ asiento.id }}">
-                                                    <small>Habilitado</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endwith %}
-                        {% endfor %}
+{% for asiento in escala_data.asientos_avion %}
+    {% with config=escala_data.asientos_configurados|get_item:asiento.id %}
+        <div class="col-md-4 col-lg-3 mb-3">
+            <div class="card h-100 asiento-card" 
+                 data-asiento-numero="{{ asiento.numero }}"
+                 data-asiento-fila="{{ asiento.fila }}"
+                 data-asiento-id="{{ asiento.id }}">
+                <div class="card-header py-2">
+                    <small><strong>{{ asiento.numero }}</strong></small>
+                    <input type="checkbox" class="form-check-input float-right asiento-selector">
+                </div>
+                <div class="card-body py-2">
+                    <div class="mb-2">
+                        <select name="asiento_{{ asiento.id }}_tipo" class="form-control form-control-sm asiento-tipo">
+                            <option value="ECO" {% if config.tipo_asiento == 'ECO' %}selected{% endif %}>Económico</option>
+                            <option value="PRE" {% if config.tipo_asiento == 'PRE' %}selected{% endif %}>Premium</option>
+                            <option value="EJE" {% if config.tipo_asiento == 'EJE' %}selected{% endif %}>Ejecutivo</option>
+                            <option value="PRI" {% if config.tipo_asiento == 'PRI' %}selected{% endif %}>Primera</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <input type="number" name="asiento_{{ asiento.id }}_precio" 
+                               class="form-control form-control-sm asiento-precio" 
+                               placeholder="Precio" 
+                               value="{{ config.precio|default:'' }}" 
+                               min="0" step="0.01">
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="asiento_{{ asiento.id }}_habilitado" 
+                               class="form-check-input asiento-habilitado" id="hab_{{ asiento.id }}"
+                               {% if config.habilitado_para_reserva %}checked{% endif %}>
+                        <label class="form-check-label" for="hab_{{ asiento.id }}">
+                            <small>Habilitado</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% endfor %}
                     </div>
                 </div>
             </div>
