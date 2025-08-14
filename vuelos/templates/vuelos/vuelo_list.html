@@ -70,14 +70,14 @@
                            placeholder="{% trans 'Modelo/Matrícula' %}" value="{{ request.GET.avion }}">
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-outline-info me-2">
+                    <button type="submit" class="btn btn-primary me-2">
                         <i class="fas fa-search"></i> {% trans "Filtrar" %}
                     </button>
-                    <a href="{% url 'vuelo_list' %}" class="btn btn-outline-warning">
+                    <a href="{% url 'vuelo_list' %}" class="btn btn-warning">
                         <i class="fas fa-times"></i> {% trans "Limpiar" %}
                     </a>
                     {% if user.is_superuser %}
-                        <a href="{% url 'vuelo_create' %}" class="btn btn-outline-success ms-3">
+                        <a href="{% url 'vuelo_create' %}" class="btn btn-success ms-3">
                             <i class="fas fa-plus"></i> {% trans "Nuevo Vuelo" %}
                         </a>
                     {% endif %}
@@ -193,11 +193,11 @@
                             
                             <div class="card-footer bg-transparent">
                                 <div class="btn-group-custom text-end">
-                                    <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-outline-info btn-sm">
+                                    <a href="{% url 'vuelo_detail' vuelo.codigo_vuelo %}" class="btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
                                     </a>
                                     {% if user.is_superuser %}
-                                        <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
+                                        <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> {% trans "Editar" %}
                                         </a>
                                     {% endif %}
@@ -331,7 +331,7 @@
                                         <i class="fas fa-eye"></i> {% trans "Ver Detalle" %}
                                     </a>
                                     {% if user.is_superuser %}
-                                        <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-outline-warning btn-sm">
+                                        <a href="{% url 'update_vuelo' vuelo.codigo_vuelo %}" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> {% trans "Editar" %}
                                         </a>
                                     {% endif %}
@@ -355,8 +355,8 @@
         <div class="container">
             <div class="empty-state">
                 <i class="fas fa-plane fa-4x text-muted mb-4"></i>
-                <h3 class="text-muted">{% trans "No se encontraron vuelos" %}</h3>
-                <p class="text-muted">{% trans "No hay vuelos que coincidan con los filtros seleccionados" %}</p>
+                <h3 class="text-white">{% trans "No se encontraron vuelos" %}</h3>
+                <p class="text-white">{% trans "No hay vuelos que coincidan con los filtros seleccionados" %}</p>
                 <div class="mt-4">
                     <a href="{% url 'vuelo_list' %}" class="btn btn-primary me-2">
                         <i class="fas fa-refresh"></i> {% trans "Ver todos los vuelos" %}
