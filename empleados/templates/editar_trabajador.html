@@ -5,7 +5,9 @@
 {% block header %}Editar Datos del Trabajador{% endblock %}
 
 {% block content %}
+<div class="fondo-trasparente">
 <form method="post" class="needs-validation" novalidate>
+
     {% csrf_token %}
 
     <!-- Errores generales -->
@@ -96,4 +98,5 @@
     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     <a href="{% url 'lista_trabajadores' %}" class="btn btn-secondary">Cancelar</a>
 </form>
+</div>
 {% endblock %}
