@@ -24,7 +24,7 @@
       .navbar-nav .btn {
           margin-right: 0.5rem;
       }
-      /* Separación entre grupos distintos */
+      /* Separación entre grupos distinos */
       .navbar-nav.me-auto {
           gap: 1rem;
           display: flex;
@@ -48,20 +48,41 @@
     <div class="navbar-collapse" id="navbarNav">
 
       <!-- Grupo principal izquierdo con botones -->
-      <ul class="navbar-nav ">
+      <ul class="navbar-nav">
         
         {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link text-white btn btn-primary px-3" href="{% url 'vuelo_list' %}">{% trans "Vuelos" %}</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white btn btn-primary px-3" href="{% url 'reserva_list' %}">{% trans "Reservas" %}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white btn btn-success px-3" href="{% url 'crear_reserva' %}">
-              {% trans "Hacer reserva" %}
-          </a>
-        </li>
+
+        {% comment %}
+        <!-- URLs DE RESERVAS - Sistema diferenciado por tipo de usuario -->
+        {% endcomment %}
+        {% if user.is_superuser %}
+            {# Admin ve todas las reservas #}
+            <li class="nav-item">
+              <a class="nav-link text-white btn btn-primary px-3" href="{% url 'reservas:admin_reservas_list' %}">
+                  {% trans "Ver todas las reservas" %}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white btn btn-success px-3" href="{% url 'reservas:admin_crear_reserva' %}">
+                  {% trans "Gestionar reservas" %}
+              </a>
+            </li>
+        {% else %}
+            {# Usuarios normales ven sus reservas y vuelos disponibles #}
+            <li class="nav-item">
+              <a class="nav-link text-white btn btn-primary px-3" href="{% url 'reservas:mis_reservas' %}">
+                  {% trans "Mis reservas" %}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white btn btn-success px-3" href="{% url 'reservas:vuelos_disponibles' %}">
+                  {% trans "Hacer reserva" %}
+              </a>
+            </li>
+        {% endif %}
         {% endif %}
 
         {% if user.is_authenticated and user.is_superuser %}
@@ -80,50 +101,54 @@
       </ul>
 
       <!-- Grupo derecho con saludo, logout y login -->
-      {% if user.is_authenticated %}
-      <ul class="navbar-nav ms-3 align-items-center">
-        <li class="nav-item">
-          <span class="navbar-text text-white fw-bold me-3">
-            {% trans "Hola," %} {{ user.username }}
+      <div class="ms-auto d-flex align-items-center gap-3">
+        {% if user.is_authenticated %}
+          <span class="text-white fw-bold">
+            {% trans "Hola," %} {{ user.get_full_name|default:user.username }}
           </span>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-outline-danger btn-sm px-3" href="{% url 'logout' %}">{% trans "Cerrar sesión" %}</a>
-        </li>
-      </ul>
-      {% else %}
-      <ul class="navbar-nav ms-3">
-        <li class="nav-item">
-          <a class="btn btn-primary btn-sm px-3" href="{% url 'login' %}">{% trans "Iniciar sesión" %}</a>
-        </li>
-      </ul>
-      {% endif %}
+          <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">
+            {% trans "Cerrar sesión" %}
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-primary btn-sm">
+            {% trans "Iniciar sesión" %}
+          </a>
+        {% endif %}
 
-      <!-- Selector idioma -->
-      <ul class="navbar-nav ms-3">
-        <li class="nav-item">
-          <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2 align-items-center">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
+        <!-- Selector de idioma -->
+        <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
 
-            <button type="submit" name="language" value="es"
-                    class="btn {% if LANGUAGE_CODE == 'es' %}btn-info{% else %}btn-outline-info{% endif %} btn-sm px-3">
-                ES
-            </button>
+          <button type="submit" name="language" value="es"
+                  class="btn {% if LANGUAGE_CODE == 'es' %}btn-info{% else %}btn-outline-info{% endif %} btn-sm">
+              ES
+          </button>
 
-            <button type="submit" name="language" value="en"
-                    class="btn {% if LANGUAGE_CODE == 'en' %}btn-info{% else %}btn-outline-info{% endif %} btn-sm px-3">
-                EN
-            </button>
-          </form>
-        </li>
-      </ul>
+          <button type="submit" name="language" value="en"
+                  class="btn {% if LANGUAGE_CODE == 'en' %}btn-info{% else %}btn-outline-info{% endif %} btn-sm">
+              EN
+          </button>
+        </form>
+      </div>
 
     </div>
   </div>
 </nav>
 
 <main class="container mt-4">
+    {% comment %}
+    <!-- MENSAJES DE DJANGO -->
+    {% endcomment %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     {% block content %}{% endblock %}
 </main>
 

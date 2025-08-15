@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <div class="fondo-transparente">
     <title>Seleccionar Asientos</title>
     <style>
         .asiento {
@@ -46,7 +47,7 @@
         <br>
         <button type="submit">Reservar</button>
     </form>
-
+</div>
     <script>
         const seleccionados = new Set();
         document.querySelectorAll('.asiento.libre').forEach(seat => {

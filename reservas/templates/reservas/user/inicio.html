@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% load reservas_extras %}
+
+{% block title %}Inicio - {% trans "Sistema de Reservas" %}{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="row">
+    <div class="col-12">
+        <h1>✈️ Bienvenido, {{ user.get_full_name|default:user.username }}</h1>
+        
+        <!-- Estadísticas del usuario -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats_usuario.total_reservas }}</h4>
+                        <p>Total Reservas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats_usuario.reservas_pendientes }}</h4>
+                        <p>Pendientes Pago</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats_usuario.reservas_confirmadas }}</h4>
+                        <p>Confirmadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-light btn-lg">
+                            🎫 Hacer Reserva
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🎯 Acciones Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-primary">
+                                ✈️ Ver Vuelos Disponibles
+                            </a>
+                            <a href="{% url 'reservas:mis_reservas' %}" class="btn btn-outline-primary">
+                                📋 Mis Reservas
+                            </a>
+                            <a href="{% url 'reservas:buscar_boleto' %}" class="btn btn-outline-info">
+                                🔍 Buscar Boleto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>📈 Reservas Recientes</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if reservas_recientes %}
+                            {% for reserva in reservas_recientes %}
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>{{ reserva.codigo_reserva }}</strong><br>
+                                        <small>{{ reserva.vuelo.codigo_vuelo }} - {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        {% if reserva.estado == 'CON' %}
+                                            <span class="badge bg-success">Pagada</span>
+                                        {% elif reserva.estado == 'RSP' %}
+                                            <span class="badge bg-warning">Sin Pago</span>
+                                        {% else %}
+                                            <span class="badge bg-info">{{ reserva.get_estado_display }}</span>
+                                        {% endif %}
+                                        <br>
+                                        <a href="{% url 'reservas:reserva_detail_user' reserva.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No tienes reservas recientes</p>
+                            <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-primary">
+                                Hacer mi primera reserva
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

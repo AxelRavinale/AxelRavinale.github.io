@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Confirmar Selección - {{ vuelo.codigo_vuelo }}{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1>💺 Confirmar Selección de Asientos</h1>
+      
+      <div class="alert alert-info mb-4">
+        <strong>Vuelo:</strong> {{ vuelo.codigo_vuelo }} - {{ vuelo.origen_principal }} → {{ vuelo.destino_principal }}<br>
+        <strong>Fecha:</strong> {{ vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Resumen de asientos seleccionados -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>✈️ Asientos Seleccionados</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Asiento</th>
+                  <th>Tipo</th>
+                  <th class="text-end">Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in asientos_seleccionados %}
+                <tr>
+                  <td>
+                    <span class="badge bg-primary">{{ item.numero }}</span>
+                  </td>
+                  <td>{{ item.tipo }}</td>
+                  <td class="text-end">
+                    <span class="fw-bold">${{ item.precio }}</span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr class="table-success">
+                  <th colspan="2">Total ({{ cantidad_asientos }} asiento{{ cantidad_asientos|pluralize }})</th>
+                  <th class="text-end">
+                    <span class="h5 mb-0">${{ precio_total }}</span>
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información importante -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6>ℹ️ Información Importante</h6>
+          <ul class="small mb-0">
+            <li><strong>Reserva temporal:</strong> Al confirmar, estos asientos quedarán reservados por 72 horas</li>
+            <li><strong>Pago:</strong> Deberá completar el pago dentro del plazo para confirmar definitivamente</li>
+            <li><strong>Cambios:</strong> Puede volver atrás para modificar su selección</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <a href="{% url 'reservas:seleccion_asientos' vuelo.pk %}" class="btn btn-outline-secondary btn-lg w-100">
+            ⬅️ Modificar Selección
+          </a>
+        </div>
+        <div class="col-md-6 mb-3">
+          <form method="post" class="d-inline w-100">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-lg w-100" id="btn-confirmar">
+              ✅ Confirmar Reserva - ${{ precio_total }}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Navegación -->
+      <div class="mt-4 text-center">
+        <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-outline-primary">
+          🏠 Volver a Vuelos Disponibles
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.table th {
+  border-top: none;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: none;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .btn-lg {
+    font-size: 1rem;
+  }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnConfirmar = document.getElementById('btn-confirmar');
+    
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener('click', function(e) {
+            // Mostrar confirmación
+            if (!confirm('¿Está seguro de que desea confirmar la reserva de estos asientos?')) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Deshabilitar botón para evitar doble click
+            btnConfirmar.disabled = true;
+            btnConfirmar.innerHTML = '⏳ Procesando...';
+            
+            // Si el usuario confirma, continuar con el submit
+            return true;
+        });
+    }
+});
+</script>
+{% endblock %}

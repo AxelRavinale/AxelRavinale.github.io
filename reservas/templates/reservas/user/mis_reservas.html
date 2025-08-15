@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% load reservas_extras %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="row">
+    <div class="col-12">
+        <h1>📋 Mis Reservas</h1>
+        
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.total }}</h4>
+                        <p>Total</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.pendientes }}</h4>
+                        <p>Pendientes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.confirmadas }}</h4>
+                        <p>Confirmadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h4>{{ stats.canceladas }}</h4>
+                        <p>Canceladas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de reservas -->
+        {% if reservas %}
+            {% for reserva in reservas %}
+                <div class="card mb-3 {% if reserva.urgente %}border-warning{% endif %}">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">
+                                Reserva: <strong>{{ reserva.codigo_reserva }}</strong>
+                                {% if reserva.urgente %}
+                                    <span class="badge bg-warning">⚠️ Urgente - Pagar Pronto</span>
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div>
+                            {% if reserva.estado == 'CON' %}
+                                <span class="badge bg-success">{{ reserva.get_estado_display }}</span>
+                            {% elif reserva.estado == 'RSP' %}
+                                <span class="badge bg-warning">{{ reserva.get_estado_display }}</span>
+                            {% elif reserva.estado == 'CAN' %}
+                                <span class="badge bg-danger">{{ reserva.get_estado_display }}</span>
+                            {% else %}
+                                <span class="badge bg-info">{{ reserva.get_estado_display }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>{{ reserva.vuelo.codigo_vuelo }}</h6>
+                                <p class="mb-1">
+                                    <strong>Ruta:</strong> {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Salida:</strong> {{ reserva.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}
+                                </p>
+                                <p class="mb-0">
+                                    <strong>Asientos:</strong> 
+                                    {% for detalle in reserva.detalles.all %}
+                                        {{ detalle.asiento.numero }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+                            <div class="col-md-3">
+                                <p class="mb-1"><strong>Total:</strong> ${{ reserva.precio_total|floatformat:2 }}</p>
+                                <p class="mb-1"><strong>Reservado:</strong> {{ reserva.fecha_reserva|date:"d/m/Y" }}</p>
+                                {% if reserva.fecha_limite_pago and reserva.estado == 'RSP' %}
+                                    <p class="mb-0"><small class="text-warning">
+                                        <strong>Límite pago:</strong> {{ reserva.fecha_limite_pago|date:"d/m/Y H:i" }}
+                                    </small></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="d-grid gap-1">
+                                    <a href="{% url 'reservas:reserva_detail_user' reserva.pk %}" class="btn btn-primary btn-sm">
+                                        👁️ Ver Detalles
+                                    </a>
+                                    {% if reserva.estado == 'RSP' %}
+                                        <a href="{% url 'reservas:procesar_pago' reserva.pk %}" class="btn btn-success btn-sm">
+                                            💳 Pagar Ahora
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'reservas:descargar_detalle_reserva' reserva.pk %}" class="btn btn-outline-info btn-sm">
+                                        📄 Descargar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <!-- Paginación -->
+            {% if is_paginated %}
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">Primera</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info text-center">
+                <h5>No tienes reservas aún</h5>
+                <p>¡Es hora de planear tu próximo viaje!</p>
+                <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-primary">
+                    ✈️ Buscar Vuelos
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

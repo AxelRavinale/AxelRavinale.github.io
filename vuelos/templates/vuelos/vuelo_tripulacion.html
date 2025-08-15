@@ -2,6 +2,8 @@
 {% load static %}
 {% load i18n %}
 
+{% block title %}{% trans "Lista de Vuelos" %}{% endblock %}
+
 {% block title %}
     {% blocktrans with codigo_vuelo=vuelo.codigo_vuelo %}Tripulación - Vuelo {{ codigo_vuelo }}{% endblocktrans %}
 {% endblock %}

@@ -37,6 +37,13 @@ class Asiento(models.Model):
         ('reservado', _('Reservado')),
         ('ocupado', _('Ocupado')),
     )
+    TIPOS = (
+        ('E', _('Economy')),
+        ('B', _('Business')),
+        ('F', _('First')),
+    )
+    tipo = models.CharField(max_length=1, choices=TIPOS, default='E', verbose_name=_("Tipo"))
+
 
     avion = models.ForeignKey(Avion, on_delete=models.CASCADE, related_name='asientos', 
                              verbose_name=_("Avión"))
@@ -44,6 +51,7 @@ class Asiento(models.Model):
     columna = models.CharField(max_length=2, verbose_name=_("Columna"), null=True, blank=True)
     estado = models.CharField(max_length=10, choices=ESTADOS, default='libre', 
                              verbose_name=_("Estado"))
+    activo = models.BooleanField(default=True, verbose_name=_("Activo"))
 
     class Meta:
         verbose_name = _("Asiento")
@@ -53,3 +61,11 @@ class Asiento(models.Model):
 
     def __str__(self):
         return f"Asiento {self.fila}{self.columna} - {self.avion.num_avion}"
+    
+    @property
+    def numero(self):
+        """Retorna el número de asiento en formato '1A', '2B', etc."""
+        return f"{self.fila}{self.columna}"
+    
+    def __str__(self):
+        return f"Asiento {self.numero} - {self.avion.num_avion}"
