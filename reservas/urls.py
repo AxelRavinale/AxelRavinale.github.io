@@ -19,12 +19,13 @@ urlpatterns = [
     path('user/', views.UserInicioView.as_view(), name='user_inicio'),
     path('vuelos-disponibles/', views.VuelosDisponiblesView.as_view(), name='vuelos_disponibles'),
     path('seleccion-asientos/<int:pk>/', views.SeleccionAsientosView.as_view(), name='seleccion_asientos'),
+    path('confirmar-seleccion/<int:pk>/', views.ConfirmarSeleccionView.as_view(), name='confirmar_seleccion'),
     path('confirmar-reserva/<int:pk>/', views.ConfirmarReservaView.as_view(), name='confirmar_reserva'),
     path('procesar-pago/<int:pk>/', views.ProcesarPagoView.as_view(), name='procesar_pago'),
     path('reserva-confirmada/<int:pk>/', views.ReservaConfirmadaView.as_view(), name='reserva_confirmada'),
     path('mis-reservas/', views.MisReservasView.as_view(), name='mis_reservas'),
+    # CORREGIR: Esta línea estaba mal, debe ser 'reserva_detail_user'
     path('reserva/<int:pk>/', views.ReservaDetailUserView.as_view(), name='reserva_detail_user'),
-    path('confirmar-seleccion/<int:pk>/', views.ConfirmarSeleccionView.as_view(), name='confirmar_seleccion'),
     
     # RUTAS PARA BOLETOS
     path('boleto/<int:pk>/', views.BoletoDetailView.as_view(), name='boleto_detail'),

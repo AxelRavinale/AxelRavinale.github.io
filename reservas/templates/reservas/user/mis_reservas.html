@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+
+
 {% load reservas_extras %}
 
 {% block title %}Mis Reservas{% endblock %}
 
 {% block content %}
+<div class="fondo-transparente">
 <div class="row">
     <div class="col-12">
         <h1>📋 Mis Reservas</h1>
@@ -155,5 +158,6 @@
             </div>
         {% endif %}
     </div>
+</div>
 </div>
 {% endblock %}

@@ -206,156 +206,134 @@ class SeleccionAsientosForm(forms.Form):
         return info
 
 
+
 class PagoForm(forms.Form):
-    """Formulario mejorado para procesar el pago de una reserva"""
+    """Formulario para procesar pagos"""
     
     METODOS_PAGO = [
-        ('tarjeta_credito', _('Tarjeta de Crédito')),
-        ('tarjeta_debito', _('Tarjeta de Débito')),
-        ('transferencia', _('Transferencia Bancaria')),
-        ('paypal', _('PayPal')),
+        ('tarjeta_credito', 'Tarjeta de Crédito'),
+        ('tarjeta_debito', 'Tarjeta de Débito'),
+        ('efectivo', 'Efectivo'),
     ]
     
     metodo_pago = forms.ChoiceField(
         choices=METODOS_PAGO,
-        initial='tarjeta_credito',
-        widget=forms.Select(attrs={
-            'class': 'form-select form-select-lg',
-            'required': True
-        }),
-        label=_("Método de Pago")
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label=_('Método de Pago')
     )
     
-    # Campos de tarjeta
+    # Datos de tarjeta
     numero_tarjeta = forms.CharField(
         max_length=19,
-        initial='4111111111111111',  # Número de prueba
         widget=forms.TextInput(attrs={
-            'class': 'form-control form-control-lg',
-            'placeholder': '4111 1111 1111 1111',
-            'pattern': r'[0-9\s]{13,19}',
-            'title': 'Ingrese un número de tarjeta válido'
+            'class': 'form-control',
+            'placeholder': '1234 5678 9012 3456',
+            'maxlength': '19'
         }),
-        label=_("Número de Tarjeta"),
-        help_text=_("Use 4111111111111111 para pruebas")
+        label=_('Número de Tarjeta'),
+        required=False
     )
     
     titular = forms.CharField(
         max_length=100,
-        initial='JUAN PEREZ',
         widget=forms.TextInput(attrs={
-            'class': 'form-control form-control-lg',
-            'placeholder': 'JUAN PEREZ',
-            'style': 'text-transform: uppercase;'
+            'class': 'form-control',
+            'placeholder': 'Nombre como aparece en la tarjeta'
         }),
-        label=_("Nombre del Titular")
+        label=_('Titular de la Tarjeta'),
+        required=False
     )
     
+    # Mes y año de expiración
+    MESES = [(i, f"{i:02d}") for i in range(1, 13)]
+    AÑOS = [(i, str(i)) for i in range(datetime.now().year, datetime.now().year + 15)]
+    
     mes_expiracion = forms.ChoiceField(
-        choices=[(i, f"{i:02d}") for i in range(1, 13)],
-        initial=12,
-        widget=forms.Select(attrs={
-            'class': 'form-select form-select-lg'
-        }),
-        label=_("Mes")
+        choices=MESES,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label=_('Mes'),
+        required=False
     )
     
     año_expiracion = forms.ChoiceField(
-        choices=[(i, str(i)) for i in range(datetime.now().year, datetime.now().year + 11)],
-        initial=datetime.now().year + 2,
-        widget=forms.Select(attrs={
-            'class': 'form-select form-select-lg'
-        }),
-        label=_("Año")
+        choices=AÑOS,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label=_('Año'),
+        required=False
     )
     
     cvv = forms.CharField(
         max_length=4,
-        min_length=3,
-        initial='123',
         widget=forms.TextInput(attrs={
-            'class': 'form-control form-control-lg',
+            'class': 'form-control',
             'placeholder': '123',
-            'pattern': '[0-9]{3,4}',
-            'title': 'Código de 3 o 4 dígitos',
-            'type': 'password'
+            'maxlength': '4'
         }),
-        label=_("CVV")
+        label=_('CVV'),
+        required=False
     )
     
     def __init__(self, *args, **kwargs):
         self.reserva = kwargs.pop('reserva', None)
         super().__init__(*args, **kwargs)
-        
-        if self.reserva:
-            # Agregar información de la reserva al formulario
-            self.fields['total'] = forms.DecimalField(
-                initial=self.reserva.precio_total,
-                widget=forms.HiddenInput()
-            )
-    
-    def clean_numero_tarjeta(self):
-        numero = self.cleaned_data['numero_tarjeta']
-        # Remover espacios y guiones
-        numero_limpio = re.sub(r'[\s-]', '', numero)
-        
-        # Para demo, aceptamos números de prueba comunes
-        numeros_prueba = [
-            '4111111111111111',  # Visa
-            '5555555555554444',  # MasterCard
-            '378282246310005',   # American Express
-        ]
-        
-        if numero_limpio in numeros_prueba:
-            return numero_limpio
-        
-        # Validar que solo contenga números
-        if not numero_limpio.isdigit():
-            raise ValidationError(_("El número de tarjeta debe contener solo números"))
-        
-        # Validar longitud
-        if len(numero_limpio) < 13 or len(numero_limpio) > 19:
-            raise ValidationError(_("El número de tarjeta debe tener entre 13 y 19 dígitos"))
-        
-        # Para demo, aceptamos cualquier número que pase las validaciones básicas
-        return numero_limpio
-    
-    def clean_titular(self):
-        titular = self.cleaned_data['titular'].strip().upper()
-        
-        # Validar que contenga al menos letras
-        if not re.search(r'[A-Z]', titular):
-            raise ValidationError(_("El nombre del titular debe contener letras"))
-        
-        if len(titular) < 2:
-            raise ValidationError(_("El nombre del titular debe tener al menos 2 caracteres"))
-        
-        return titular
-    
-    def clean_cvv(self):
-        cvv = self.cleaned_data['cvv']
-        
-        # Validar que solo contenga números
-        if not cvv.isdigit():
-            raise ValidationError(_("El CVV debe contener solo números"))
-        
-        return cvv
     
     def clean(self):
         cleaned_data = super().clean()
-        mes = cleaned_data.get('mes_expiracion')
-        año = cleaned_data.get('año_expiracion')
+        metodo_pago = cleaned_data.get('metodo_pago')
         
-        if mes and año:
-            # Validar que la fecha no esté vencida
-            fecha_actual = datetime.now()
-            año_int = int(año)
-            mes_int = int(mes)
+        # Validar datos de tarjeta si no es efectivo
+        if metodo_pago != 'efectivo':
+            numero_tarjeta = cleaned_data.get('numero_tarjeta (pruebe 4111111111111111)')
+            titular = cleaned_data.get('titular')        
+            mes_expiracion = cleaned_data.get('mes_expiracion')
+            año_expiracion = cleaned_data.get('año_expiracion')
+            cvv = cleaned_data.get('cvv')
             
-            if año_int < fecha_actual.year or (año_int == fecha_actual.year and mes_int < fecha_actual.month):
-                raise ValidationError(_("La tarjeta está vencida"))
+            if not numero_tarjeta:
+                raise ValidationError(_('Número de tarjeta es requerido'))
+            
+            if not titular:
+                raise ValidationError(_('Titular de la tarjeta es requerido'))
+            
+            if not mes_expiracion:
+                raise ValidationError(_('Mes de expiración es requerido'))
+            
+            if not año_expiracion:
+                raise ValidationError(_('Año de expiración es requerido'))
+                
+            if not cvv:
+                raise ValidationError(_('CVV es requerido'))
+            
+            # Validar formato de número de tarjeta (solo dígitos)
+            numero_limpio = numero_tarjeta.replace(' ', '').replace('-', '')
+            if not numero_limpio.isdigit() or len(numero_limpio) < 13:
+                raise ValidationError(_('Número de tarjeta inválido'))
+            
+            # Validar CVV
+            if not cvv.isdigit() or len(cvv) < 3:
+                raise ValidationError(_('CVV inválido'))
+            
+            # Validar fecha de expiración
+            try:
+                año = int(año_expiracion)
+                mes = int(mes_expiracion)
+                fecha_exp = datetime(año, mes, 1)
+                if fecha_exp < datetime.now():
+                    raise ValidationError(_('La tarjeta está expirada'))
+            except (ValueError, TypeError):
+                raise ValidationError(_('Fecha de expiración inválida'))
         
         return cleaned_data
+    
+    def clean_numero_tarjeta(self):
+        numero = self.cleaned_data.get('numero_tarjeta', '')
+        # Formatear número con espacios
+        numero_limpio = numero.replace(' ', '').replace('-', '')
+        if numero_limpio:
+            # Agregar espacios cada 4 dígitos
+            numero_formateado = ' '.join([numero_limpio[i:i+4] for i in range(0, len(numero_limpio), 4)])
+            return numero_formateado
+        return numero
 
 
 class BusquedaBoletoForm(forms.Form):

@@ -365,8 +365,9 @@ class AdminReservaDetailView(AdminRequiredMixin, LoginRequiredMixin, DetailView)
         return self.get(request, *args, **kwargs)
 
 
+
 class ProcesarPagoView(UserRequiredMixin, LoginRequiredMixin, FormView):
-    """Vista para procesar el pago de una reserva"""
+    """Vista para procesar el pago de una reserva - CORREGIDA"""
     template_name = 'reservas/user/procesar_pago.html'
     form_class = PagoForm
 
@@ -398,35 +399,73 @@ class ProcesarPagoView(UserRequiredMixin, LoginRequiredMixin, FormView):
     def form_valid(self, form):
         reserva = self.get_reserva()
         
+        # DEBUG LOGS
+        logger.info(f"DEBUG - Procesando pago para reserva: {reserva.codigo_reserva}")
+        logger.info(f"DEBUG - Estado de reserva: {reserva.estado}")
+        logger.info(f"DEBUG - Puede pagarse: {reserva.puede_pagarse}")
+        logger.info(f"DEBUG - Está expirada: {reserva.esta_expirada}")
+        logger.info(f"DEBUG - Precio total: {reserva.precio_total}")
+        logger.info(f"DEBUG - Datos del formulario: {form.cleaned_data}")
+        
         try:
             with transaction.atomic():
-                # Simular procesamiento de pago
-                datos_tarjeta = {
-                    'numero': form.cleaned_data['numero_tarjeta'],
-                    'titular': form.cleaned_data['titular'],
-                    'cvv': form.cleaned_data['cvv'],
-                    'expiracion': f"{form.cleaned_data['mes_expiracion']}/{form.cleaned_data['año_expiracion']}"
-                }
+                # Verificar nuevamente que se puede pagar (por si cambió durante el formulario)
+                if not reserva.puede_pagarse:
+                    logger.error(f"DEBUG - Reserva {reserva.codigo_reserva} ya no puede pagarse")
+                    form.add_error(None, _('Esta reserva ya no puede ser pagada'))
+                    return self.form_invalid(form)
                 
+                # Simular procesamiento de pago
+                datos_tarjeta = {}
+                if form.cleaned_data['metodo_pago'] != 'efectivo':
+                    datos_tarjeta = {
+                        'numero': form.cleaned_data['numero_tarjeta'],
+                        'titular': form.cleaned_data['titular'],
+                        'cvv': form.cleaned_data['cvv'],
+                        'expiracion': f"{form.cleaned_data['mes_expiracion']}/{form.cleaned_data['año_expiracion']}"
+                    }
+                
+                logger.info(f"DEBUG - Llamando a reserva.procesar_pago()")
+                
+                # Procesar pago y generar boleto
                 boleto = reserva.procesar_pago(
                     metodo_pago=form.cleaned_data['metodo_pago'],
                     datos_tarjeta=datos_tarjeta
                 )
+                
+                logger.info(f"DEBUG - Boleto generado exitosamente: {boleto.codigo_barras}")
                 
                 messages.success(
                     self.request,
                     _('¡Pago procesado exitosamente! Su boleto ha sido generado: {}').format(boleto.codigo_barras)
                 )
                 
+                # Redirigir a página de confirmación
                 return redirect('reservas:reserva_confirmada', pk=reserva.pk)
                 
         except ValidationError as e:
+            logger.error(f"ValidationError en ProcesarPagoView: {str(e)}")
             form.add_error(None, str(e))
             return self.form_invalid(form)
         except Exception as e:
+            logger.error(f"Error inesperado en ProcesarPagoView: {str(e)}")
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
             form.add_error(None, _('Error al procesar el pago: {}').format(str(e)))
             return self.form_invalid(form)
 
+    def form_invalid(self, form):
+        """Manejar errores del formulario"""
+        logger.error(f"Formulario inválido en ProcesarPagoView: {form.errors}")
+        # Agregar mensaje de error general si no hay errores específicos
+        if not form.errors and not form.non_field_errors():
+            messages.error(self.request, _('Hubo un error al procesar el formulario. Inténtelo nuevamente.'))
+        
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        """URL de éxito"""
+        return reverse('reservas:reserva_confirmada', kwargs={'pk': self.get_reserva().pk})
 
 class ReservaConfirmadaView(UserRequiredMixin, LoginRequiredMixin, DetailView):
     """Vista de confirmación de reserva pagada"""
@@ -460,33 +499,59 @@ class MisReservasView(UserRequiredMixin, LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Reserva.objects.filter(
+        # DEBUG: Agregar logging para debug
+        logger.info(f"DEBUG - Usuario: {self.request.user.id} ({self.request.user.username})")
+        
+        queryset = Reserva.objects.filter(
             pasajero=self.request.user,
             activo=True
         ).select_related(
             'vuelo__origen_principal',
             'vuelo__destino_principal'
         ).prefetch_related('detalles__asiento_vuelo__asiento').order_by('-fecha_reserva')
+        
+        # DEBUG: Mostrar todas las reservas del usuario
+        reservas_count = queryset.count()
+        logger.info(f"DEBUG - Reservas encontradas: {reservas_count}")
+        
+        for reserva in queryset:
+            logger.info(f"DEBUG - Reserva: {reserva.codigo_reserva}, Estado: {reserva.estado}, Activo: {reserva.activo}")
+        
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
         # Estadísticas del usuario
         reservas_usuario = self.get_queryset()
+        
+        # DEBUG: Revisar estados
+        estados_debug = {}
+        for reserva in reservas_usuario:
+            estado = reserva.estado
+            if estado in estados_debug:
+                estados_debug[estado] += 1
+            else:
+                estados_debug[estado] = 1
+        
+        logger.info(f"DEBUG - Estados de reservas: {estados_debug}")
+        
         context['stats'] = {
             'total': reservas_usuario.count(),
-            'pendientes': reservas_usuario.filter(estado=Reserva.EstadoChoices.RESERVADO_SIN_PAGO).count(),
-            'confirmadas': reservas_usuario.filter(estado=Reserva.EstadoChoices.CONFIRMADA).count(),
-            'canceladas': reservas_usuario.filter(estado=Reserva.EstadoChoices.CANCELADA).count(),
+            'pendientes': reservas_usuario.filter(estado='RSP').count(),  # RESERVADO_SIN_PAGO
+            'confirmadas': reservas_usuario.filter(estado='CON').count(),  # CONFIRMADA
+            'canceladas': reservas_usuario.filter(estado='CAN').count(),   # CANCELADA
         }
         
         # Marcar reservas que expiran pronto (48 horas)
         for reserva in context['reservas']:
-            if reserva.estado == Reserva.EstadoChoices.RESERVADO_SIN_PAGO and reserva.horas_para_expiracion is not None:
+            if reserva.estado == 'RSP' and reserva.horas_para_expiracion is not None:
                 if reserva.horas_para_expiracion <= 48:
                     reserva.urgente = True
                 else:
                     reserva.urgente = False
+        
+        logger.info(f"DEBUG - Stats: {context['stats']}")
         
         return context
 
@@ -502,7 +567,6 @@ class ReservaDetailUserView(UserRequiredMixin, LoginRequiredMixin, DetailView):
             Reserva,
             pk=self.kwargs['pk'],
             pasajero=self.request.user,
-            activo=True
         )
         return reserva
 
@@ -565,6 +629,7 @@ class BoletoDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['es_admin'] = self.request.user.is_superuser
+        
         return context
 
 
@@ -575,6 +640,8 @@ class BuscarBoletoView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = BusquedaBoletoForm()
+        boleto = self.get_object()
+        context['pasajero'] = boleto.reserva.pasajero
         return context
 
     def post(self, request, *args, **kwargs):
@@ -1142,13 +1209,14 @@ class ConfirmarSeleccionView(UserRequiredMixin, LoginRequiredMixin, View):
                     f"Total: ${precio_total:.2f}"
                 )
                 
-                # Redirigir a detalles de la reserva
-                return redirect('reservas:reserva_detail', pk=reserva.pk)
+                # AQUÍ ESTÁ EL FIX: Redirigir correctamente a confirmar_reserva
+                return redirect('reservas:confirmar_reserva', pk=reserva.pk)
                 
         except ValidationError as e:
             messages.error(request, str(e))
             return redirect('reservas:seleccion_asientos', pk=pk)
         except Exception as e:
+            logger.error(f"Error en ConfirmarSeleccionView: {str(e)}")
             messages.error(request, f'Error inesperado: {str(e)}')
             return redirect('reservas:seleccion_asientos', pk=pk)
 

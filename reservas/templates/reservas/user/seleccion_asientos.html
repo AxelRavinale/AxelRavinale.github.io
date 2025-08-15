@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+
+
 {% load regex_filters %}
 
 {% block title %}Seleccionar Asientos - {{ vuelo.codigo_vuelo }}{% endblock %}
 
 {% block content %}
+<div class="fondo-transparente">
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
@@ -168,7 +171,7 @@
     </a>
   </div>
 </div>
-
+</div>
 {% endblock %}
 
 {% block extra_css %}

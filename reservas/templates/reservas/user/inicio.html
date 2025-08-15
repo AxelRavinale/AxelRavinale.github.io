@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+
+
 {% load reservas_extras %}
 
 {% block title %}Inicio - {% trans "Sistema de Reservas" %}{% endblock %}
 
 {% block content %}
+<div class="fondo-transparente">
 <div class="row">
     <div class="col-12">
         <h1>✈️ Bienvenido, {{ user.get_full_name|default:user.username }}</h1>
@@ -107,5 +110,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

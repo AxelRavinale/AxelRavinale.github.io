@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+
+
 {% load reservas_extras %}
 
 {% block title %}¡Reserva Confirmada!{% endblock %}
 
 {% block content %}
+<div class="fondo-transparente">
 <div class="row justify-content-center">
     <div class="col-md-10">
         <div class="text-center mb-4">
@@ -149,6 +152,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
 

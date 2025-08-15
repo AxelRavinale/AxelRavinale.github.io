@@ -5,6 +5,7 @@
 {% block header %}Registrar Nuevo Trabajador{% endblock %}
 
 {% block content %}
+<div class="fondo-transparente">
 <form method="post" class="needs-validation" novalidate>
     {% csrf_token %}
 
@@ -94,4 +95,5 @@
     <button type="submit" class="btn btn-success">Registrar</button>
     <a href="{% url 'lista_trabajadores' %}" class="btn btn-secondary">Cancelar</a>
 </form>
+</div>
 {% endblock %}
