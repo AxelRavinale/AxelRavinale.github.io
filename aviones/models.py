@@ -37,6 +37,13 @@ class Asiento(models.Model):
         ('reservado', _('Reservado')),
         ('ocupado', _('Ocupado')),
     )
+    TIPOS = (
+        ('E', _('Economy')),
+        ('B', _('Business')),
+        ('F', _('First')),
+    )
+    tipo = models.CharField(max_length=1, choices=TIPOS, default='E', verbose_name=_("Tipo"))
+
 
     avion = models.ForeignKey(Avion, on_delete=models.CASCADE, related_name='asientos', 
                              verbose_name=_("Avión"))
