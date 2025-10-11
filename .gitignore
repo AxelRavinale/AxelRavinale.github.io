@@ -8,7 +8,7 @@ env
 env/
 db.sqlite3
 *.log
-=======
+
 venv/
 ENV/
 env/
@@ -25,6 +25,12 @@ db.sqlite3
 .env
 .env.*
 env
+
+# Archivos de configuración de entorno
+.venv
+.venv.*
+venv
+
 
 # Archivos de logs
 *.log
@@ -47,6 +53,18 @@ htmlcov/
 .coverage
 .tox/
 .pytest_cache/
->>>>>>> main
+
 db.sqlite3
 db.sqlite3
+# Ignorar imágenes Docker exportadas
+*.tar
+
+# Ignorar archivos de entorno sensibles
+.env
+.env.local
+
+# Ignorar node_modules o dependencias que se reconstruyen
+node_modules/
+venv/
+__pycache__/
+db

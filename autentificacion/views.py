@@ -1,65 +1,45 @@
-from django.shortcuts import render, redirect
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.core.mail import EmailMessage
-from django.contrib.auth.models import User
-from django.template.loader import render_to_string
-from django.utils.translation import gettext as _
-from django.utils.translation import activate, get_language, deactivate
-from django.views import View
+# views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 
-from autentificacion.forms import RegisterForm, LoginForm
-from core.models import Persona
-class RegisterView(View):
-    def get(self, request):
-        form = RegisterForm()
-        return render(request, 'register.html', {'form': form})
-    
-    def form_invalid(self, form):
-        print(form.errors)  
-        return super().form_invalid(form)
-    
-    def post(self, request):
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Registro exitoso.")
-            return redirect('home')  # Asegurate que esta ruta exista
-        return render(request, 'register.html', {'form': form})
-    
-    
-    
+from .serializers import RegisterSerializer, LoginSerializer
+from .services import AuthService
 
-class LoginView(View):
-    def get(self, request):
-        form = LoginForm()
-        return render(request, 'login.html', {'form': form})
+class RegisterAPIView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = AuthService.register_user_api(serializer.validated_data)
             if user:
-                login(request, user)
-                messages.success(request, _("Inicio de sesión exitoso."))
-                return redirect('home')
-            else:
-                messages.error(request, _("Usuario o contraseña incorrectos."))
-        return render(request, 'login.html', {'form': form})
+                return Response({"detail": "Registro exitoso."}, status=status.HTTP_201_CREATED)
+            return Response({"detail": "Error al registrar usuario."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def logout_view(request):
-    logout(request)
-    messages.info(request, _("Sesión cerrada correctamente."))
-    return redirect('login')
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+            user, token = AuthService.login_user_api(request, username, password)
+            if user:
+                return Response({
+                    "detail": "Inicio de sesión exitoso.",
+                    "user": {"id": user.id, "username": user.username},
+                    "token": token
+                }, status=status.HTTP_200_OK)
+            return Response({"detail": "Usuario o contraseña incorrectos."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def change_language(request, lang_code):
-    if lang_code in dict(settings.LANGUAGES).keys():
-        activate(lang_code)
-        request.session[settings.LANGUAGE_COOKIE_NAME] = lang_code
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+class LogoutAPIView(APIView):
+    def post(self, request):
+        AuthService.logout_user_api(request)
+        return Response({"detail": "Sesión cerrada correctamente."}, status=status.HTTP_200_OK)

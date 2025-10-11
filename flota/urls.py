@@ -1,9 +1,10 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import AvionViewSet
+
+router = DefaultRouter()
+router.register(r'aviones', AvionViewSet, basename='avion')
 
 urlpatterns = [
-    path('', views.lista_aviones, name='lista_aviones'),
-    path('registrar/', views.registrar_avion, name='registrar_avion'),
-    path('editar/<int:avion_id>/', views.editar_avion, name='editar_avion'),
-    path('eliminar/<int:avion_id>/', views.eliminar_avion, name='eliminar_avion'),
+    path('', include(router.urls)),
 ]

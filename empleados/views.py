@@ -1,58 +1,48 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from .models import Trabajador
-from .forms import UsuarioForm, TrabajadorForm
-from django.contrib import messages
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import TrabajadorSerializer
+from .services import TrabajadorService
 
-def lista_trabajadores(request):
-    trabajadores = Trabajador.objects.filter(activo=True)
-    return render(request, 'lista_trabajadores.html', {'trabajadores': trabajadores})
+class TrabajadorListCreateAPIView(ListCreateAPIView):
+    """
+    GET /api/trabajadores/
+    POST /api/trabajadores/
+    """
+    serializer_class = TrabajadorSerializer
 
-def registrar_trabajador(request):
-    if request.method == 'POST':
-        usuario_form = UsuarioForm(request.POST)
-        trabajador_form = TrabajadorForm(request.POST)
-        if usuario_form.is_valid() and trabajador_form.is_valid():
-            usuario = usuario_form.save(commit=False)
-            usuario.set_password(usuario.password)
-            usuario.save()
-            trabajador = trabajador_form.save(commit=False)
-            trabajador.usuario = usuario
-            trabajador.save()
-            messages.success(request, 'Trabajador registrado correctamente.')
-            return redirect('lista_trabajadores')
-    else:
-        usuario_form = UsuarioForm()
-        trabajador_form = TrabajadorForm()
-    return render(request, 'registrar_trabajador.html', {
-        'usuario_form': usuario_form,
-        'trabajador_form': trabajador_form
-    })
+    def get_queryset(self):
+        return TrabajadorService.listar_trabajadores()
 
-def eliminar_trabajador(request, trabajador_id):
-    trabajador = get_object_or_404(Trabajador, id=trabajador_id)
-    trabajador.activo = False
-    trabajador.save()
-    messages.success(request, 'Trabajador eliminado correctamente.')
-    return redirect('lista_trabajadores')
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        trabajador = TrabajadorService.registrar_trabajador(serializer.validated_data)
+        return Response(
+            TrabajadorSerializer(trabajador).data,
+            status=status.HTTP_201_CREATED
+        )
 
-def editar_trabajador(request, trabajador_id):
-    trabajador = get_object_or_404(Trabajador, id=trabajador_id)
-    usuario = trabajador.usuario
 
-    if request.method == 'POST':
-        usuario_form = UsuarioForm(request.POST, instance=usuario)
-        trabajador_form = TrabajadorForm(request.POST, instance=trabajador)
-        if usuario_form.is_valid() and trabajador_form.is_valid():
-            usuario_form.save()
-            trabajador_form.save()
-            messages.success(request, 'Trabajador actualizado correctamente.')
-            return redirect('lista_trabajadores')
-    else:
-        usuario_form = UsuarioForm(instance=usuario)
-        trabajador_form = TrabajadorForm(instance=trabajador)
+class TrabajadorRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    """
+    GET /api/trabajadores/<pk>/
+    PUT /api/trabajadores/<pk>/
+    DELETE /api/trabajadores/<pk>/
+    """
+    serializer_class = TrabajadorSerializer
 
-    return render(request, 'editar_trabajador.html', {
-        'usuario_form': usuario_form,
-        'trabajador_form': trabajador_form
-    })
+    def get_object(self):
+        return TrabajadorService.obtener_trabajador(self.kwargs['pk'])
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        trabajador = TrabajadorService.actualizar_trabajador(instance.id, serializer.validated_data)
+        return Response(TrabajadorSerializer(trabajador).data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        TrabajadorService.eliminar_trabajador(instance.id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
