@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Lista de Vuelos" %}{% endblock %}
+
+{% block title %}
+    {% trans "Crear Nuevo Vuelo" %}
+{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="{% static 'css/vuelo_carga.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>
+                    <i class="fas fa-plane-departure text-primary"></i>
+                    {% trans "Crear Nuevo Vuelo" %}
+                </h1>
+                <a href="{% url 'vuelo_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> {% trans "Volver a la lista" %}
+                </a>
+            </div>
+
+            <!-- Mensajes -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" id="vueloForm" novalidate>
+                {% csrf_token %}
+
+                <!-- Información Principal del Vuelo -->
+                <div class="form-section">
+                    <h3 class="form-section-header">
+                        <i class="fas fa-info-circle"></i> {% trans "Información del Vuelo" %}
+                    </h3>
+                    <div class="form-section-body">
+                        {{ vuelo_form.non_field_errors }}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.codigo_vuelo.id_for_label }}" class="form-label">
+                                    <i class="fas fa-tag text-primary"></i> {% trans "Código de Vuelo" %} *
+                                </label>
+                                {{ vuelo_form.codigo_vuelo }}
+                                {% for error in vuelo_form.codigo_vuelo.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.avion_asignado.id_for_label }}" class="form-label">
+                                    <i class="fas fa-plane text-primary"></i> {% trans "Avión Asignado" %}
+                                </label>
+                                {{ vuelo_form.avion_asignado }}
+                                {% for error in vuelo_form.avion_asignado.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.origen_principal.id_for_label }}" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-success"></i> {% trans "Origen Principal" %} *
+                                </label>
+                                {{ vuelo_form.origen_principal }}
+                                {% for error in vuelo_form.origen_principal.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.destino_principal.id_for_label }}" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-danger"></i> {% trans "Destino Principal" %} *
+                                </label>
+                                {{ vuelo_form.destino_principal }}
+                                {% for error in vuelo_form.destino_principal.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.fecha_salida_estimada.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar-alt text-primary"></i> {% trans "Fecha y Hora de Salida" %} *
+                                </label>
+                                {{ vuelo_form.fecha_salida_estimada }}
+                                {% for error in vuelo_form.fecha_salida_estimada.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.fecha_llegada_estimada.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar-check text-primary"></i> {% trans "Fecha y Hora de Llegada" %} *
+                                </label>
+                                {{ vuelo_form.fecha_llegada_estimada }}
+                                {% for error in vuelo_form.fecha_llegada_estimada.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ vuelo_form.km_totales.id_for_label }}" class="form-label">
+                                    <i class="fas fa-route text-primary"></i> {% trans "Kilómetros Totales" %}
+                                </label>
+                                {{ vuelo_form.km_totales }}
+                                {% for error in vuelo_form.km_totales.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3 d-flex align-items-end">
+                                <div class="form-check">
+                                    {{ vuelo_form.activo }}
+                                    <label class="form-check-label" for="{{ vuelo_form.activo.id_for_label }}">
+                                        <i class="fas fa-check-circle text-success"></i> {% trans "Vuelo Activo" %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta sobre escalas -->
+                        <div class="has-escalas-check" id="escalasCheck">
+                            <div class="form-check form-check-lg">
+                                {{ vuelo_form.tiene_escalas }}
+                                <label class="form-check-label fw-bold" for="{{ vuelo_form.tiene_escalas.id_for_label }}">
+                                    <i class="fas fa-route text-warning"></i> 
+                                    {% trans "¿Este vuelo tiene escalas intermedias?" %}
+                                </label>
+                                <div class="form-text-white mt-2">
+                                    {% trans "Si marca esta opción, podrá agregar escalas después de crear el vuelo." %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="text-center mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-save"></i> {% trans "Crear Vuelo" %}
+                    </button>
+                    <a href="{% url 'vuelo_list' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i> {% trans "Cancelar" %}
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tieneEscalasCheckbox = document.getElementById('{{ vuelo_form.tiene_escalas.id_for_label }}');
+    const escalasCheck = document.getElementById('escalasCheck');
+    
+    function updateEscalasStyle() {
+        if (tieneEscalasCheckbox.checked) {
+            escalasCheck.classList.add('checked');
+        } else {
+            escalasCheck.classList.remove('checked');
+        }
+    }
+    
+    tieneEscalasCheckbox.addEventListener('change', updateEscalasStyle);
+    updateEscalasStyle(); // Ejecutar al cargar
+});
+</script>
+{% endblock %}

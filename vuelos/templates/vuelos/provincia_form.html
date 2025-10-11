@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Lista de Vuelos" %}{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>{% trans "Crear nueva provincia" %}</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_nombre" class="form-label">{% trans "Nombre de la provincia" %}</label>
+        {{ form.nombre }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_pais" class="form-label">{% trans "País" %}</label>
+        {{ form.pais }}
+        <a href="{% url 'pais_form' %}" class="btn btn-link btn-sm ms-2">
+          {% trans "Agregar nuevo país" %}
+        </a>
+      </div>
+
+      <div class="form-check mb-3">
+        {{ form.activo }}
+        <label class="form-check-label" for="id_activo">{% trans "¿Está activa?" %}</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">{% trans "Guardar" %}</button>
+    </form>
+
+    <hr>
+    <h3 class="mt-4">{% trans "Provincias existentes" %}</h3>
+    <ul>
+      {% for provincia in provincias %}
+        <li>{{ provincia.nombre }} {% trans "—" %} {{ provincia.pais.nombre }}</li>
+      {% empty %}
+        <li>{% trans "No hay provincias registradas aún." %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
