@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% load reservas_extras %}
+
+{% block title %}¡Reserva Confirmada!{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="text-center mb-4">
+            <div class="alert alert-success border-0 shadow-lg">
+                <div class="display-4 mb-3">🎉</div>
+                <h1 class="display-5 fw-bold text-success">¡Pago Procesado Exitosamente!</h1>
+                <p class="lead mb-0">Tu reserva ha sido confirmada y tu boleto está listo</p>
+            </div>
+        </div>
+        
+        <!-- Información de la reserva -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">✅ Reserva Confirmada</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold">Información de la Reserva</h6>
+                        <div class="mb-3">
+                            <span class="fw-bold">Código de Reserva:</span><br>
+                            <span class="badge bg-primary fs-5">{{ reserva.codigo_reserva }}</span>
+                        </div>
+                        <p><strong>Estado:</strong> <span class="badge bg-success">{{ reserva.get_estado_display }}</span></p>
+                        <p><strong>Fecha de Pago:</strong> {{ reserva.fecha_pago|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Total Pagado:</strong> <span class="text-success fw-bold fs-5">${{ reserva.precio_total|floatformat:2 }}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold">Información del Vuelo</h6>
+                        <p><strong>Vuelo:</strong> {{ reserva.vuelo.codigo_vuelo }}</p>
+                        <p><strong>Ruta:</strong> {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}</p>
+                        <p><strong>Salida:</strong> {{ reserva.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Llegada:</strong> {{ reserva.vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Pasajero:</strong> {{ reserva.pasajero.get_full_name|default:reserva.pasajero.username }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asientos confirmados -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">🪑 Asientos Confirmados</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for detalle in reserva.detalles.all %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-success">
+                            <div class="card-body text-center">
+                                <h4 class="text-success mb-2">{{ detalle.asiento_vuelo.asiento.numero }}</h4>
+                                <p class="mb-1"><strong>Tipo:</strong> {{ detalle.asiento_vuelo.get_tipo_asiento_display }}</p>
+                                <p class="mb-1"><strong>Precio:</strong> ${{ detalle.precio_pagado|floatformat:2 }}</p>
+                                {% if detalle.asiento_vuelo.escala_vuelo %}
+                                    <p class="mb-0"><small class="text-muted">Escala {{ detalle.asiento_vuelo.escala_vuelo.orden }}</small></p>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <span class="badge bg-success">✅ Confirmado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if boleto %}
+        <!-- Información del boleto -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">🎫 Tu Boleto Electrónico</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <div class="display-6">🎫</div>
+                    <h5 class="fw-bold">Boleto Generado Exitosamente</h5>
+                    <p class="text-muted">Código de Boleto: <span class="fw-bold">{{ boleto.codigo_barras }}</span></p>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{% url 'reservas:boleto_detail' boleto.pk %}" class="btn btn-primary btn-lg">
+                        👁️ Ver Boleto Completo
+                    </a>
+                    <a href="{% url 'reservas:descargar_boleto' boleto.pk %}" class="btn btn-success btn-lg">
+                        📥 Descargar PDF
+                    </a>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <small>
+                        <strong>📧 Importante:</strong> También puedes buscar tu boleto más tarde 
+                        usando el código <strong>{{ boleto.codigo_barras }}</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Información importante -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">📋 Información Importante</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold">✈️ Para el día del vuelo:</h6>
+                        <ul class="small">
+                            <li>Llega al aeropuerto 2 horas antes (vuelos nacionales) o 3 horas (internacionales)</li>
+                            <li>Presenta tu documento de identidad y el boleto</li>
+                            <li>Verifica los horarios de tu vuelo antes de viajar</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold">📞 ¿Necesitas ayuda?</h6>
+                        <ul class="small">
+                            <li>Puedes ver tus reservas en "Mis Reservas"</li>
+                            <li>Guarda el código de boleto: <strong>{{ boleto.codigo_barras|default:"N/A" }}</strong></li>
+                            <li>Descarga el PDF como respaldo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botones de acción -->
+        <div class="text-center mb-4">
+            <div class="d-grid gap-2 d-md-block">
+                <a href="{% url 'reservas:mis_reservas' %}" class="btn btn-outline-primary btn-lg">
+                    📋 Ver Mis Reservas
+                </a>
+                <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-primary btn-lg">
+                    🔍 Buscar Otro Vuelo
+                </a>
+                {% if boleto %}
+                <a href="{% url 'reservas:descargar_boleto' boleto.pk %}" class="btn btn-success btn-lg">
+                    📥 Descargar Boleto
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: 600;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+}
+
+.display-4 {
+    font-size: 3rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .display-5 {
+        font-size: 1.8rem;
+    }
+    
+    .btn-lg {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+</style>
+{% endblock %}

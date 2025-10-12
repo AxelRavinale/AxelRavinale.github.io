@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load reservas_extras %}
+
+{% block title %}Configurar Vuelos - {% trans "Admin" %}{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="row">
+    <div class="col-12">
+        <h1>⚙️ Configurar Vuelos para Reservas</h1>
+        <p class="text-muted">Selecciona un vuelo para configurar sus asientos y precios</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if vuelos_sin_configurar %}
+            <div class="card">
+                <div class="card-header">
+                    <h5>Vuelos Pendientes de Configuración</h5>
+                </div>
+                <div class="card-body">
+                    {% for vuelo in vuelos_sin_configurar %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h6>{{ vuelo.codigo_vuelo }}</h6>
+                                        <p class="mb-1">
+                                            <strong>Ruta:</strong> {{ vuelo.origen_principal }} → {{ vuelo.destino_principal }}
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Fecha:</strong> {{ vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}
+                                        </p>
+                                        <p class="mb-0">
+                                            <strong>Avión:</strong> {{ vuelo.avion_asignado|default:"Con escalas" }}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <a href="{% url 'reservas:admin_configuracion_vuelo' vuelo.pk %}" 
+                                           class="btn btn-primary">
+                                            🔧 Configurar Asientos
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                <h5>✅ ¡Excelente!</h5>
+                <p>Todos los vuelos disponibles ya están configurados.</p>
+                <a href="{% url 'reservas:admin_reservas_list' %}" class="btn btn-success">
+                    Ver Reservas Existentes
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

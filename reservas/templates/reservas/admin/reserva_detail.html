@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load reservas_extras %}
+
+{% block title %}Reserva {{ reserva.codigo_reserva }} - Admin{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="row">
+    <div class="col-12">
+        <h1>📋 Reserva {{ reserva.codigo_reserva }}</h1>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Información de la reserva -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Información de la Reserva</h5>
+                        {% if reserva.estado == 'CON' %}
+                            <span class="badge bg-success fs-6">{{ reserva.get_estado_display }}</span>
+                        {% elif reserva.estado == 'RSP' %}
+                            <span class="badge bg-warning fs-6">{{ reserva.get_estado_display }}</span>
+                        {% elif reserva.estado == 'CAN' %}
+                            <span class="badge bg-danger fs-6">{{ reserva.get_estado_display }}</span>
+                        {% else %}
+                            <span class="badge bg-info fs-6">{{ reserva.get_estado_display }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Pasajero:</strong> {{ reserva.pasajero.get_full_name|default:reserva.pasajero.username }}</p>
+                                <p><strong>Email:</strong> {{ reserva.pasajero.email }}</p>
+                                <p><strong>Fecha de Reserva:</strong> {{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Precio Total:</strong> ${{ reserva.precio_total|floatformat:2 }}</p>
+                                {% if reserva.fecha_limite_pago %}
+                                    <p><strong>Límite de Pago:</strong> {{ reserva.fecha_limite_pago|date:"d/m/Y H:i" }}</p>
+                                {% endif %}
+                                {% if reserva.fecha_pago %}
+                                    <p><strong>Fecha de Pago:</strong> {{ reserva.fecha_pago|date:"d/m/Y H:i" }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información del vuelo -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Información del Vuelo</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Código:</strong> {{ reserva.vuelo.codigo_vuelo }}</p>
+                        <p><strong>Ruta:</strong> {{ reserva.vuelo.origen_principal }} → {{ reserva.vuelo.destino_principal }}</p>
+                        <p><strong>Salida:</strong> {{ reserva.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Llegada:</strong> {{ reserva.vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+
+                <!-- Asientos reservados -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Asientos Reservados</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Asiento</th>
+                                        <th>Tipo</th>
+                                        <th>Precio</th>
+                                        <th>Avión</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for detalle in reserva.detalles.all %}
+                                        <tr>
+                                            <td><strong>{{ detalle.asiento.numero }}</strong></td>
+                                            <td>{{ detalle.asiento_vuelo.get_tipo_asiento_display }}</td>
+                                            <td>${{ detalle.precio_pagado|floatformat:2 }}</td>
+                                            <td>{{ detalle.asiento.avion.modelo }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <!-- Acciones -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Acciones</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if reserva.estado != 'CON' and reserva.estado != 'CAN' %}
+                            <form method="post" class="mb-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="validar_pago">
+                                <button type="submit" class="btn btn-success btn-sm w-100" 
+                                        onclick="return confirm('¿Validar el pago de esta reserva?')">
+                                    ✅ Validar Pago Manual
+                                </button>
+                            </form>
+                        {% endif %}
+                        
+                        {% if reserva.estado != 'CAN' and reserva.estado != 'CON' %}
+                            <form method="post" class="mb-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="cancelar">
+                                <button type="submit" class="btn btn-danger btn-sm w-100" 
+                                        onclick="return confirm('¿Cancelar esta reserva?')">
+                                    ❌ Cancelar Reserva
+                                </button>
+                            </form>
+                        {% endif %}
+                        
+                        <a href="{% url 'reservas:descargar_detalle_reserva' reserva.pk %}" 
+                           class="btn btn-info btn-sm w-100 mb-2">
+                            📄 Descargar Detalle
+                        </a>
+                        
+                        {% if boleto %}
+            <!-- Información del boleto -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5>🎫 Tu Boleto Electrónico</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h4>Código de Barras: <span class="text-primary">{{ boleto.codigo_barras }}</span></h4>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Asientos Reservados</h6>
+                            {% for detalle in reserva.detalles.all %}
+                                <p>
+                                    <strong>{{ detalle.asiento.numero }}</strong> - 
+                                    {{ detalle.asiento_vuelo.get_tipo_asiento_display }} - 
+                                    ${{ detalle.precio_pagado|floatformat:2 }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info">
+                                <h6>📋 Instrucciones</h6>
+                                <ul class="mb-0">
+                                    <li>Presenta este boleto en el aeropuerto</li>
+                                    <li>Llega 2 horas antes del vuelo</li>
+                                    <li>Porta documento de identidad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Acciones -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-grid gap-2">
+                            {% if boleto %}
+                                <a href="{% url 'reservas:boleto_detail' boleto.pk %}" class="btn btn-primary btn-lg">
+                                    🎫 Ver Boleto Completo
+                                </a>
+                                <a href="{% url 'reservas:descargar_boleto' boleto.pk %}" class="btn btn-outline-primary">
+                                    📥 Descargar Boleto PDF
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'reservas:mis_reservas' %}" class="btn btn-info">
+                                📋 Ver Mis Reservas
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'reservas:user_inicio' %}" class="btn btn-success">
+                                🏠 Ir al Inicio
+                            </a>
+                            <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-outline-success">
+                                ✈️ Buscar Más Vuelos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

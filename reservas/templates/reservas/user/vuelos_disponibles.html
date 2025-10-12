@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load reservas_extras %}
+{% load math_filters %}
+
+
+{% block title %}Vuelos Disponibles{% endblock %}
+
+{% block content %}
+<div class="fondo-transparente">
+<div class="row">
+    <div class="col-12">
+        <h1>✈️ Vuelos Disponibles</h1>
+        
+        <!-- Filtros de búsqueda -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" name="origen" class="form-control" 
+                               placeholder="Ciudad de origen" value="{{ filtros.origen }}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="destino" class="form-control" 
+                               placeholder="Ciudad de destino" value="{{ filtros.destino }}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" name="fecha" class="form-control" value="{{ filtros.fecha }}">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                        <a href="{% url 'reservas:vuelos_disponibles' %}" class="btn btn-secondary">Limpiar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de vuelos -->
+        {% if vuelos_con_info %}
+            <div class="row">
+                {% for info in vuelos_con_info %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>{{ info.vuelo.codigo_vuelo }} - {{ info.vuelo.origen_principal }} → {{ info.vuelo.destino_principal }}</h5>
+                    </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Salida:</strong> {{ info.vuelo.fecha_salida_estimada|date:"d/m/Y H:i" }}</p>
+                                    <p><strong>Llegada:</strong> {{ info.vuelo.fecha_llegada_estimada|date:"d/m/Y H:i" }}</p>
+                                    <p><strong>Precio desde:</strong> ${{ info.precio_desde|floatformat:2 }}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>Asientos disponibles:</strong> {{ info.asientos_disponibles }}/{{ info.asientos_totales }}</p>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar" style="width: {{ info.porcentaje_ocupado }}%">
+                                            {{ info.porcentaje_ocupado|floatformat:0 }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <!-- 🔥 BOTÓN CLAVE QUE FALTABA -->
+                                    {% if info.asientos_disponibles > 0 %}
+                                        <a href="{% url 'reservas:seleccion_asientos' info.vuelo.pk %}" class="btn btn-primary btn-lg">
+                                            ✈️ Seleccionar Asientos
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-secondary btn-lg" disabled>
+                                            Sin Asientos
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <h5>No hay vuelos disponibles</h5>
+                <p>No se encontraron vuelos que coincidan con tu búsqueda.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}
