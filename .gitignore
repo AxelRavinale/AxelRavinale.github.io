@@ -56,14 +56,11 @@ htmlcov/
 
 db.sqlite3
 db.sqlite3
-# Ignorar imágenes Docker exportadas
 *.tar
 
-# Ignorar archivos de entorno sensibles
 .env
 .env.local
 
-# Ignorar node_modules o dependencias que se reconstruyen
 node_modules/
 venv/
 __pycache__/

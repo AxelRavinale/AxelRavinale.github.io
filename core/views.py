@@ -35,6 +35,7 @@ class PersonaRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
     serializer_class = PersonaSerializer
     permission_classes = [IsAdminUser]
+    queryset = PersonaService.get_all_queryset() if hasattr(PersonaService, 'get_all_queryset') else []  # ✅ agregado para Swagger
 
     def get_object(self):
         persona_id = self.kwargs.get('pk')

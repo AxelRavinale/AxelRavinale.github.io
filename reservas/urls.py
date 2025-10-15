@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views as views
+from . import view as views
 
 app_name = "reservas_api"
 
