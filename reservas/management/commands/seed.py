@@ -234,15 +234,23 @@ class Command(BaseCommand):
             apellido = random.choice(apellidos)
             dni = f"{25000000 + i}{random.randint(10, 99)}"
             
-            # Verificar si ya existe
+            # Generar email único para el pasajero
+            email_base = f"pasajero_{nombre.lower()}_{apellido.lower()}"
+            unique_email = f"{email_base}{random.randint(1000, 9999)}@email.com"
+            
+            # Verificar si ya existe por DNI o Email
             if Pasajero.objects.filter(dni=dni).exists():
                 pasajero = Pasajero.objects.get(dni=dni)
+                self.stdout.write(f"  ⚠ Pasajero con DNI {dni} ya existe, usando existente...")
+            elif Pasajero.objects.filter(email=unique_email).exists():
+                pasajero = Pasajero.objects.get(email=unique_email)
+                self.stdout.write(f"  ⚠ Pasajero con Email {unique_email} ya existe, usando existente...")
             else:
                 pasajero = Pasajero.objects.create(
                     nombre=nombre,
                     apellido=apellido,
                     dni=dni,
-                    email=f"pasajero{i+1}@email.com",
+                    email=unique_email,
                     telefono=f"+549351{random.randint(1000000, 9999999)}",
                     activo=True
                 )
@@ -519,7 +527,6 @@ class Command(BaseCommand):
                     reserva=reserva,
                     asiento_vuelo=asiento_vuelo,
                     precio_pagado=asiento_vuelo.precio,
-                    fecha=fecha_reserva  # ← LÍNEA AGREGADA
                 )
             
             reserva.calcular_precio_total()
