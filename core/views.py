@@ -4,19 +4,21 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import PersonaSerializer
-from .services import PersonaService
+from core.serializers import PersonaSerializer
+from core.services import PersonaService
 
 class PersonaListCreateAPIView(ListCreateAPIView):
     """
     GET /api/personas -> Lista todas las personas (usuarios autenticados)
     POST /api/personas -> Crea una persona (solo admins)
     """
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     serializer_class = PersonaSerializer
 
     def get_queryset(self):
         return PersonaService.list_personas()
+
+
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_superuser:
