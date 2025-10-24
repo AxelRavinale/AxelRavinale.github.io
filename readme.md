@@ -7,18 +7,18 @@ Un sistema web completo desarrollado en Django para la gestión integral de una 
 ### Para Pasajeros
 - **Búsqueda de vuelos** disponibles por fecha y destino
 - **Selección de asientos** interactiva con mapa visual del avión
-- **Gestión de reservas**: crear, consultar y administrar reservas
+- **Gestión de reservas** - crear, consultar y administrar reservas
 - **Sistema de pagos** con fechas límite y estados de pago
 - **Consulta pública de boletos** mediante código de reserva
 - **Panel personal** para ver historial de reservas
 
 ### Para Administradores
-- **Gestión de vuelos**: crear, modificar y programar vuelos
+- **Gestión de vuelos** - crear, modificar y programar vuelos
 - **Administración de escalas** para vuelos con paradas intermedias
-- **Gestión de tripulación**: asignar pilotos y personal de cabina
-- **Control de flota**: registro y mantenimiento de aviones
-- **Gestión de empleados**: alta, baja y modificación de personal
-- **Administración de pasajeros**: registro y actualización de datos
+- **Gestión de tripulación** - asignar pilotos y personal de cabina
+- **Control de flota** - registro y mantenimiento de aviones
+- **Gestión de empleados** - alta, baja y modificación de personal
+- **Administración de pasajeros** - registro y actualización de datos
 - **Configuración de asientos** por tipo de avión
 - **Sistema de reservas administrativas** para agencias
 
@@ -26,21 +26,17 @@ Un sistema web completo desarrollado en Django para la gestión integral de una 
 
 El proyecto está organizado en aplicaciones modulares de Django:
 
-- **autentificacion/ # Sistema de login y registro**
-- **aviones/ # Gestión de flota y asientos**
-- **core/ # Modelos base y configuración**
-- **empleados/ # Administración de personal**
-- **flota/ # Gestión de aviones**
-- **home/ # Página principal**
-- **pasajeros/ # Gestión de pasajeros**
-- **reservas/ # Sistema de reservas y boletos**
-- **vuelos/ # Programación y gestión de vuelos**
-
-## Además cuenta con:
-- `static/` y `staticfiles/` para CSS, JS e imágenes
-- `index.html` como página principal
-- `manage.py` para administración del proyecto
-- `requirements.txt` con dependencias
+```
+├── autentificacion/     # Sistema de login y registro
+├── aviones/            # Gestión de flota y asientos
+├── core/               # Modelos base y configuración
+├── empleados/          # Administración de personal
+├── flota/              # Gestión de aviones
+├── home/               # Página principal
+├── pasajeros/          # Gestión de pasajeros
+├── reservas/           # Sistema de reservas y boletos
+└── vuelos/             # Programación y gestión de vuelos
+```
 
 ## 📋 Requisitos del Sistema
 
@@ -53,105 +49,139 @@ El proyecto está organizado en aplicaciones modulares de Django:
 
 1. **Clonar el repositorio**
 ```bash
-git clone git@github.com:AxelRavinale/AxelRavinale.github.io.git
-cd AxelRavinale.github.io
+git clone <url-del-repositorio>
+cd sistema-aerolinea
+```
 
+2. **Crear entorno virtual**
+```bash
 python -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
+```
 
+3. **Instalar dependencias**
+```bash
 pip install -r requirements.txt
+```
 
+4. **Configurar base de datos**
+```bash
 python manage.py migrate
+```
 
+5. **Crear superusuario**
+```bash
 python manage.py createsuperuser
+```
 
+6. **Ejecutar servidor de desarrollo**
+```bash
 python manage.py runserver
 ```
 
-`Accede a la aplicación en http://127.0.0.1:8000 y al panel de administración en http://127.0.0.1:8000/admin.`
+El sistema estará disponible en `http://localhost:8000`
 
-### 🗄️ Modelos de Datos Principales
-Estructura de Vuelos
+## 🗄️ Modelos de Datos Principales
 
-Vuelo: Información básica (número, origen, destino, fechas)
+### Estructura de Vuelos
+- **Vuelo**: Información básica del vuelo (número, origen, destino, fechas)
+- **Escala**: Paradas intermedias con tiempos de conexión
+- **TripulacionVuelo**: Asignación de personal (pilotos, azafatas)
 
-Escala: Paradas intermedias con tiempos de conexión
+### Sistema de Reservas
+- **Reserva**: Reserva principal con estado de pago
+- **ReservaDetalle**: Detalles específicos por pasajero
+- **Boleto**: Boleto individual vinculado a asiento específico
+- **AsientoVuelo**: Configuración de asientos por vuelo
 
-TripulacionVuelo: Asignación de personal (pilotos, azafatas)
+### Gestión de Personal
+- **Empleado**: Datos del personal de la aerolínea
+- **Pasajero**: Información de pasajeros registrados
+- **Persona**: Modelo base con datos personales
 
-Sistema de Reservas
+### Flota
+- **Avion**: Información de la aeronave
+- **Asiento**: Configuración de asientos por avión (clase, ubicación)
 
-Reserva: Reserva principal con estado de pago
+## 🌐 Internacionalización
 
-ReservaDetalle: Detalles específicos por pasajero
+El sistema soporta múltiples idiomas:
+- **Español** (es) - Idioma principal
+- **Inglés** (en) - Idioma secundario
 
-Boleto: Boleto individual vinculado a asiento
+Los archivos de traducción se encuentran en el directorio `locale/`.
 
-AsientoVuelo: Configuración de asientos por vuelo
+## 📱 Interfaces de Usuario
 
-Gestión de Personal
+### Panel de Administración
+- Interfaz administrativa completa de Django
+- Gestión de todos los modelos del sistema
+- Reportes y estadísticas
 
-Empleado: Datos del personal de la aerolínea
+### Interfaz Pública
+- **Búsqueda de vuelos**: Formulario intuitivo con filtros
+- **Selección de asientos**: Mapa visual interactivo del avión
+- **Proceso de reserva**: Flujo paso a paso
+- **Consulta de boletos**: Búsqueda por código de reserva
 
-Pasajero: Información de pasajeros registrados
+### Panel de Usuario
+- **Mis reservas**: Historial completo de reservas
+- **Detalles de vuelo**: Información completa del itinerario
+- **Estado de pago**: Seguimiento de pagos pendientes
 
-Persona: Modelo base con datos personales
+## ⚙️ Características Técnicas
 
-Flota
+### Funcionalidades Avanzadas
+- **Sistema de expiración de reservas**: Comando automático para limpiar reservas vencidas
+- **Gestión de asientos por vuelo**: Configuración dinámica según el avión asignado
+- **Estados de reserva**: Pendiente, Confirmada, Pagada, Cancelada
+- **Tipos de asiento**: Económica, Ejecutiva, Primera Clase
+- **Manejo de escalas**: Vuelos directos y con conexiones
 
-Avion: Información de la aeronave
+### Seguridad
+- Sistema de autenticación de Django
+- Protección CSRF en formularios
+- Validación de datos en modelos y formularios
+- Separación de permisos por tipo de usuario
 
-Asiento: Configuración de asientos por avión (clase, ubicación)
+## 📁 Archivos Estáticos
 
-### 🌐 Internacionalización
+```
+static/
+├── css/
+│   └── estilos.css      # Estilos personalizados
+└── img/                 # Imágenes del sistema
+```
 
-Español (es) - Idioma principal
+## 🚀 Despliegue
 
-Inglés (en) - Idioma secundario
+El proyecto incluye configuración para despliegue con:
+- `render.yaml` - Configuración para Render.com
+- `requirements.txt` - Dependencias Python
+- Configuración de archivos estáticos
 
-Archivos de traducción en el directorio locale/.
+Para producción, asegúrate de:
+1. Configurar variables de entorno para la base de datos
+2. Ajustar `ALLOWED_HOSTS` en settings.py
+3. Configurar un servidor web (Nginx/Apache)
+4. Usar PostgreSQL en lugar de SQLite
 
-### 📱 Interfaces de Usuario
-Panel de Administración
+## 🤝 Contribuir
 
-Completo de Django
+1. Fork el proyecto
+2. Crea una rama para tu característica (`git checkout -b feature/NuevaCaracteristica`)
+3. Commit tus cambios (`git commit -m 'Agregar nueva característica'`)
+4. Push a la rama (`git push origin feature/NuevaCaracteristica`)
+5. Abre un Pull Request
 
-Gestión de todos los modelos
+## 📄 Licencia
 
-Reportes y estadísticas
+Este proyecto está bajo la licencia [Especificar Licencia].
 
-Interfaz Pública
+## 📧 Contacto
 
-Búsqueda de vuelos con filtros intuitivos
+Para soporte o consultas sobre el sistema, contacta a [tu-email@ejemplo.com].
 
-Selección de asientos interactiva
+---
 
-Proceso de reserva paso a paso
-
-Consulta de boletos por código de reserva
-
-Panel de Usuario
-
-Historial completo de reservas
-
-Detalles de vuelos
-
-Estado de pago
-
-### ⚙️ Características Técnicas
-
-Sistema de expiración de reservas automático
-
-Gestión dinámica de asientos según avión
-
-Estados de reserva: Pendiente, Confirmada, Pagada, Cancelada
-
-Tipos de asiento: Económica, Ejecutiva, Primera Clase
-
-Manejo de vuelos directos y con escalas
-
-Autenticación y permisos de usuario
-
-Protección CSRF y validación de datos
-
-Desarrollado con ❤️ usando Django**
+**Desarrollado con ❤️ usando Django**
