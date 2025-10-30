@@ -23,8 +23,8 @@ class TripulacionVueloSerializer(serializers.ModelSerializer):
 
 class VueloSerializer(serializers.ModelSerializer):
     escalas = EscalaSerializer(many=True, read_only=True, source='escalas_vuelo')
-    tripulacion = TripulacionVueloSerializer(many=True, read_only=True, source='tripulacion_vuelo')
-    avion_detalle = AvionSerializer(source='avion', read_only=True)
+    tripulacion = TripulacionVueloSerializer(many=True, read_only=True)
+    avion_detalle = AvionSerializer(source='avion_asignado', read_only=True)
 
     class Meta:
             model = Vuelo

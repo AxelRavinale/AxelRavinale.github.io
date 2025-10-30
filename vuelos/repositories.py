@@ -5,13 +5,13 @@ from .models import EscalaVuelo, TripulacionVuelo
 class VueloRepository:
     @staticmethod
     def listar_todos():
-        return Vuelo.objects.filter(activo=True).select_related('avion')
+        return Vuelo.objects.filter(activo=True).select_related('avion_asignado')
 
     @staticmethod
     def obtener_por_id(pk):
-        return Vuelo.objects.select_related('avion').prefetch_related(
+        return Vuelo.objects.select_related('avion_asignado').prefetch_related(
             Prefetch('escalas_vuelo'),
-            Prefetch('tripulacion_vuelo')
+            Prefetch('tripulacion')
         ).filter(pk=pk, activo=True).first()
 
     @staticmethod
@@ -23,4 +23,4 @@ class VueloRepository:
             queryset = queryset.filter(destino__icontains=destino)
         if fecha:
             queryset = queryset.filter(fecha_salida__date=fecha)
-        return queryset.select_related('avion')
+        return queryset.select_related('avion_asignado')

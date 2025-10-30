@@ -40,5 +40,5 @@ class VueloService:
         return {
             "vuelo": vuelo,
             "escalas": vuelo.escalas_vuelo.all(),
-            "tripulacion": vuelo.tripulacion_vuelo.all(),
+            "tripulacion": vuelo.tripulacion.all(),
         }

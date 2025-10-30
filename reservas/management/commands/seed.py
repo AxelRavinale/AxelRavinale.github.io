@@ -503,15 +503,12 @@ class Command(BaseCommand):
                 activo=True,
                 habilitado_para_reserva=True
             ).exclude(
-                reservadetalle__reserva__estado__in=['CON', 'RSP', 'CRE'],
-                reservadetalle__reserva__activo=True
+                reservadetalle_reservaestado_in=['CON', 'RSP', 'CRE'],
+                reservadetalle_reserva_activo=True
             )[:random.randint(1, 2)]
             
             if not asientos_disponibles:
                 continue
-            
-            # Fecha de la reserva (puede ser antes o después de hoy)
-            fecha_reserva = timezone.now() - timedelta(days=random.randint(0, 30))
             
             # Crear reserva
             reserva = Reserva.objects.create(
@@ -526,7 +523,7 @@ class Command(BaseCommand):
                 ReservaDetalle.objects.create(
                     reserva=reserva,
                     asiento_vuelo=asiento_vuelo,
-                    precio_pagado=asiento_vuelo.precio,
+                    precio_pagado=asiento_vuelo.precio
                 )
             
             reserva.calcular_precio_total()
