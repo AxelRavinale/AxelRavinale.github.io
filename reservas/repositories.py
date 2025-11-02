@@ -16,25 +16,37 @@ class ReservaRepository:
         return get_object_or_404(Reserva, id=reserva_id)
 
     @staticmethod
+    def obtener_reservas_vuelo(vuelo_id):
+        """Obtiene todas las reservas de un vuelo específico"""
+        return Reserva.objects.filter(
+            vuelo_id=vuelo_id,
+            activo=True
+        ).select_related('vuelo', 'pasajero').prefetch_related('detalles')
+
+    @staticmethod
     @transaction.atomic
-    def crear_reserva(pasajero, vuelo, asientos, precio_total):
+    def crear_reserva(pasajero, vuelo, asientos_vuelo, precio_total):
+        """
+        Crea una reserva con asientos de vuelo
+        asientos_vuelo: lista de objetos AsientoVuelo
+        """
         reserva = Reserva.objects.create(
             pasajero=pasajero,
             vuelo=vuelo,
-            monto_total=precio_total,
-            estado="CREADA"
+            precio_total=precio_total,
+            estado=Reserva.EstadoChoices.CREADA  # ✅ Usar el enum
         )
 
-        for asiento in asientos:
+        for asiento_vuelo in asientos_vuelo:
             ReservaDetalle.objects.create(
                 reserva=reserva,
-                asiento=asiento,
-                precio=vuelo.precio_base,
-                estado="pendiente"
+                asiento_vuelo=asiento_vuelo,
+                precio_pagado=asiento_vuelo.precio,  # ✅ El precio viene del AsientoVuelo
             )
-            asiento.estado = "reservado"
-            asiento.save()
 
+        # Recalcular precio total
+        reserva.calcular_precio_total()
+        
         return reserva
 
     @staticmethod
