@@ -1,46 +1,18 @@
-"""
-URL configuration for core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
-from django.conf.urls.i18n import i18n_patterns
-from django.views.i18n import set_language
-from .views import PersonaCreateView
-
-def trigger_error(request):
-    division_by_zero = 1 / 0  # This will raise a ZeroDivisionError
-
+from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
-    path('set_language/', set_language, name='set_language'),
-]
-
-urlpatterns += i18n_patterns(
-    path('personas/crear/', PersonaCreateView.as_view(), name='persona_create'),
     path('admin/', admin.site.urls),
-    path('', include('home.urls')),
-    path('auth/', include('autentificacion.urls')),
-    path('', include('vuelos.urls')),
-    path('trabajadores/', include('empleados.urls')),
-    path('pasajeros/', include('pasajeros.urls')),
-    path('reservas/', include('reservas.urls')),
-    path('flota/', include('flota.urls')),
-    path('sentry-debug/', trigger_error),)
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('api/core/', include('core.urls_persona')),        
+    path('api/reservas/', include('reservas.urls')),
+    path('api/vuelos/', include('vuelos.urls')),
+    path('api/flota/', include('flota.urls')),
+    path('api/pasajeros/', include('pasajeros.urls')),
+    path('api/auth/', include('autentificacion.urls')),   # autenticación con JWT o Token
+
+    path('api/docs/', include('core.swagger_urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+]

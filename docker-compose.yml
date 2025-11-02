@@ -1,0 +1,14 @@
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+      - sqlite_data:/app/db  # carpeta donde se guardará db.sqlite3
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+
+volumes:
+  sqlite_data:

@@ -1,9 +1,7 @@
 from django.urls import path
-from . import views
+from .views import TrabajadorListCreateAPIView, TrabajadorRetrieveUpdateDestroyAPIView
 
 urlpatterns = [
-    path('', views.lista_trabajadores, name='lista_trabajadores'),
-    path('registrar/', views.registrar_trabajador, name='registrar_trabajador'),
-    path('eliminar/<int:trabajador_id>/', views.eliminar_trabajador, name='eliminar_trabajador'),
-    path('editar/<int:trabajador_id>/', views.editar_trabajador, name='editar_trabajador'),
+    path('trabajadores/', TrabajadorListCreateAPIView.as_view(), name='trabajador-list-create'),
+    path('trabajadores/<int:pk>/', TrabajadorRetrieveUpdateDestroyAPIView.as_view(), name='trabajador-detail'),
 ]

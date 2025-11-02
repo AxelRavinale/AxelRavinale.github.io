@@ -1,9 +1,8 @@
 from django.urls import path
-from autentificacion.views import RegisterView, LoginView, logout_view, change_language
+from .views import RegisterAPIView, LoginAPIView, LogoutAPIView
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('language/<str:lang_code>/', change_language, name='change_language')
+    path('register/', RegisterAPIView.as_view(), name='register'),
+    path('login/', LoginAPIView.as_view(), name='login'),
+    path('logout/', LogoutAPIView.as_view(), name='logout'),
 ]

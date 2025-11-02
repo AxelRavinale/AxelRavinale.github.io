@@ -1,51 +1,48 @@
 from rest_framework import serializers
-from aviones.models import Avion
-from vuelos.models import Vuelo, Escala, TripulacionVuelo
-from core.models import Localidad
-from .constant import ROLES_TRIPULACION
-
-class LocalidadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Localidad
-        fields = ['id', 'nombre', 'activo']
-
-
-class AvionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Avion
-        fields = ['id', 'num_avion', 'modelo', 'filas', 'columnas', 'estado', 'km_recorridos', 'activo']
-
+from .models import Vuelo, Escala, Avion, TripulacionVuelo
 
 class EscalaSerializer(serializers.ModelSerializer):
-    origen = LocalidadSerializer(read_only=True)
-    destino = LocalidadSerializer(read_only=True)
-    origen_id = serializers.PrimaryKeyRelatedField(queryset=Localidad.objects.all(), source='origen', write_only=True)
-    destino_id = serializers.PrimaryKeyRelatedField(queryset=Localidad.objects.all(), source='destino', write_only=True)
-
     class Meta:
         model = Escala
-        fields = [
-            'id', 'origen', 'destino', 'origen_id', 'destino_id',
-            'fecha_salida', 'fecha_llegada', 'km_estimados', 'activo'
-        ]
+        fields = ['id', 'origen', 'destino', 'km_estimados', 'activo']
 
 
-class VueloSerializer(serializers.ModelSerializer):
-    escala = EscalaSerializer(read_only=True)
-    escala_id = serializers.PrimaryKeyRelatedField(queryset=Escala.objects.all(), source='escala', write_only=True)
-    avion = AvionSerializer(read_only=True)
-    avion_id = serializers.PrimaryKeyRelatedField(queryset=Avion.objects.all(), source='avion', write_only=True)
-
+class AvionVueloSerializer(serializers.ModelSerializer):  # ✅ Renombrado
+    """Serializer simple para mostrar info básica del avión en vuelos"""
     class Meta:
-        model = Vuelo
-        fields = ['id', 'codigo_vuelo', 'escala', 'escala_id', 'avion', 'avion_id', 'activo']
+        model = Avion
+        fields = ['id', 'modelo', 'activo']
 
 
 class TripulacionVueloSerializer(serializers.ModelSerializer):
-    persona_id = serializers.IntegerField()
-    vuelo_id = serializers.PrimaryKeyRelatedField(queryset=Vuelo.objects.all(), source='vuelo')
-    rol = serializers.ChoiceField(choices=ROLES_TRIPULACION)
+    persona_nombre = serializers.CharField(source='persona.nombre', read_only=True)
 
     class Meta:
         model = TripulacionVuelo
-        fields = ['id', 'vuelo_id', 'persona_id', 'rol']
+        fields = ['id', 'vuelo', 'persona', 'rol', 'persona_nombre']
+
+
+class VueloSerializer(serializers.ModelSerializer):
+    escalas = EscalaSerializer(many=True, read_only=True, source='escalas_vuelo')
+    tripulacion = TripulacionVueloSerializer(many=True, read_only=True)
+    avion_detalle = AvionVueloSerializer(source='avion_asignado', read_only=True)  # ✅ Usa el renombrado
+
+    class Meta:
+        model = Vuelo
+        fields = [
+            'id',
+            'codigo_vuelo',
+            'origen_principal',
+            'destino_principal',
+            'fecha_salida_estimada',
+            'fecha_llegada_estimada',
+            'km_totales',
+            'avion_asignado',
+            'tiene_escalas',
+            'activo',
+            'cargado_por',
+            'fecha_carga',
+            'avion_detalle',
+            'tripulacion',
+            'escalas'  
+        ]   

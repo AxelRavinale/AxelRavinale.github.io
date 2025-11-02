@@ -1,4 +1,3 @@
-# core/admin.py
 from django.contrib import admin
 from core.models import Localidad, Genero, TipoDocumento, Persona, Provincia, Pais, TipoVuelo, Estado
 
